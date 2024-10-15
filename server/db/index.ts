@@ -6,6 +6,10 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import * as schema from './schema';
 import * as drizzleConfig from '~/drizzle.config';
 
+// TODO use nuxt and nitros internal DB system with sqlite and drizzle
+// https://nitro.unjs.io/guide/database
+// https://db0.unjs.io/integrations/drizzle
+
 async function runMigrations () {
   const dbClient = new PG.Client(drizzleConfig.default.dbCredentials);
   const db = drizzle(dbClient);
