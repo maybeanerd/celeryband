@@ -1,12 +1,12 @@
 name: Build and test
 
-on: 
+on:
   push:
     branches:
       - main
-  pull_request: 
-    branches: 
-      - '**'
+  pull_request:
+    branches:
+      - "**"
 
 jobs:
   lint_and_typecheck:
@@ -14,19 +14,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20.5.1
-      - name : Install pnpm
+          node-version: 22.9.0
+      - name: Install pnpm
         run: npm install -g pnpm
       - name: Install dependencies
         run: pnpm i
       - name: lint all workspaces
-        run: pnpm run -r lint 
+        run: pnpm run -r lint
       - name: build all workspaces
         run: pnpm run -r build
       #- name: unit test (with coverage)
-      #  run: pnpm run test:cov  
+      #  run: pnpm run test:cov
       #- name: e2e test
       #  run: pnpm run test:e2e
