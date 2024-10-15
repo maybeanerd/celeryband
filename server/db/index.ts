@@ -10,7 +10,7 @@ async function runMigrations () {
   const dbClient = new Client(drizzleConfig.default.dbCredentials);
   const db = drizzle(dbClient);
   await dbClient.connect();
-  await migrate(db, { migrationsFolder: './db/migrations' });
+  await migrate(db, { migrationsFolder: './server/db/migrations' });
   await dbClient.end();
 }
 
