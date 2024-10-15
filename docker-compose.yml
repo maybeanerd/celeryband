@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  traefik:
+    image: 'traefik:v3.1.6'
+    container_name: 'Reverse-Proxy'
+    command:
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+    ports:
+      - 80:80
+    depends_on:
+      - celeryband
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+    networks:
+      - internal
+
+  celeryband:
+    build:
+      context: .
+      args:
+        - COMMIT_HASH=abcdefg
+    image: ${IMAGE_NAME}
+    depends_on:
+      - database
+    networks:
+      - internal
+    environment:
+      - INSTANCE_NAME=${INSTANCE_NAME}
+      - DATABASE_HOST=database
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.celeryband.rule=PathPrefix(`/`)'
+      - 'traefik.http.services.celeryband.loadbalancer.server.port=3000'
+
+  database:
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: nest
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - internal
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+
+networks:
+  internal:
