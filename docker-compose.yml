@@ -41,7 +41,7 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: nest
+      POSTGRES_DB: celery
     restart: always
     ports:
       - 5432:5432
