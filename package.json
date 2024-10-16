@@ -32,8 +32,8 @@
     "@nuxt/ui": "2.18.7",
     "@nuxtjs/eslint-config-typescript": "12.1.0",
     "@nuxtjs/i18n": "8.5.5",
-    "@types/node": "20.17.0",
     "@types/pg": "8.11.10",
+    "@types/node": "20.17.0",
     "@typescript-eslint/parser": "7.18.0",
     "@vite-pwa/nuxt": "0.10.5",
     "autoprefixer": "10.4.20",
@@ -46,8 +46,8 @@
     "typescript": "5.6.3"
   },
   "dependencies": {
+    "db0": "0.2.1",
     "dotenv": "16.4.5",
-    "drizzle-orm": "0.35.0",
-    "pg": "8.13.0"
+    "drizzle-orm": "0.35.0"
   }
 }

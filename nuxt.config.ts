@@ -16,6 +16,16 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
     },
+    database: {
+      default: {
+        connector: 'sqlite',
+        options: { name: 'db' },
+      },
+    },
+    experimental: {
+      database: true,
+    },
+
   },
 
   build: {},
@@ -30,4 +40,5 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2024-10-15',
+
 });

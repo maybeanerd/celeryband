@@ -1,5 +1,6 @@
-import { initializeDb } from '~/server/db';
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 
-export default defineNitroPlugin(async () => {
-  await initializeDb();
+export default defineNitroPlugin(() => {
+  const db = useDrizzle();
+  migrate(db, { migrationsFolder: './server/db/migrations' });
 });

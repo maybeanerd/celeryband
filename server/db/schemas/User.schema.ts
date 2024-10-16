@@ -1,8 +1,8 @@
-import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-export const user = pgTable('user', {
-  id: uuid().defaultRandom().primaryKey(),
-  emailHash: varchar().unique().notNull(),
+export const user = sqliteTable('user', {
+  id: text().primaryKey(), // TODO somehow generate UUIDs here, preferrably by default
+  emailHash: text().unique().notNull(),
 });
 
 export type User = typeof user.$inferSelect;

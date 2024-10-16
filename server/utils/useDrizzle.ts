@@ -1,9 +1,13 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import * as PG from 'pg';
+import { createDatabase } from 'db0';
+import sqlite from 'db0/connectors/better-sqlite3';
+import { drizzle } from 'db0/integrations/drizzle';
 import * as schema from '~/server/db/schema';
-import * as drizzleConfig from '~/drizzle.config';
 
+// Initialize DB instance
+// You can use any other available connector
+const db = createDatabase(sqlite({ }));
+
+// And then leverage drizzle typed API to make more advanced ones
 export function useDrizzle () {
-  const client = new PG.Client(drizzleConfig.default.dbCredentials);
-  return drizzle(client, { schema });
+  return drizzle<typeof schema>(db);
 }
