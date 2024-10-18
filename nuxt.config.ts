@@ -19,7 +19,6 @@ export default defineNuxtConfig({
     database: {
       default: {
         connector: 'sqlite',
-        options: { name: 'db' },
       },
     },
     experimental: {

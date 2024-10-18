@@ -24,10 +24,10 @@ services:
       args:
         - COMMIT_HASH=abcdefg
     image: ${IMAGE_NAME}
-    depends_on:
-      - database
     networks:
       - internal
+    volumes:
+      - db-data:.data/db.sqlite3
     environment:
       - INSTANCE_NAME=${INSTANCE_NAME}
       - DATABASE_HOST=database
@@ -35,20 +35,6 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.celeryband.rule=PathPrefix(`/`)'
       - 'traefik.http.services.celeryband.loadbalancer.server.port=3000'
-
-  database:
-    image: postgres:16.4
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: celery
-    restart: always
-    ports:
-      - 5432:5432
-    networks:
-      - internal
-    volumes:
-      - db-data:/var/lib/postgresql/data
 
 volumes:
   db-data:
