@@ -1,1 +1,1 @@
-export { user, type User, type NewUser } from './schemas/User.schema';
+export { userSchema as user } from './schemas/User.schema';
