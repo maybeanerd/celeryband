@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "better-sqlite3": "11.4.0",
-    "db0": "0.2.1",
     "drizzle-orm": "0.35.0"
   }
 }

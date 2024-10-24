@@ -11,9 +11,6 @@ importers:
       better-sqlite3:
         specifier: 11.4.0
         version: 11.4.0
-      db0:
-        specifier: 0.2.1
-        version: 0.2.1(better-sqlite3@11.4.0)(drizzle-orm@0.35.0(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.4.0))
       drizzle-orm:
         specifier: 0.35.0
         version: 0.35.0(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.4.0)
@@ -2788,26 +2785,6 @@ packages:
       better-sqlite3:
         optional: true
       drizzle-orm:
-        optional: true
-
-  db0@0.2.1:
-    resolution: {integrity: sha512-BWSFmLaCkfyqbSEZBQINMVNjCVfrogi7GQ2RSy1tmtfK9OXlsup6lUMwLsqSD7FbAjD04eWFdXowSHHUp6SE/Q==}
-    peerDependencies:
-      '@electric-sql/pglite': '*'
-      '@libsql/client': '*'
-      better-sqlite3: '*'
-      drizzle-orm: '*'
-      mysql2: '*'
-    peerDependenciesMeta:
-      '@electric-sql/pglite':
-        optional: true
-      '@libsql/client':
-        optional: true
-      better-sqlite3:
-        optional: true
-      drizzle-orm:
-        optional: true
-      mysql2:
         optional: true
 
   debug@2.6.9:
@@ -9129,11 +9106,6 @@ snapshots:
       is-data-view: 1.0.1
 
   db0@0.1.4(better-sqlite3@11.4.0)(drizzle-orm@0.35.0(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.4.0)):
-    optionalDependencies:
-      better-sqlite3: 11.4.0
-      drizzle-orm: 0.35.0(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.4.0)
-
-  db0@0.2.1(better-sqlite3@11.4.0)(drizzle-orm@0.35.0(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.4.0)):
     optionalDependencies:
       better-sqlite3: 11.4.0
       drizzle-orm: 0.35.0(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.4.0)
