@@ -16,15 +16,6 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
     },
-    database: {
-      default: {
-        connector: 'sqlite',
-      },
-    },
-    experimental: {
-      database: true,
-    },
-
   },
 
   build: {},

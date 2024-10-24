@@ -1,7 +1,7 @@
-import { useOgDrizzle } from '~/server/utils/useOgDrizzle';
+import { useDrizzle } from '~/server/utils/useDrizzle';
 
 export default defineEventHandler(async () => {
-  const { db } = useOgDrizzle();
+  const { db } = useDrizzle();
   const users = await db.query.user.findMany();
 
   return {

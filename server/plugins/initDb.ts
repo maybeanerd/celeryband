@@ -1,11 +1,13 @@
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import { useOgDrizzle } from '~/server/utils/useOgDrizzle';
+import { useDrizzle } from '~/server/utils/useDrizzle';
 
 export default defineNitroPlugin(() => {
-  console.log('Initializing DB');
+  console.info('Initializing DB');
 
-  const { db } = useOgDrizzle();
+  const { db } = useDrizzle();
+
+  console.info('Running DB migrations');
   migrate(db, { migrationsFolder: './server/db/migrations' });
 
-  console.log('Finished initializing DB');
+  console.info('Finished initializing DB');
 });
