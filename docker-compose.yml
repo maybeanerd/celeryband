@@ -29,6 +29,7 @@ services:
     environment:
       - INSTANCE_NAME=${INSTANCE_NAME}
       - DATABASE_HOST=database
+      - NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_PASSWORD
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.celeryband.rule=PathPrefix(`/`)'
