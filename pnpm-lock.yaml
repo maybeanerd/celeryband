@@ -58,8 +58,8 @@ importers:
         specifier: 3.14.159
         version: 3.14.159(@parcel/watcher@2.4.1)(@types/node@22.9.0)(better-sqlite3@11.5.0)(drizzle-orm@0.36.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.11)(@types/pg@8.11.10)(better-sqlite3@11.5.0))(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.10(@types/node@22.9.0)(terser@5.34.1))
       nuxt-auth-utils:
-        specifier: 0.5.4
-        version: 0.5.4(magicast@0.3.5)(rollup@4.24.4)
+        specifier: 0.5.5
+        version: 0.5.5(magicast@0.3.5)(rollup@4.24.4)
       prettier:
         specifier: 3.3.3
         version: 3.3.3
@@ -4563,8 +4563,8 @@ packages:
     engines: {node: ^16.10.0 || >=18.0.0}
     hasBin: true
 
-  nuxt-auth-utils@0.5.4:
-    resolution: {integrity: sha512-Dyo5+sj44aFYfDO2aahpdqbwewz7OCEcjoXiCcrLty5ZJWErLXUL68xKzzkgeyXEdV4YhtKZnfpP/+NI1+fPNw==}
+  nuxt-auth-utils@0.5.5:
+    resolution: {integrity: sha512-9Pg6Ey0NEVh9/rm29LgdvpBZeWo51iGcb7JFqkI0M+/I/YqUnI1sXAeHfaAeUJgSntfQe/CfDvN/Eez7grilHg==}
     peerDependencies:
       '@simplewebauthn/browser': ^11.0.0
       '@simplewebauthn/server': ^11.0.0
@@ -11495,7 +11495,7 @@ snapshots:
 
   nuxi@3.15.0: {}
 
-  nuxt-auth-utils@0.5.4(magicast@0.3.5)(rollup@4.24.4):
+  nuxt-auth-utils@0.5.5(magicast@0.3.5)(rollup@4.24.4):
     dependencies:
       '@adonisjs/hash': 9.0.5
       '@nuxt/kit': 3.14.159(magicast@0.3.5)(rollup@4.24.4)
