@@ -26,7 +26,11 @@ jobs:
         run: pnpm run -r lint
       - name: build all workspaces
         run: pnpm run -r build
-      #- name: unit test (with coverage)
-      #  run: pnpm run test:cov
-      #- name: e2e test
-      #  run: pnpm run test:e2e
+      - name: ensure no outstanding migrations
+        run: | 
+          pnpm db:generate && \
+          if [ -z "$(git status --porcelain)" ]; then \
+            exit 0; \
+          else \
+            exit 1; \
+          fi
