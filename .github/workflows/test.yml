@@ -19,14 +19,18 @@ jobs:
         with:
           node-version: 22.9.0
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: corepack enable pnpm
       - name: Install dependencies
         run: pnpm i
-      - name: lint all workspaces
-        run: pnpm run -r lint
-      - name: build all workspaces
-        run: pnpm run -r build
-      #- name: unit test (with coverage)
-      #  run: pnpm run test:cov
-      #- name: e2e test
-      #  run: pnpm run test:e2e
+      - name: lint
+        run: pnpm lint
+      - name: build
+        run: pnpm build
+      - name: ensure no outstanding migrations
+        run: | 
+          pnpm db:generate && \
+          if [ -z "$(git status --porcelain)" ]; then \
+            exit 0; \
+          else \
+            exit 1; \
+          fi
