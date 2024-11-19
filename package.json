@@ -32,7 +32,7 @@
     "@nuxt/ui": "2.19.2",
     "@nuxtjs/eslint-config-typescript": "12.1.0",
     "@nuxtjs/i18n": "9.1.0",
-    "@types/better-sqlite3": "7.6.11",
+    "@types/better-sqlite3": "7.6.12",
     "@types/node": "22.9.0",
     "@typescript-eslint/parser": "7.18.0",
     "@vite-pwa/nuxt": "0.10.6",
