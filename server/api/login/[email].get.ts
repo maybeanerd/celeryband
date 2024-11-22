@@ -1,8 +1,14 @@
 import { createLoginToken, obfuscateEmail } from '~/server/api/login/authentification';
 
-export default defineEventHandler(async () => {
-  // TODO get email from request body
-  const email = ('test@test.com');
+export default defineEventHandler(async (event) => {
+  // TODO validate email using zod
+  const email = getRouterParam(event, 'email');
+  if (!email) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'missing email',
+    });
+  }
 
   const obfuscatedEmail = await obfuscateEmail(email);
 

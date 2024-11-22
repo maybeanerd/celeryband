@@ -15,7 +15,7 @@ export function createLoginToken (obfuscatedEmail: string) {
   return token;
 }
 
-export function validateLoginToken (token: string) {
+export function validateLoginToken (token: string): string | null {
   // TODO validate token for the user in the database, get the obfuscatedEmail
   console.log(`Validating token : ${token}`);
 

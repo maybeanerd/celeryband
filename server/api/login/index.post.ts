@@ -21,14 +21,16 @@ async function ensureUserExists (hashedEmail: string) {
 }
 
 export default defineEventHandler(async (event) => {
-  // TODO get token from request body
-  const loginToken = 'cool secret token';
+  // TODO use zod to validate body/token
+  const { token } = await readBody(event);
 
-  const obfuscatedEmail = validateLoginToken(loginToken);
+  const obfuscatedEmail = validateLoginToken(token);
 
   if (obfuscatedEmail === null) {
-    // TODO throw 403
-    throw new Error('Invalid token');
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Invalid token.',
+    });
   }
 
   const user = await ensureUserExists(obfuscatedEmail);
