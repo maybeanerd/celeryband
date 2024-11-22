@@ -1,11 +1,23 @@
-import { randomBytes } from 'crypto';
+import { randomBytes, scrypt } from 'crypto';
 import { eq } from 'drizzle-orm';
 import { loginTokenSchema } from '~/server/db/schemas/LoginToken.schema';
 
-export function obfuscateEmail (email: string) {
-  // TODO use crypto.scrypt to generate a hash that can be used to obfuscate the email
-  // https://nodejs.org/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
-  return Promise.resolve(email.split('@').join(' [at] '));
+export function obfuscateEmail (email: string): Promise<string> {
+  // TODO generate a random salt once, and then reuse within server
+  // (this is necessary because emails need to always resolve to the same email again)
+  const salt = 'coolRandomSalt';
+
+  const obfuscatedEmail = new Promise<string>((resolve, reject) => {
+    scrypt(email, salt, 64, (err, derivedKey) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(derivedKey.toString('hex'));
+    });
+  });
+
+  return obfuscatedEmail;
 }
 
 export async function createLoginToken (obfuscatedEmail: string) {
