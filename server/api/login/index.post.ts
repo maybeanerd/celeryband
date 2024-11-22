@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   // TODO use zod to validate body/token
   const { token } = await readBody(event);
 
-  const obfuscatedEmail = validateLoginToken(token);
+  const obfuscatedEmail = await validateLoginToken(token);
 
   if (obfuscatedEmail === null) {
     throw createError({
