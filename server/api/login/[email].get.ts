@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const obfuscatedEmail = await obfuscateEmail(email);
 
-  const token = createLoginToken(obfuscatedEmail);
+  const token = await createLoginToken(obfuscatedEmail);
 
   // TODO send token to original email
   console.log('token', token);

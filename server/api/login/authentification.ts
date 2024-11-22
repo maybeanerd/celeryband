@@ -20,6 +20,8 @@ export async function createLoginToken (obfuscatedEmail: string) {
     emailHash: obfuscatedEmail,
     expirationDate: Date.now() + dayOffsetInMs,
   });
+
+  return token;
 }
 
 export async function validateLoginToken (token: string): Promise<string | null> {
