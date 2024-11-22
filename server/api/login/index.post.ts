@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { userSchema } from '~/server/db/schemas/User.schema';
 import { useDrizzle } from '~/server/utils/useDrizzle';
+import { validateLoginToken } from '~/server/api/login/authentification';
 
 async function ensureUserExists (hashedEmail: string) {
   const { db } = useDrizzle();
@@ -20,17 +21,20 @@ async function ensureUserExists (hashedEmail: string) {
 }
 
 export default defineEventHandler(async (event) => {
-  // TODO get email from request body
-  const hashedEmail = await hashPassword('test@test.com');
+  // TODO get token from request body
+  const loginToken = 'cool secret token';
 
-  const user = await ensureUserExists(hashedEmail);
+  const obfuscatedEmail = validateLoginToken(loginToken);
+
+  if (obfuscatedEmail === null) {
+    // TODO throw 403
+    throw new Error('Invalid token');
+  }
+
+  const user = await ensureUserExists(obfuscatedEmail);
   if (!user) {
     throw new Error('Was not able to ensure user exists');
   }
-
-  // Pretend to validate password/hash
-
-  const validCredentials = await verifyPassword(hashedEmail, 'test@test.com');
 
   await setUserSession(event, {
   // User data
@@ -41,7 +45,5 @@ export default defineEventHandler(async (event) => {
     secure: {
       message: 'user is logged in hehe',
     },
-    // Any extra fields for the session data
-    validCredentials,
   });
 });
