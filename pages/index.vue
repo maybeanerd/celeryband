@@ -12,10 +12,15 @@
         Session data: {{ session }}
       </p>
     </div>
-    <UButton v-else class="max-w-36" :loading="loading" @click="logIn">
-      Log In
-    </UButton>
-
+    <div v-else class="flex flex-col gap-2">
+      <UButton class="max-w-36" @click="requestToken">
+        Request Token
+      </UButton>
+      <p>Current Token: {{ loginToken }}</p>
+      <UButton class="max-w-36" :loading="loading" @click="logIn">
+        Log In
+      </UButton>
+    </div>
     <UButton class="max-w-36" @click="refresh">
       Refresh
     </UButton>
@@ -40,10 +45,28 @@ const { data, error, refresh } = await useFetch<Array<User>>('/api/users', {
 
 const loading = ref(false);
 
+const loginToken = ref<string | null>(null);
+
+const requestToken = async () => {
+  const { data } = await useFetch<{ token: string }>('/api/login', {
+    method: 'PUT',
+    body: {
+      email: 'myCoolTestEmail@celery.band',
+    },
+  });
+
+  if (data.value !== null) {
+    loginToken.value = data.value.token;
+  }
+};
+
 const logIn = async () => {
   loading.value = true;
-  await fetch('/api/login', {
+  await useFetch('/api/login', {
     method: 'POST',
+    body: {
+      token: loginToken.value,
+    },
   });
 
   await refresh();
