@@ -1,5 +1,3 @@
-import { useDrizzle } from '~/server/utils/useDrizzle';
-
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
 

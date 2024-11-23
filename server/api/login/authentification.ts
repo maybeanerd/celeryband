@@ -3,6 +3,8 @@ import { eq } from 'drizzle-orm';
 import { loginTokenSchema } from '~/server/db/schemas/LoginToken.schema';
 import { obfuscationSaltSchema } from '~/server/db/schemas/ObfuscationSalt.schema';
 
+// TODO move this file outside /api to remove it from being considered a route handler
+
 // Creates and reuses a single shared salt.
 // This is necessary because emails need to always be obfuscated the same way to allow re-log-ins
 async function ensureObfuscationSalt (): Promise<string> {

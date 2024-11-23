@@ -1,6 +1,5 @@
 import { randomUUID } from 'crypto';
 import { userSchema } from '~/server/db/schemas/User.schema';
-import { useDrizzle } from '~/server/utils/useDrizzle';
 import { validateLoginToken } from '~/server/api/login/authentification';
 
 async function ensureUserExists (hashedEmail: string) {

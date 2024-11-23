@@ -1,9 +1,10 @@
 import { createLoginToken, obfuscateEmail } from '~/server/api/login/authentification';
 
 export default defineEventHandler(async (event) => {
-  // TODO validate email using zod
-  const email = getRouterParam(event, 'email');
-  if (!email) {
+  const { email } = await readBody(event);
+
+  // TODO use zod to validate body/email
+  if (!email || typeof email !== 'string') {
     throw createError({
       statusCode: 400,
       statusMessage: 'missing email',
