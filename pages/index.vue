@@ -69,6 +69,8 @@ const logIn = async () => {
     },
   });
 
+  loginToken.value = null;
+
   await refresh();
   await fetchUserSession();
 
