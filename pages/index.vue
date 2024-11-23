@@ -51,7 +51,7 @@ const requestToken = async () => {
   const { data } = await useFetch<{ token: string }>('/api/login', {
     method: 'PUT',
     body: {
-      email: 'myCoolTestEmail@celery.band',
+      email: 'myCoolTestEmail-1@celery.band',
     },
   });
 

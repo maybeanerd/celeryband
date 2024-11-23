@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { eq } from 'drizzle-orm';
 import { userSchema } from '~/server/db/schemas/User.schema';
 import { validateLoginToken } from '~/server/src/modules/authentification';
 
@@ -6,8 +7,7 @@ async function ensureUserExists (hashedEmail: string) {
   const { db } = useDrizzle();
 
   const existingUser = await db.query.user.findFirst(
-    // searching by hash won't work because of the way the hash is generated atm - it needs to always be the same, for that to work
-    /* { where: eq(userSchema.emailHash, hashedEmail) } */
+    { where: eq(userSchema.emailHash, hashedEmail) },
   );
 
   if (existingUser) {

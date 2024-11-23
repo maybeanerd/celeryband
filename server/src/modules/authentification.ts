@@ -26,7 +26,7 @@ async function ensureObfuscationSalt (): Promise<string> {
 export async function obfuscateEmail (email: string): Promise<string> {
   const salt = await ensureObfuscationSalt();
 
-  const obfuscatedEmail = new Promise<string>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     scrypt(email, salt, 64, (err, derivedKey) => {
       if (err) {
         reject(err);
@@ -35,8 +35,6 @@ export async function obfuscateEmail (email: string): Promise<string> {
       resolve(derivedKey.toString('hex'));
     });
   });
-
-  return obfuscatedEmail;
 }
 
 export async function createLoginToken (obfuscatedEmail: string) {
