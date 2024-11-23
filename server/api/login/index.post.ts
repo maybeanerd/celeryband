@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { userSchema } from '~/server/db/schemas/User.schema';
-import { validateLoginToken } from '~/server/api/login/authentification';
+import { validateLoginToken } from '~/server/src/modules/authentification';
 
 async function ensureUserExists (hashedEmail: string) {
   const { db } = useDrizzle();

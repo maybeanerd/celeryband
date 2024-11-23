@@ -1,4 +1,4 @@
-import { createLoginToken, obfuscateEmail } from '~/server/api/login/authentification';
+import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentification';
 
 export default defineEventHandler(async (event) => {
   const userSession = await getUserSession(event);
