@@ -1,6 +1,8 @@
 import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentification';
 
 export default defineEventHandler(async (event) => {
+  // TODO add ratelimit
+
   const userSession = await getUserSession(event);
   if (userSession.user) {
     throw createError({
