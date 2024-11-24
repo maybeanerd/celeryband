@@ -22,9 +22,10 @@ const emailTransporter = createTransport({
 // TODO get service domain dynamically/from env?
 const serviceDomain = new URL('https://celery.band').toString();
 
-function getServiceDomainWithToken (token: string) {
+function getLoginLink (token: string) {
   const urlWithToken = new URL(serviceDomain);
   urlWithToken.searchParams.set('token', token);
+  urlWithToken.pathname = '/login';
 
   return urlWithToken.toString();
 }
@@ -36,7 +37,7 @@ You're getting this email because someone tried to sign into ${serviceDomain} us
 If this wasn't you, you can simply ignore this email.
     
 If this was you, please click the following link to log in:
-${getServiceDomainWithToken(loginToken)}
+${getLoginLink(loginToken)}
     
 This link is only valid once.`;
 }
