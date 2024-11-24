@@ -45,11 +45,15 @@ This link is only valid once.`;
 export async function sendLoginEmail (loginToken: string, emailAddress: string) {
   const emailContent = generateLoginEmailContent(loginToken, emailAddress);
 
-  await emailTransporter.sendMail({
+  const response = await emailTransporter.sendMail({
     from: '"celeryband" <noreply@celery.band>',
     to: emailAddress,
     subject: 'celeryband login',
     text: emailContent,
     // TODO could also create a HTML version of the content
   });
+
+  if (response.accepted.length < 1) {
+    throw new Error('Failed to send email.');
+  }
 }
