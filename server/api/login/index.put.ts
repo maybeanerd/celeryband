@@ -1,4 +1,5 @@
 import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentification';
+import { sendLoginEmail } from '~/server/src/modules/email';
 
 export default defineEventHandler(async (event) => {
   // TODO add ratelimit
@@ -24,10 +25,13 @@ export default defineEventHandler(async (event) => {
   const obfuscatedEmail = await obfuscateEmail(email);
 
   const token = await createLoginToken(obfuscatedEmail);
-
-  // TODO send token to original email
-  console.log('token', token);
-
-  // for easier testing, for now we return the token directly
-  return { token };
+  try {
+    await sendLoginEmail(token, email);
+  } catch (error) {
+    console.error(error);
+    throw createError({
+      statusCode: 502,
+      statusMessage: 'Unable to send login verification email.',
+    });
+  }
 });
