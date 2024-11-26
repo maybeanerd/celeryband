@@ -42,7 +42,7 @@
     "git-commit-info": "2.0.2",
     "nuxt": "3.14.1592",
     "nuxt-auth-utils": "0.5.5",
-    "prettier": "3.3.3",
+    "prettier": "3.4.0",
     "tsx": "4.19.2",
     "typescript": "5.7.2"
   },
