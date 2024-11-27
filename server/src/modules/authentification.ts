@@ -57,7 +57,10 @@ export async function validateLoginToken (token: string): Promise<string | null>
   const { db } = useDrizzle();
 
   const deletedRows = await db.delete(loginTokenSchema).where(
-    and(eq(loginTokenSchema.token, token), gt(loginTokenSchema.expirationDate, Date.now())),
+    and(
+      eq(loginTokenSchema.token, token),
+      gt(loginTokenSchema.expirationDate, Date.now()),
+    ),
   ).returning();
 
   const loginTokenData = deletedRows.at(0);
