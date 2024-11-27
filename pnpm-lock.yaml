@@ -69,6 +69,9 @@ importers:
       nuxt-auth-utils:
         specifier: 0.5.5
         version: 0.5.5(magicast@0.3.5)(rollup@4.24.4)
+      nuxt-cron:
+        specifier: 1.7.0
+        version: 1.7.0(magicast@0.3.5)(rollup@4.24.4)
       prettier:
         specifier: 3.3.3
         version: 3.3.3
@@ -2173,6 +2176,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  '@types/luxon@3.4.2':
+    resolution: {integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==}
+
   '@types/node@22.9.3':
     resolution: {integrity: sha512-F3u1fs/fce3FFk+DAxbxc78DF8x0cY09RRL8GnXLmkJ1jvx3TtPdWoTT5/NiYfI5ASqXBmfqJi9dZ3gxMx4lzw==}
 
@@ -2977,6 +2983,9 @@ packages:
 
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
+  cron@3.2.1:
+    resolution: {integrity: sha512-w2n5l49GMmmkBFEsH9FIDhjZ1n1QgTMOCMGuQtOXs5veNiosZmso6bQGuqOJSYAXXrG84WQFVneNk+Yt0Ua9iw==}
 
   croner@9.0.0:
     resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
@@ -4453,6 +4462,10 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  luxon@3.5.0:
+    resolution: {integrity: sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==}
+    engines: {node: '>=12'}
+
   magic-string-ast@0.6.2:
     resolution: {integrity: sha512-oN3Bcd7ZVt+0VGEs7402qR/tjgjbM7kPlH/z7ufJnzTLVBzXJITRHOJiwMmmYMgZfdoWQsfQcY+iKlxiBppnMA==}
     engines: {node: '>=16.14.0'}
@@ -4733,6 +4746,9 @@ packages:
         optional: true
       '@simplewebauthn/server':
         optional: true
+
+  nuxt-cron@1.7.0:
+    resolution: {integrity: sha512-a/JvAbAiviEo/y43kYUKauI9EYfoWfKE1v+dheFXTAnT9CSBALZ1TW6VNmG0QgbuddUGttw504qp1qqdgwS44g==}
 
   nuxt@3.14.1592:
     resolution: {integrity: sha512-roWAQH4Mb6WY72cNos+YVw0DgTCNAhNygiAMCedM7hbX6ESTR2n3VH7tU0yIWDPe/hfFdii4M4wWTTNHOtS44g==}
@@ -8960,6 +8976,8 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/luxon@3.4.2': {}
+
   '@types/node@22.9.3':
     dependencies:
       undici-types: 6.19.8
@@ -9986,6 +10004,11 @@ snapshots:
       readable-stream: 4.5.2
 
   create-require@1.1.1: {}
+
+  cron@3.2.1:
+    dependencies:
+      '@types/luxon': 3.4.2
+      luxon: 3.5.0
 
   croner@9.0.0: {}
 
@@ -11683,6 +11706,8 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
+  luxon@3.5.0: {}
+
   magic-string-ast@0.6.2:
     dependencies:
       magic-string: 0.30.12
@@ -12003,6 +12028,16 @@ snapshots:
       - rollup
       - supports-color
       - webpack-sources
+
+  nuxt-cron@1.7.0(magicast@0.3.5)(rollup@4.24.4):
+    dependencies:
+      '@nuxt/kit': 3.14.1592(magicast@0.3.5)(rollup@4.24.4)
+      cron: 3.2.1
+      fast-glob: 3.3.2
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
 
   nuxt@3.14.1592(@parcel/watcher@2.4.1)(@types/node@22.9.3)(better-sqlite3@11.5.0)(drizzle-orm@0.36.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/pg@8.11.10)(better-sqlite3@11.5.0))(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.4)(terser@5.34.1)(typescript@5.7.2)(vite@5.4.11(@types/node@22.9.3)(terser@5.34.1)):
     dependencies:
