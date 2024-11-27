@@ -12,13 +12,8 @@
         Session data: {{ session }}
       </p>
     </div>
-    <div v-else class="flex flex-col gap-2">
-      <UButton class="max-w-36" @click="requestToken">
-        Request Token
-      </UButton>
-      <UButton class="max-w-36" :loading="loading" @click="logIn">
-        Log In
-      </UButton>
+    <div v-else>
+      Logged out...
     </div>
     <UButton class="max-w-36" @click="refresh">
       Refresh
@@ -36,7 +31,7 @@
 <script setup lang="ts">
 import type { User } from '~/server/db/schemas/User.schema';
 
-const { loggedIn, user, session, fetch: fetchUserSession, clear } = useUserSession();
+const { loggedIn, user, session, clear } = useUserSession();
 
 const { data, error, refresh } = await useFetch<Array<User>>('/api/users', {
   lazy: true,
@@ -44,32 +39,14 @@ const { data, error, refresh } = await useFetch<Array<User>>('/api/users', {
 
 const loading = ref(false);
 
-const loginToken = ref<string | null>(null);
-
-const requestToken = async () => {
-  await useFetch<{ token: string }>('/api/login', {
-    method: 'PUT',
-    body: {
-      email: 'myCoolTestEmail-1@celery.band',
-    },
-  });
-};
-
-const logIn = async () => {
-  loading.value = true;
-  await useFetch('/api/login', {
-    method: 'POST',
-    body: {
-      token: loginToken.value,
-    },
-  });
-
-  loginToken.value = null;
-
-  await refresh();
-  await fetchUserSession();
-
-  loading.value = false;
-};
-
+// TODO build reusable route guard
+watch(loggedIn,
+  (isLoggedIn) => {
+    if (!isLoggedIn) {
+      const router = useRouter();
+      router.push('/login');
+    }
+  },
+  { immediate: true },
+);
 </script>
