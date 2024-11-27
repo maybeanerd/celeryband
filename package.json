@@ -50,6 +50,7 @@
   "dependencies": {
     "better-sqlite3": "11.6.0",
     "drizzle-orm": "0.36.4",
-    "nodemailer": "6.9.16"
+    "nodemailer": "6.9.16",
+    "zod": "3.23.8"
   }
 }

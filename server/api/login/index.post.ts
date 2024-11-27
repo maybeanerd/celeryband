@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
 import { userSchema } from '~/server/db/schemas/User.schema';
 import { validateLoginToken } from '~/server/src/modules/authentification';
 
@@ -19,9 +20,13 @@ async function ensureUserExists (hashedEmail: string) {
   return createdUser.at(0);
 }
 
+const tokenBodyValidator = z.object({
+  token: z.string().min(1),
+});
+
 export default defineEventHandler(async (event) => {
-  // TODO use zod to validate body/token
-  const { token } = await readBody(event);
+  const body = await readBody(event);
+  const { token } = tokenBodyValidator.parse(body);
 
   const obfuscatedEmail = await validateLoginToken(token);
 

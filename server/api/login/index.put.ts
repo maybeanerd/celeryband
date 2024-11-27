@@ -1,5 +1,11 @@
+import { z } from 'zod';
 import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentification';
 import { sendLoginEmail } from '~/server/src/modules/email';
+
+const emailBodyValidator = z.object({
+  // TODO create email ending validation based on env/config
+  email: z.string().email().min(1).endsWith('@diluz.io'),
+});
 
 export default defineEventHandler(async (event) => {
   // TODO add ratelimit
@@ -12,15 +18,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const { email } = await readBody(event);
-
-  // TODO use zod to validate body/email
-  if (!email || typeof email !== 'string') {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'missing email',
-    });
-  }
+  const body = await readBody(event);
+  const { email } = emailBodyValidator.parse(body);
 
   const obfuscatedEmail = await obfuscateEmail(email);
 
