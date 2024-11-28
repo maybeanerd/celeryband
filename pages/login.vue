@@ -11,18 +11,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: 'logged-out',
+});
 
-const { loggedIn, fetch: fetchUserSession } = useUserSession();
-
-watch(loggedIn,
-  (isLoggedIn) => {
-    if (isLoggedIn) {
-      const router = useRouter();
-      router.push('/');
-    }
-  },
-  { immediate: true },
-);
+const { fetch: fetchUserSession } = useUserSession();
 
 const loading = ref(false);
 
