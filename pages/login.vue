@@ -19,11 +19,26 @@ const { fetch: fetchUserSession } = useUserSession();
 
 const loading = ref(false);
 
+const email = ref('celeryBandTestEmail@diluz.io');
+
+const requestToken = async () => {
+  await useFetch<{ token: string }>('/api/login', {
+    method: 'PUT',
+    body: {
+      email: email.value,
+    },
+  });
+};
+
 const route = useRoute();
 
-const loginToken = route.params.token;
+const loginToken = route.query.token;
 
-const logIn = async () => {
+onMounted(async () => {
+  if (!loginToken) {
+    return;
+  }
+
   loading.value = true;
 
   await useFetch('/api/login', {
@@ -36,20 +51,6 @@ const logIn = async () => {
   await fetchUserSession();
 
   loading.value = false;
-};
+});
 
-const email = ref('celeryBandTestEmail@diluz.io');
-
-const requestToken = async () => {
-  await useFetch<{ token: string }>('/api/login', {
-    method: 'PUT',
-    body: {
-      email: email.value,
-    },
-  });
-};
-
-if (loginToken) {
-  await logIn();
-}
 </script>
