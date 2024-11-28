@@ -35,6 +35,10 @@ const route = useRoute();
 const loginToken = route.query.token;
 
 onMounted(async () => {
+  if (import.meta.server) {
+    return;
+  }
+
   if (!loginToken) {
     return;
   }
