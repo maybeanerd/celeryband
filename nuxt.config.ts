@@ -18,6 +18,8 @@ export default defineNuxtConfig({
     'nuxt-cron'],
   pwa: {},
 
+  ssr: false,
+
   nitro: {
     prerender: {
       crawlLinks: true,

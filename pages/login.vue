@@ -32,27 +32,29 @@ const requestToken = async () => {
 
 const route = useRoute();
 
-const loginToken = route.query.token;
+const loginToken = ref(route.query.token);
 
 onMounted(async () => {
-  if (import.meta.server) {
-    return;
-  }
-
-  if (!loginToken) {
+  if (!loginToken.value) {
     return;
   }
 
   loading.value = true;
 
-  await useFetch('/api/login', {
+  const { error } = await useFetch('/api/login', {
     method: 'POST',
     body: {
-      token: loginToken,
+      token: loginToken.value,
     },
   });
 
   await fetchUserSession();
+
+  if (error.value) {
+    const { push } = useRouter();
+    await push({ query: { token: undefined } });
+    loginToken.value = null;
+  }
 
   loading.value = false;
 });
