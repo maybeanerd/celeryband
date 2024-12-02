@@ -9,8 +9,16 @@ const { version } = packageJson;
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ['@nuxt/image', '@nuxtjs/i18n', '@vite-pwa/nuxt', '@nuxt/ui', 'nuxt-auth-utils'],
+  modules: [
+    '@nuxt/image',
+    '@nuxtjs/i18n',
+    '@vite-pwa/nuxt',
+    '@nuxt/ui',
+    'nuxt-auth-utils',
+    'nuxt-cron'],
   pwa: {},
+
+  ssr: false,
 
   nitro: {
     prerender: {
@@ -27,6 +35,11 @@ export default defineNuxtConfig({
       version,
       buildDate: new Date().toISOString(),
     },
+  },
+
+  cron: {
+    runOnInit: true,
+    jobsDir: 'cron',
   },
 
   compatibilityDate: '2024-10-15',

@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="flex flex-col min-h-full justify-between">
-      <div v-if="loggedIn" class="p-4 lg:p-8 w-screen overflow-x-hidden">
+      <h1>You're logged out. Sign in by requesting a link to your email:</h1>
+      <div class="p-4 lg:p-8 w-screen overflow-x-hidden">
         <slot />
-      </div>
-      <div v-else class="p-4 lg:p-8 w-screen overflow-x-hidden">
-        Validating Login
       </div>
       <Footer />
     </div>
@@ -17,9 +15,9 @@ const { loggedIn } = useUserSession();
 
 watch(loggedIn,
   (isLoggedIn) => {
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
       const router = useRouter();
-      router.push('/login');
+      router.push('/');
     }
   },
   { immediate: true },
