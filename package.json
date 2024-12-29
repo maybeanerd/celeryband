@@ -43,7 +43,7 @@
     "git-commit-info": "2.0.2",
     "nuxt": "3.15.0",
     "nuxt-auth-utils": "0.5.7",
-    "nuxt-cron": "1.7.0",  
+    "nuxt-cron": "1.8.0",  
     "prettier": "3.4.2",
     "tsx": "4.19.2",
     "typescript": "5.7.2"
