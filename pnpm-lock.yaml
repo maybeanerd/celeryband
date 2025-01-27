@@ -67,8 +67,8 @@ importers:
         specifier: 3.15.3
         version: 3.15.3(@parcel/watcher@2.4.1)(@types/node@22.10.7)(better-sqlite3@11.8.1)(db0@0.2.1(better-sqlite3@11.8.1)(drizzle-orm@0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/pg@8.11.10)(better-sqlite3@11.8.1)))(drizzle-orm@0.38.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/pg@8.11.10)(better-sqlite3@11.8.1))(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.4)(terser@5.34.1)(tsx@4.19.2)(typescript@5.7.3)(vite@6.0.11(@types/node@22.10.7)(jiti@2.4.2)(terser@5.34.1)(tsx@4.19.2)(yaml@2.7.0))(yaml@2.7.0)
       nuxt-auth-utils:
-        specifier: 0.5.9
-        version: 0.5.9(magicast@0.3.5)(rollup@4.24.4)
+        specifier: 0.5.10
+        version: 0.5.10(magicast@0.3.5)(rollup@4.24.4)
       nuxt-cron:
         specifier: 1.8.0
         version: 1.8.0(magicast@0.3.5)(rollup@4.24.4)
@@ -3807,9 +3807,6 @@ packages:
   h3@1.13.0:
     resolution: {integrity: sha512-vFEAu/yf8UMUcB4s43OaDaigcqpQd14yanmOsn+NcRX3/guSKncyE2rOYhq8RIchgJrPSs/QiIddnTTR1ddiAg==}
 
-  h3@1.13.1:
-    resolution: {integrity: sha512-u/z6Z4YY+ANZ05cRRfsFJadTBrNA6e3jxdU+AN5UCbZSZEUwgHiwjvUEe0k1NoQmAvQmETwr+xB5jd7mhCJuIQ==}
-
   h3@1.14.0:
     resolution: {integrity: sha512-ao22eiONdgelqcnknw0iD645qW0s9NnrJHr5OBz4WOMdBdycfSas1EQf1wXRsm+PcB2Yoj43pjBPwqIpJQTeWg==}
 
@@ -4640,8 +4637,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-auth-utils@0.5.9:
-    resolution: {integrity: sha512-h1GFT3MDIExe55oIxeakSzjE2JNtZa7OBqgd9vHz2c/aY81KR9TM1kab5laE1+Y0RRHjextNEqxk1K85tn6WnA==}
+  nuxt-auth-utils@0.5.10:
+    resolution: {integrity: sha512-GD8K/5OIkDktTtJvDlfoclUNAwa3uI/JeF+l253EjqDhT8VaKFi2HQ3hpTOBKQQ8TBgdgqo84KxcC/wYK7SEcA==}
     peerDependencies:
       '@simplewebauthn/browser': ^11.0.0
       '@simplewebauthn/server': ^11.0.0
@@ -10979,19 +10976,6 @@ snapshots:
       uncrypto: 0.1.3
       unenv: 1.10.0
 
-  h3@1.13.1:
-    dependencies:
-      cookie-es: 1.2.2
-      crossws: 0.3.2
-      defu: 6.1.4
-      destr: 2.0.3
-      iron-webcrypto: 1.2.1
-      ohash: 1.1.4
-      radix3: 1.1.2
-      ufo: 1.5.4
-      uncrypto: 0.1.3
-      unenv: 1.10.0
-
   h3@1.14.0:
     dependencies:
       cookie-es: 1.2.2
@@ -11515,7 +11499,7 @@ snapshots:
       crossws: 0.3.1
       defu: 6.1.4
       get-port-please: 3.1.2
-      h3: 1.13.1
+      h3: 1.14.0
       http-shutdown: 1.2.2
       jiti: 2.4.2
       mlly: 1.7.4
@@ -11892,13 +11876,14 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-auth-utils@0.5.9(magicast@0.3.5)(rollup@4.24.4):
+  nuxt-auth-utils@0.5.10(magicast@0.3.5)(rollup@4.24.4):
     dependencies:
       '@adonisjs/hash': 9.0.5
-      '@nuxt/kit': 3.15.2(magicast@0.3.5)(rollup@4.24.4)
+      '@nuxt/kit': 3.15.3(magicast@0.3.5)(rollup@4.24.4)
       defu: 6.1.4
       h3: 1.14.0
       hookable: 5.5.3
+      jose: 5.9.6
       ofetch: 1.4.1
       ohash: 1.1.4
       openid-client: 6.1.7
