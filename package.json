@@ -37,7 +37,7 @@
     "@types/nodemailer": "6.4.17",
     "@typescript-eslint/parser": "7.18.0",
     "@vite-pwa/nuxt": "0.10.6",
-    "autoprefixer": "10.4.20",
+    "autoprefixer": "10.4.21",
     "drizzle-kit": "0.30.5",
     "eslint": "8.57.1",
     "git-commit-info": "2.0.2",
