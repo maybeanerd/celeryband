@@ -67,8 +67,8 @@ importers:
         specifier: 3.16.2
         version: 3.16.2(@parcel/watcher@2.4.1)(@types/node@22.14.0)(better-sqlite3@11.9.1)(db0@0.3.1(better-sqlite3@11.9.1)(drizzle-orm@0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/pg@8.11.10)(better-sqlite3@11.9.1)(gel@2.0.0)))(drizzle-orm@0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(@types/pg@8.11.10)(better-sqlite3@11.9.1)(gel@2.0.0))(eslint@8.57.1)(ioredis@5.6.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.36.0)(terser@5.34.1)(tsx@4.19.3)(typescript@5.8.2)(vite@6.2.4(@types/node@22.14.0)(jiti@2.4.2)(terser@5.34.1)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0)
       nuxt-auth-utils:
-        specifier: 0.5.17
-        version: 0.5.17(magicast@0.3.5)
+        specifier: 0.5.18
+        version: 0.5.18(magicast@0.3.5)
       nuxt-cron:
         specifier: 1.8.0
         version: 1.8.0(magicast@0.3.5)(rollup@4.36.0)
@@ -4813,8 +4813,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-auth-utils@0.5.17:
-    resolution: {integrity: sha512-2cT494ZFGaywX3fZOkNUNrRwaqElGB2J9mfNZXFI5TXyCyxn/eaa9eMxxyWon4IwKxj3V5a9Lk3YNjcnWBU18g==}
+  nuxt-auth-utils@0.5.18:
+    resolution: {integrity: sha512-x70sooKMdHoQEEnQK2oPWYIBaUkquj2KcNWKExJU38fLVRraKZodxj9+j6gBLsHhmpKZizMLpFNtV2zfavDKEA==}
     peerDependencies:
       '@atproto/api': ^0.13.15
       '@atproto/oauth-client-node': ^0.2.0
@@ -8105,7 +8105,7 @@ snapshots:
 
   '@nuxt/devtools-kit@1.7.0(magicast@0.3.5)(vite@6.2.4(@types/node@22.14.0)(jiti@2.4.2)(terser@5.34.1)(tsx@4.19.3)(yaml@2.7.0))':
     dependencies:
-      '@nuxt/kit': 3.16.1(magicast@0.3.5)
+      '@nuxt/kit': 3.16.2(magicast@0.3.5)
       '@nuxt/schema': 3.16.1
       execa: 7.2.0
       vite: 6.2.4(@types/node@22.14.0)(jiti@2.4.2)(terser@5.34.1)(tsx@4.19.3)(yaml@2.7.0)
@@ -11949,10 +11949,10 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-auth-utils@0.5.17(magicast@0.3.5):
+  nuxt-auth-utils@0.5.18(magicast@0.3.5):
     dependencies:
       '@adonisjs/hash': 9.0.5
-      '@nuxt/kit': 3.16.0(magicast@0.3.5)
+      '@nuxt/kit': 3.16.2(magicast@0.3.5)
       defu: 6.1.4
       h3: 1.15.1
       hookable: 5.5.3
