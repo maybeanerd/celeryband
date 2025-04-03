@@ -25,7 +25,7 @@ services:
     networks:
       - internal
     volumes:
-      - db-data:.data/db.sqlite3
+      - db-data:/app/data
     environment:
       - NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_SECRET
       - OBFUSCATION_SALT=PLEASE_PROVIDE_A_SECURE_SALT
