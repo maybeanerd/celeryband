@@ -27,10 +27,13 @@ services:
     volumes:
       - db-data:.data/db.sqlite3
     environment:
-      - INSTANCE_NAME=${INSTANCE_NAME}
-      - DATABASE_HOST=database
       - NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_SECRET
       - OBFUSCATION_SALT=PLEASE_PROVIDE_A_SECURE_SALT
+
+      - SMTP_HOST=dummy.smtp.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=dummyUser
+      - SMTP_PASSWORD=dummyPassword
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.celeryband.rule=PathPrefix(`/`)'
