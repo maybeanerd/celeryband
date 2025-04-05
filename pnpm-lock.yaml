@@ -34,8 +34,8 @@ importers:
         specifier: 12.1.0
         version: 12.1.0(eslint@8.57.1)(typescript@5.8.3)
       '@nuxtjs/i18n':
-        specifier: 9.5.1
-        version: 9.5.1(@vue/compiler-dom@3.5.13)(eslint@8.57.1)(magicast@0.3.5)(rollup@4.36.0)(vue@3.5.13(typescript@5.8.3))
+        specifier: 9.5.2
+        version: 9.5.2(@vue/compiler-dom@3.5.13)(eslint@8.57.1)(magicast@0.3.5)(rollup@4.36.0)(vue@3.5.13(typescript@5.8.3))
       '@types/better-sqlite3':
         specifier: 7.6.13
         version: 7.6.13
@@ -1608,8 +1608,8 @@ packages:
     peerDependencies:
       eslint: ^8.23.0
 
-  '@nuxtjs/i18n@9.5.1':
-    resolution: {integrity: sha512-1SXPISxMJ89sp2EfyXAyC1pmkAsSACPzBP0PBIveXBE1VvEE0ErFGuL70zgBXGETkT4tDq6OzZoWySO32ndkcw==}
+  '@nuxtjs/i18n@9.5.2':
+    resolution: {integrity: sha512-54Db+/9ohkvQeNpdWlb29trv6JkojGHnVB6nImS7D0Rf6EQ1cO84xG7wjEK7ndTX6GWLO/r2xCrAKyqSlwINJw==}
     engines: {node: '>=18.12.0'}
 
   '@nuxtjs/tailwindcss@6.13.1':
@@ -8291,7 +8291,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  '@nuxtjs/i18n@9.5.1(@vue/compiler-dom@3.5.13)(eslint@8.57.1)(magicast@0.3.5)(rollup@4.36.0)(vue@3.5.13(typescript@5.8.3))':
+  '@nuxtjs/i18n@9.5.2(@vue/compiler-dom@3.5.13)(eslint@8.57.1)(magicast@0.3.5)(rollup@4.36.0)(vue@3.5.13(typescript@5.8.3))':
     dependencies:
       '@intlify/h3': 0.6.1
       '@intlify/shared': 10.0.6
