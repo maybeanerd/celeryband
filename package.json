@@ -38,7 +38,7 @@
     "@typescript-eslint/parser": "7.18.0",
     "@vite-pwa/nuxt": "0.10.8",
     "autoprefixer": "10.4.21",
-    "drizzle-kit": "0.30.6",
+    "drizzle-kit": "0.31.0",
     "eslint": "8.57.1",
     "git-commit-info": "2.0.2",
     "nuxt": "3.16.2",
