@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Create salary bands for your company in an anonymous and safe way.",
   "author": "Sebastian Di Luzio",
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@10.8.1",
   "private": true,
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
     "git-commit-info": "2.0.2",
     "nuxt": "3.16.2",
     "nuxt-auth-utils": "0.5.20",
-    "nuxt-cron": "1.8.0",  
+    "nuxt-cron": "1.8.0",
     "prettier": "3.5.3",
     "tsx": "4.19.3",
     "typescript": "5.8.3"
