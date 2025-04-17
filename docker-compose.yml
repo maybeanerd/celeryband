@@ -29,6 +29,9 @@ services:
     environment:
       - NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_SECRET
       - OBFUSCATION_SALT=PLEASE_PROVIDE_A_SECURE_SALT
+      - ROLES=software engineer,product manager,designer,director
+      - SENIORITY_LEVELS=junior,professional,senior,staff,principal
+      - DEPARTMENTS=gamma,beta,omega
 
       - SMTP_HOST=dummy.smtp.com
       - SMTP_PORT=587
