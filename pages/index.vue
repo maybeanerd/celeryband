@@ -11,7 +11,7 @@
       Session data: {{ session }}
     </p>
 
-    <UButton class="max-w-36" @click="refresh">
+    <UButton class="max-w-36" @click="() => refresh()">
       Refresh
     </UButton>
 
