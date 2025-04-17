@@ -18,6 +18,8 @@ export default defineNuxtConfig({
     'nuxt-cron'],
   pwa: {},
 
+  css: ['~/assets/main.css'],
+
   ssr: false,
 
   nitro: {
