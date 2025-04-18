@@ -1,19 +1,26 @@
 <template>
   <div class="flex flex-col gap-2 border-primary-500 border-2 rounded-lg p-4">
-    <h1>Your Salary</h1>
-
-    <UButton class="max-w-36" @click="() => refresh()">
-      Refresh
-    </UButton>
-
-    <p v-if="data">
-      salary: {{ data }}
-    </p>
+    <div class="flex gap-4 items-center">
+      <h1>Your Current Salary</h1>
+      <UButton class="max-w-36" @click="() => refresh()">
+        Refresh
+      </UButton>
+    </div>
+    <div v-if="data" class="flex flex-col gap-2 p-4 border-2 border-info-500 rounded-lg">
+      <p>role: {{ data.role }}</p>
+      <p> seniority level: {{ data.seniorityLevel }}</p>
+      <p>department: {{ data.department }}</p>
+      <p>yearly amount: {{ data.yearlyAmount }} {{ attributes?.currency }}</p>
+      <p>hours per week: {{ data.hoursPerWeek }}</p>
+      <p>last updated at: {{ data.updatedAt }}</p>
+    </div>
     <p v-else>
       error: {{ error }}
     </p>
-
-    <template v-if="attributes">
+    <h1 class="mt-6">
+      Adjust your Salary
+    </h1>
+    <div class="flex flex-col gap-2 p-4 border-2 border-white rounded-lg">
       <p>
         role: {{ selectedRole }}
       </p>
@@ -24,16 +31,16 @@
         department: {{ selectedDepartment }}
       </p>
       <p>
-        yearlyAmount: {{ selectedYearlyAmount }} {{ attributes.currency }}
+        yearlyAmount: {{ selectedYearlyAmount }} {{ attributes?.currency }}
       </p>
       <p>
         hoursPerWeek: {{ selectedHoursPerWeek }}
       </p>
-    </template>
 
-    <UButton class="max-w-36" @click="() => updateSalary()">
-      Change Salary
-    </UButton>
+      <UButton class="max-w-36" @click="() => updateSalary()">
+        Change Salary
+      </UButton>
+    </div>
   </div>
 </template>
 
