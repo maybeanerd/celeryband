@@ -14,27 +14,26 @@ seniorityLevel: string;
 
   const now = new Date().getTime();
 
-  if (existingSalary) {
-    await db.update(salarySchema).set({
-      yearlyAmount: salary.yearlyAmount,
-      department: salary.department,
-      hoursPerWeek: salary.hoursPerWeek,
-      role: salary.role,
-      seniorityLevel: salary.seniorityLevel,
-      updatedAt: now,
-    }).where(eq(salarySchema.ownerId, userId));
-    return;
-  }
-
-  await db.insert(salarySchema).values({
-    ownerId: userId,
+  const newSalaryData = {
     yearlyAmount: salary.yearlyAmount,
     department: salary.department,
     hoursPerWeek: salary.hoursPerWeek,
     role: salary.role,
     seniorityLevel: salary.seniorityLevel,
-    createdAt: now,
     updatedAt: now,
+  };
+
+  if (existingSalary) {
+    await db.update(salarySchema).set(
+      newSalaryData,
+    ).where(eq(salarySchema.ownerId, userId));
+    return;
+  }
+
+  await db.insert(salarySchema).values({
+    ...newSalaryData,
+    ownerId: userId,
+    createdAt: now,
   });
 }
 
