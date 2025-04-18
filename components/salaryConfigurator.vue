@@ -20,22 +20,36 @@
     <h1 class="mt-6">
       Adjust your Salary
     </h1>
-    <div class="flex flex-col gap-2 p-4 border-2 border-white rounded-lg">
+    <div v-if="attributes" class="flex flex-col gap-2 p-4 border-2 border-white rounded-lg">
       <p>
-        role: {{ selectedRole }}
+        Role:
       </p>
+      <USelect v-model="selectedRole" :items="attributes.roles" class="w-48" />
+
       <p>
-        seniorityLevel: {{ selectedSeniorityLevel }}
+        Seniority Level:
       </p>
+      <USelect v-model="selectedSeniorityLevel" :items="attributes.seniorityLevels" class="w-48" />
+
       <p>
-        department: {{ selectedDepartment }}
+        Department:
       </p>
+      <USelect v-model="selectedDepartment" :items="attributes.departments" class="w-48" />
+
       <p>
-        yearlyAmount: {{ selectedYearlyAmount }} {{ attributes?.currency }}
+        Yearly Amount:
       </p>
+      <div>
+        <UInput v-model="selectedYearlyAmount" type="number" class="w-48">
+          <template #trailing>
+            {{ attributes.currency }}
+          </template>
+        </UInput>
+      </div>
       <p>
-        hoursPerWeek: {{ selectedHoursPerWeek }}
+        Hours Per Week:
       </p>
+      <UInput v-model="selectedHoursPerWeek" type="number" class="w-48" />
 
       <UButton class="max-w-36" @click="() => updateSalary()">
         Change Salary
@@ -47,9 +61,9 @@
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 const { data: attributes } = await useFetch<{
-  roles: readonly [string, ...string[]];
-  seniorityLevels: readonly [string, ...string[]];
-  departments: readonly [string, ...string[]];
+  roles: Array<string>;
+  seniorityLevels: Array<string>;
+  departments: Array<string>;
   currency: string;
 }>('/api/salary/attributes', {
   lazy: true,
