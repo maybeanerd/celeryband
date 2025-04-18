@@ -7,8 +7,11 @@ const seniorityLevels = commaDelimitedSeniorityLevels ? commaDelimitedSeniorityL
 const commaDelimitedDepartments = process.env.DEPARTMENTS;
 const departments = commaDelimitedDepartments ? commaDelimitedDepartments.split(',') : ['all'];
 
+const currency = process.env.CURRENCY || '€';
+
 export const salaryRangeAttributes = {
   roles,
   seniorityLevels,
   departments,
+  currency,
 };
