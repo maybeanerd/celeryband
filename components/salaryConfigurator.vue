@@ -1,18 +1,14 @@
 <template>
   <div class="flex flex-col gap-2 border-primary-500 border-2 rounded-lg p-4">
-    <div class="flex gap-4 items-center">
-      <h1>Your Current Salary</h1>
-      <UButton class="max-w-36" @click="() => refresh()">
-        Refresh
-      </UButton>
-    </div>
+    <h1>Your Current Salary</h1>
+
     <div v-if="data" class="flex flex-col gap-2 p-4 border-2 border-info-500 rounded-lg">
       <p>role: {{ data.role }}</p>
       <p> seniority level: {{ data.seniorityLevel }}</p>
       <p>department: {{ data.department }}</p>
       <p>yearly amount: {{ data.yearlyAmount }} {{ attributes?.currency }}</p>
       <p>hours per week: {{ data.hoursPerWeek }}</p>
-      <p>last updated at: {{ data.updatedAt }}</p>
+      <p>last updated at: {{ new Date(data.updatedAt) }}</p>
     </div>
     <p v-else>
       error: {{ error }}
@@ -89,15 +85,15 @@ async function updateSalary() {
 
   };
 
-  const { data, error } = await useFetch<SalarySchema>('/api/salary', {
+  const { error } = await useFetch<SalarySchema>('/api/salary', {
     method: 'PUT',
     body: salaryValues,
   });
   if (error.value) {
-    console.error('Error updating salary:', error.value);
-  } else {
-    console.log('Salary updated successfully:', data.value);
+    alert('Error updating salary');
+    return;
   }
+  refresh();
 }
 
 </script>
