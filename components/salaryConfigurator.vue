@@ -62,7 +62,7 @@ const selectedDepartment = ref(data.value?.department || '');
 const selectedYearlyAmount = ref(data.value?.yearlyAmount || 0);
 const selectedHoursPerWeek = ref(data.value?.hoursPerWeek || 0);
 
-async function updateSalary() {
+async function updateSalary () {
   const salaryValues = {
     role: selectedRole.value,
     seniorityLevel: selectedSeniorityLevel.value,
