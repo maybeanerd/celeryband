@@ -32,6 +32,7 @@ services:
       - ROLES=software engineer,product manager,designer,director
       - SENIORITY_LEVELS=junior,professional,senior,staff,principal
       - DEPARTMENTS=gamma,beta,omega
+      - CURRENCY=€
 
       - SMTP_HOST=dummy.smtp.com
       - SMTP_PORT=587

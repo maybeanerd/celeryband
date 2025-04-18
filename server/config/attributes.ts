@@ -1,14 +1,32 @@
+function getValuesFromEnvvar (input: string | undefined, fallbackValues: readonly [string, ...Array<string>]): readonly [string, ...Array<string>] {
+  if (!input) {
+    return fallbackValues;
+  }
+
+  const splitInput = input.split(',');
+  if (splitInput.length === 0) {
+    throw new Error('If you provide configuration, it needs to include at least one element.');
+  }
+  return splitInput as [string, ...Array<string>];
+}
+
 const commaDelimitedRoles = process.env.ROLES;
-const roles = commaDelimitedRoles ? commaDelimitedRoles.split(',') : ['software engineer', 'product manager', 'designer'];
+const fallbackRoles = ['software engineer', 'product manager', 'designer'] as const;
+const roles = getValuesFromEnvvar(commaDelimitedRoles, fallbackRoles);
 
 const commaDelimitedSeniorityLevels = process.env.SENIORITY_LEVELS;
-const seniorityLevels = commaDelimitedSeniorityLevels ? commaDelimitedSeniorityLevels.split(',') : ['junior', 'professional', 'senior', 'staff', 'principal'];
+const fallbackSeniorityLevels = ['junior', 'professional', 'senior', 'staff', 'principal'] as const;
+const seniorityLevels = getValuesFromEnvvar(commaDelimitedSeniorityLevels, fallbackSeniorityLevels);
 
 const commaDelimitedDepartments = process.env.DEPARTMENTS;
-const departments = commaDelimitedDepartments ? commaDelimitedDepartments.split(',') : ['all'];
+const fallbackDepartments = ['all'] as const;
+const departments = getValuesFromEnvvar(commaDelimitedDepartments, fallbackDepartments);
 
-export const salaryRangeAttributes = {
+const currency = process.env.CURRENCY || '€' as const;
+
+export const salaryAttributes = {
   roles,
   seniorityLevels,
   departments,
+  currency,
 };
