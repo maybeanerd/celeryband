@@ -1,22 +1,9 @@
 <template>
   <div class="flex flex-col gap-2 border-primary-500 border-2 rounded-lg p-4">
-    <h1>Your Current Salary</h1>
-
-    <div v-if="data" class="flex flex-col gap-2 p-4 border-2 border-info-500 rounded-lg">
-      <p>role: {{ data.role }}</p>
-      <p> seniority level: {{ data.seniorityLevel }}</p>
-      <p>department: {{ data.department }}</p>
-      <p>yearly amount: {{ data.yearlyAmount }} {{ attributes?.currency }}</p>
-      <p>hours per week: {{ data.hoursPerWeek }}</p>
-      <p>last updated at: {{ new Date(data.updatedAt) }}</p>
-    </div>
-    <p v-else>
-      error: {{ error }}
-    </p>
-    <h1 class="mt-6">
-      Adjust your Salary
+    <h1>
+      Your Salary
     </h1>
-    <div v-if="attributes" class="flex flex-col gap-2 p-4 border-2 border-white rounded-lg">
+    <div v-if="attributes" class="flex flex-col gap-2">
       <p>
         Role:
       </p>
@@ -65,7 +52,7 @@ const { data: attributes } = await useFetch<{
   lazy: true,
 });
 
-const { data, error, refresh } = await useFetch<SalarySchema>('/api/salary', {
+const { data, refresh } = await useFetch<SalarySchema>('/api/salary', {
   lazy: false,
 });
 
@@ -93,7 +80,7 @@ async function updateSalary() {
     alert('Error updating salary');
     return;
   }
-  refresh();
+  await refresh();
 }
 
 </script>
