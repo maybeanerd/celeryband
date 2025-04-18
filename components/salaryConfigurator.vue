@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-2 border-primary-500 border-2 rounded-lg p-4">
     <h1>Your Salary</h1>
 
     <UButton class="max-w-36" @click="() => refresh()">
@@ -13,20 +13,32 @@
       error: {{ error }}
     </p>
 
-    <p>Attributes: {{ attributes }}</p>
+    <template v-if="attributes">
+      <p>
+        role: {{ selectedRole }}
+      </p>
+      <p>
+        seniorityLevel: {{ selectedSeniorityLevel }}
+      </p>
+      <p>
+        department: {{ selectedDepartment }}
+      </p>
+      <p>
+        yearlyAmount: {{ selectedYearlyAmount }} {{ attributes.currency }}
+      </p>
+      <p>
+        hoursPerWeek: {{ selectedHoursPerWeek }}
+      </p>
+    </template>
 
     <UButton class="max-w-36" @click="() => updateSalary()">
-      Update Salary
+      Change Salary
     </UButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
-
-const { data, error, refresh } = await useFetch<SalarySchema>('/api/salary', {
-  lazy: true,
-});
 const { data: attributes } = await useFetch<{
   roles: readonly [string, ...string[]];
   seniorityLevels: readonly [string, ...string[]];
@@ -36,13 +48,24 @@ const { data: attributes } = await useFetch<{
   lazy: true,
 });
 
+const { data, error, refresh } = await useFetch<SalarySchema>('/api/salary', {
+  lazy: false,
+});
+
+const selectedRole = ref(data.value?.role || '');
+const selectedSeniorityLevel = ref(data.value?.seniorityLevel || '');
+const selectedDepartment = ref(data.value?.department || '');
+const selectedYearlyAmount = ref(data.value?.yearlyAmount || 0);
+const selectedHoursPerWeek = ref(data.value?.hoursPerWeek || 0);
+
 async function updateSalary() {
   const salaryValues = {
-    role: 'software engineer',
-    seniorityLevel: 'senior',
-    department: 'beta',
-    yearlyAmount: 100000,
-    hoursPerWeek: 40,
+    role: selectedRole.value,
+    seniorityLevel: selectedSeniorityLevel.value,
+    department: selectedDepartment.value,
+    yearlyAmount: selectedYearlyAmount.value,
+    hoursPerWeek: selectedHoursPerWeek.value,
+
   };
 
   const { data, error } = await useFetch<SalarySchema>('/api/salary', {
