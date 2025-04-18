@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import SalaryConfigurator from '~/components/salaryConfigurator.vue';
 import type { User } from '~/server/db/schemas/User.schema';
 
 const { user, session, clear } = useUserSession();
