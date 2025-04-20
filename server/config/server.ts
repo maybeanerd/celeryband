@@ -24,9 +24,17 @@ const departments = getValuesFromEnvvar(commaDelimitedDepartments, fallbackDepar
 
 const currency = process.env.CURRENCY || '€' as const;
 
-export const salaryAttributes = {
+const acceptedDomain = process.env.ACCEPTED_DOMAIN ?? null;
+
+if (acceptedDomain === null) {
+  throw new Error('ACCEPTED_DOMAIN is not set. This is necessary to limit signups to your company.');
+}
+
+export const serverConfiguration = {
   roles,
   seniorityLevels,
   departments,
   currency,
+  acceptedDomain,
+
 };

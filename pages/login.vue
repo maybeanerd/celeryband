@@ -7,7 +7,7 @@
   </div>
   <div v-else class="flex flex-col gap-2">
     <UTextarea v-model="email" placeholder="Email" class="max-w-64" :rows="1" />
-    <UButton class="max-w-36" @click="requestToken">
+    <UButton class="max-w-36" :loading="loading" @click="requestToken">
       Request Token
     </UButton>
   </div>
@@ -19,6 +19,7 @@ definePageMeta({
 });
 
 const { fetch: fetchUserSession } = useUserSession();
+const { showErrorToast } = useToastNotifications();
 
 const loading = ref(false);
 
@@ -27,15 +28,17 @@ const email = ref('celeryBandTestEmail@diluz.io');
 const emailSent = ref(false);
 
 const requestToken = async () => {
+  loading.value = true;
   const { error } = await useFetch<{ token: string }>('/api/login', {
     method: 'PUT',
     body: {
       email: email.value,
     },
   });
+  loading.value = false;
 
   if (error.value) {
-    window.alert('Error requesting token');
+    showErrorToast('Failed log in.', JSON.stringify(error.value.message));
     return;
   }
   emailSent.value = true;
@@ -49,8 +52,6 @@ onMounted(async () => {
   if (!loginToken.value) {
     return;
   }
-
-  loading.value = true;
 
   const { error } = await useFetch('/api/login', {
     method: 'POST',
@@ -66,8 +67,6 @@ onMounted(async () => {
     await push({ query: { token: undefined } });
     loginToken.value = null;
   }
-
-  loading.value = false;
 });
 
 </script>

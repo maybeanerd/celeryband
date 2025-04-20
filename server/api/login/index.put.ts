@@ -1,10 +1,10 @@
 import { z } from 'zod';
+import { serverConfiguration } from '~/server/config/server';
 import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentification';
 import { sendLoginEmail } from '~/server/src/modules/email';
 
 const emailBodyValidator = z.object({
-  // TODO create email ending validation based on env/config
-  email: z.string().email().min(1).endsWith('@diluz.io'),
+  email: z.string().email().min(1).endsWith(`@${serverConfiguration.acceptedDomain}`),
 });
 
 export default defineEventHandler(async (event) => {
@@ -19,7 +19,16 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event);
-  const { email } = emailBodyValidator.parse(body);
+  const { error, data } = emailBodyValidator.safeParse(body);
+
+  if (error) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: error.errors[0].message,
+    });
+  }
+
+  const { email } = data;
 
   const obfuscatedEmail = await obfuscateEmail(email);
 

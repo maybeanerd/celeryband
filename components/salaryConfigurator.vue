@@ -3,21 +3,21 @@
     <h1>
       Your Salary
     </h1>
-    <div v-if="attributes" class="flex flex-col gap-2">
+    <div v-if="config" class="flex flex-col gap-2">
       <p>
         Role:
       </p>
-      <USelect v-model="selectedRole" :items="attributes.roles" class="w-48" />
+      <USelect v-model="selectedRole" :items="config.roles" class="w-48" />
 
       <p>
         Seniority Level:
       </p>
-      <USelect v-model="selectedSeniorityLevel" :items="attributes.seniorityLevels" class="w-48" />
+      <USelect v-model="selectedSeniorityLevel" :items="config.seniorityLevels" class="w-48" />
 
       <p>
         Department:
       </p>
-      <USelect v-model="selectedDepartment" :items="attributes.departments" class="w-48" />
+      <USelect v-model="selectedDepartment" :items="config.departments" class="w-48" />
 
       <p>
         Yearly Amount:
@@ -25,7 +25,7 @@
       <div>
         <UInput v-model="selectedYearlyAmount" type="number" class="w-48">
           <template #trailing>
-            {{ attributes.currency }}
+            {{ config.currency }}
           </template>
         </UInput>
       </div>
@@ -34,27 +34,22 @@
       </p>
       <UInput v-model="selectedHoursPerWeek" type="number" class="w-48" />
 
-      <UButton class="max-w-36" @click="() => updateSalary()">
-        Change Salary
+      <UButton class="max-w-36" :loading="loadingSalaryChange" @click="() => updateSalary()">
+        Update Salary
       </UButton>
     </div>
-
-    <div>Statistics: {{ statistics }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
-const { data: attributes } = await useFetch<{
-  roles: Array<string>;
-  seniorityLevels: Array<string>;
-  departments: Array<string>;
-  currency: string;
-}>('/api/salary/attributes', {
-  lazy: true,
-});
+import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 
-const { data, refresh } = await useFetch<SalarySchema>('/api/salary', {
+const { showErrorToast, showSuccessToast } = useToastNotifications();
+
+const { config } = await useServerConfiguration();
+
+const { data } = await useFetch<SalarySchema>('/api/salary', {
   lazy: false,
 });
 
@@ -64,7 +59,11 @@ const selectedDepartment = ref(data.value?.department || '');
 const selectedYearlyAmount = ref(data.value?.yearlyAmount || 0);
 const selectedHoursPerWeek = ref(data.value?.hoursPerWeek || 0);
 
+const loadingSalaryChange = ref(false);
+
 async function updateSalary () {
+  loadingSalaryChange.value = true;
+
   const salaryValues = {
     role: selectedRole.value,
     seniorityLevel: selectedSeniorityLevel.value,
@@ -78,15 +77,14 @@ async function updateSalary () {
     method: 'PUT',
     body: salaryValues,
   });
+  loadingSalaryChange.value = false;
+
   if (error.value) {
-    alert('Error updating salary');
+    showErrorToast('Error while updating salary', JSON.stringify(error.value.data?.data?.fieldErrors));
     return;
   }
-  await refresh();
+  showSuccessToast('Salary updated',
+    'Your salary has been updated successfully.');
 }
-
-const { data: statistics } = await useFetch<unknown>('/api/salary/statistics', {
-  lazy: true,
-});
 
 </script>
