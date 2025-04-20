@@ -34,7 +34,7 @@
       </p>
       <UInput v-model="selectedHoursPerWeek" type="number" class="w-48" />
 
-      <UButton class="max-w-36" @click="() => updateSalary()">
+      <UButton class="max-w-36" :loading="loadingSalaryChange" @click="() => updateSalary()">
         Change Salary
       </UButton>
     </div>
@@ -45,6 +45,25 @@
 
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
+
+const toast = useToast();
+
+function showErrorToast(error: string, description: string) {
+  toast.add({
+    title: error,
+    description,
+    color: 'error',
+  });
+}
+
+function showSuccessToast(title: string, description: string) {
+  toast.add({
+    title,
+    description,
+    color: 'success',
+  });
+}
+
 const { data: attributes } = await useFetch<{
   roles: Array<string>;
   seniorityLevels: Array<string>;
@@ -54,7 +73,7 @@ const { data: attributes } = await useFetch<{
   lazy: true,
 });
 
-const { data, refresh } = await useFetch<SalarySchema>('/api/salary', {
+const { data } = await useFetch<SalarySchema>('/api/salary', {
   lazy: false,
 });
 
@@ -64,7 +83,11 @@ const selectedDepartment = ref(data.value?.department || '');
 const selectedYearlyAmount = ref(data.value?.yearlyAmount || 0);
 const selectedHoursPerWeek = ref(data.value?.hoursPerWeek || 0);
 
-async function updateSalary () {
+const loadingSalaryChange = ref(false);
+
+async function updateSalary() {
+  loadingSalaryChange.value = true;
+
   const salaryValues = {
     role: selectedRole.value,
     seniorityLevel: selectedSeniorityLevel.value,
@@ -78,14 +101,19 @@ async function updateSalary () {
     method: 'PUT',
     body: salaryValues,
   });
+  loadingSalaryChange.value = false;
+
   if (error.value) {
-    alert('Error updating salary');
+    showErrorToast('Error while updating salary', JSON.stringify(error.value.data?.data?.fieldErrors));
     return;
   }
-  await refresh();
+  showSuccessToast('Salary updated',
+    'Your salary has been updated successfully.');
+
+  await refreshStatistics();
 }
 
-const { data: statistics } = await useFetch<unknown>('/api/salary/statistics', {
+const { data: statistics, refresh: refreshStatistics } = await useFetch<unknown>('/api/salary/statistics', {
   lazy: true,
 });
 
