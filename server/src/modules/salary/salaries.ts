@@ -160,7 +160,8 @@ export async function getSalaryStatistics (userId: string) {
   const statistics = getStatisticsForSalaries(salaries);
   const normalizedStatistics = getStatisticsForSalaries(normalizedSalaries);
 
-  const statisticsOfSameRoleAndSeniority = normalizedStatistics.byRoleAndSeniority.find(r => r.role === userSalary.role)?.seniorityLevels
+  const statisticsOfSameRoleAndSeniority = normalizedStatistics.byRoleAndSeniority
+    .find(r => r.role === userSalary.role)?.seniorityLevels
     .find(s => s.seniorityLevel === userSalary.seniorityLevel)?.statistics ?? null;
 
   const statisticsOfSameRoleAndSeniorityAndDepartment = normalizedStatistics.byDepartmentAndRoleAndSeniority
@@ -175,7 +176,7 @@ export async function getSalaryStatistics (userId: string) {
           median: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniority.median),
         }
       : null,
-    byDepartment: statisticsOfSameRoleAndSeniorityAndDepartment
+    department: statisticsOfSameRoleAndSeniorityAndDepartment
       ? {
           average: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniorityAndDepartment.average),
           median: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniorityAndDepartment.median),
