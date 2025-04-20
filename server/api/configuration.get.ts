@@ -1,12 +1,13 @@
-import { serverCnfiguration } from '~/server/config/server';
+import { serverConfiguration } from '~/server/config/server';
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
 
   return {
-    roles: serverCnfiguration.roles,
-    seniorityLevels: serverCnfiguration.seniorityLevels,
-    departments: serverCnfiguration.departments,
-    currency: serverCnfiguration.currency,
+    roles: serverConfiguration.roles,
+    seniorityLevels: serverConfiguration.seniorityLevels,
+    departments: serverConfiguration.departments,
+    currency: serverConfiguration.currency,
+    acceptedDomain: serverConfiguration.acceptedDomain,
   };
 });

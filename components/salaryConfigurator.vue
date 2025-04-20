@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
-import { useServerConfiguration } from '~/utils/api/useServerConfiguration';
+import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 
 const { showErrorToast, showSuccessToast } = useToastNotifications();
 

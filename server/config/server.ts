@@ -30,7 +30,7 @@ if (acceptedDomain === null) {
   throw new Error('ACCEPTED_DOMAIN is not set. This is necessary to limit signups to your company.');
 }
 
-export const serverCnfiguration = {
+export const serverConfiguration = {
   roles,
   seniorityLevels,
   departments,

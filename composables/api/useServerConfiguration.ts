@@ -4,6 +4,7 @@ export async function useServerConfiguration () {
     seniorityLevels: Array<string>;
     departments: Array<string>;
     currency: string;
+    acceptedDomain: string;
   }>('/api/configuration', {
     lazy: true,
   });
