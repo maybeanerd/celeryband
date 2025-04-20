@@ -61,7 +61,7 @@ const selectedHoursPerWeek = ref(data.value?.hoursPerWeek || 0);
 
 const loadingSalaryChange = ref(false);
 
-async function updateSalary() {
+async function updateSalary () {
   loadingSalaryChange.value = true;
 
   const salaryValues = {

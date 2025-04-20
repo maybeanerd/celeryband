@@ -16,7 +16,7 @@
 const { clear } = useUserSession();
 
 const { showErrorToast } = useToastNotifications();
-function deleteAccount() {
+function deleteAccount () {
   showErrorToast('Failed to delete account.', 'This feature is not implemented yet.');
 }
 

@@ -1,9 +1,9 @@
 <template>
   <UTabs :items="items" class="w-full">
-    <template #statistics="{ item }">
+    <template #statistics>
       <SalaryStatistics />
     </template>
-    <template #personal="{ item }">
+    <template #personal>
       <PersonalAssessment />
     </template>
   </UTabs>
