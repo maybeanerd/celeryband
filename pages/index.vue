@@ -3,14 +3,8 @@
     <template #statistics="{ item }">
       <SalaryStatistics />
     </template>
-    <template #account="{ item }">
-      <div class="flex flex-col gap-2">
-        <UButton class="max-w-36" @click="clear">
-          Log Out
-        </UButton>
-
-        <SalaryConfigurator />
-      </div>
+    <template #normalized="{ item }">
+      <p>normalizes salaries...</p>
     </template>
   </UTabs>
 </template>
@@ -18,19 +12,17 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui';
 
-const { clear } = useUserSession();
-
 const items = ref<TabsItem[]>([
 
   {
-    label: 'Statistics',
+    label: 'Salary Statistics',
     icon: 'i-lucide-bar-chart-big',
     slot: 'statistics' as const,
   },
   {
-    label: 'Account',
-    icon: 'i-lucide-user',
-    slot: 'account' as const,
+    label: 'Normalized Salaries',
+    icon: 'i-lucide-chart-column-stacked',
+    slot: 'normalized' as const,
   },
 ]);
 </script>
