@@ -1,12 +1,12 @@
-import { salaryAttributes } from '~/server/config/attributes';
+import { serverCnfiguration } from '~/server/config/server';
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
 
   return {
-    roles: salaryAttributes.roles,
-    seniorityLevels: salaryAttributes.seniorityLevels,
-    departments: salaryAttributes.departments,
-    currency: salaryAttributes.currency,
+    roles: serverCnfiguration.roles,
+    seniorityLevels: serverCnfiguration.seniorityLevels,
+    departments: serverCnfiguration.departments,
+    currency: serverCnfiguration.currency,
   };
 });

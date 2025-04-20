@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { salaryAttributes } from '~/server/config/attributes';
+import { serverCnfiguration } from '~/server/config/server';
 import { storeSalaryForUser } from '~/server/src/modules/salary/salaries';
 
 const salaryValidator = z.object({
   yearlyAmount: z.number().min(1),
   hoursPerWeek: z.number().min(1).max(168),
-  department: z.enum(salaryAttributes.departments),
-  role: z.enum(salaryAttributes.roles),
-  seniorityLevel: z.enum(salaryAttributes.seniorityLevels),
+  department: z.enum(serverCnfiguration.departments),
+  role: z.enum(serverCnfiguration.roles),
+  seniorityLevel: z.enum(serverCnfiguration.seniorityLevels),
 });
 
 export default defineEventHandler(async (event) => {
