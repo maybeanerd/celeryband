@@ -1,17 +1,39 @@
 <template>
-  <div class="flex flex-col gap-2">
-    <h1>Celery Band</h1>
-    <UButton class="max-w-36" @click="clear">
-      Log Out
-    </UButton>
-    <p>
-      Logged in as: {{ user }}
-    </p>
+  <UTabs :items="items" class="w-full">
+    <template #statistics="{ item }">
+      <SalaryStatistics />
+    </template>
+    <template #account="{ item }">
+      <div class="flex flex-col gap-2">
+        <p>
+          Logged in as: {{ user }}
+        </p>
+        <UButton class="max-w-36" @click="clear">
+          Log Out
+        </UButton>
 
-    <SalaryConfigurator />
-  </div>
+        <SalaryConfigurator />
+      </div>
+    </template>
+  </UTabs>
 </template>
 
 <script setup lang="ts">
+import type { TabsItem } from '@nuxt/ui';
+
 const { user, clear } = useUserSession();
+
+const items = ref<TabsItem[]>([
+
+  {
+    label: 'Statistics',
+    icon: 'i-lucide-lock',
+    slot: 'statistics' as const,
+  },
+  {
+    label: 'Account',
+    icon: 'i-lucide-user',
+    slot: 'account' as const,
+  },
+]);
 </script>
