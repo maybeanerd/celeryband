@@ -38,6 +38,8 @@
         Change Salary
       </UButton>
     </div>
+
+    <div>Statistics: {{ statistics }}</div>
   </div>
 </template>
 
@@ -82,5 +84,9 @@ async function updateSalary () {
   }
   await refresh();
 }
+
+const { data: statistics } = await useFetch<unknown>('/api/salary/statistics', {
+  lazy: true,
+});
 
 </script>
