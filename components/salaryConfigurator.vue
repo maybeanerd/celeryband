@@ -3,21 +3,21 @@
     <h1>
       Your Salary
     </h1>
-    <div v-if="attributes" class="flex flex-col gap-2">
+    <div v-if="config" class="flex flex-col gap-2">
       <p>
         Role:
       </p>
-      <USelect v-model="selectedRole" :items="attributes.roles" class="w-48" />
+      <USelect v-model="selectedRole" :items="config.roles" class="w-48" />
 
       <p>
         Seniority Level:
       </p>
-      <USelect v-model="selectedSeniorityLevel" :items="attributes.seniorityLevels" class="w-48" />
+      <USelect v-model="selectedSeniorityLevel" :items="config.seniorityLevels" class="w-48" />
 
       <p>
         Department:
       </p>
-      <USelect v-model="selectedDepartment" :items="attributes.departments" class="w-48" />
+      <USelect v-model="selectedDepartment" :items="config.departments" class="w-48" />
 
       <p>
         Yearly Amount:
@@ -25,7 +25,7 @@
       <div>
         <UInput v-model="selectedYearlyAmount" type="number" class="w-48">
           <template #trailing>
-            {{ attributes.currency }}
+            {{ config.currency }}
           </template>
         </UInput>
       </div>
@@ -43,33 +43,11 @@
 
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
+import { useServerConfiguration } from '~/utils/api/useServerConfiguration';
 
-const toast = useToast();
+const { showErrorToast, showSuccessToast } = useToastNotifications();
 
-function showErrorToast(error: string, description: string) {
-  toast.add({
-    title: error,
-    description,
-    color: 'error',
-  });
-}
-
-function showSuccessToast(title: string, description: string) {
-  toast.add({
-    title,
-    description,
-    color: 'success',
-  });
-}
-
-const { data: attributes } = await useFetch<{
-  roles: Array<string>;
-  seniorityLevels: Array<string>;
-  departments: Array<string>;
-  currency: string;
-}>('/api/salary/attributes', {
-  lazy: true,
-});
+const { config } = await useServerConfiguration();
 
 const { data } = await useFetch<SalarySchema>('/api/salary', {
   lazy: false,

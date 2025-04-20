@@ -5,8 +5,8 @@
       <UButton class="max-w-36" variant="soft" @click="clear">
         Log Out
       </UButton>
-      <UButton class="max-w-64" variant="ghost" color="error">
-        Delete Account (TODO)
+      <UButton class="max-w-64" variant="ghost" color="error" @click="deleteAccount">
+        Delete Account
       </UButton>
     </div>
   </div>
@@ -14,5 +14,10 @@
 
 <script setup lang="ts">
 const { clear } = useUserSession();
+
+const { showErrorToast } = useToastNotifications();
+function deleteAccount() {
+  showErrorToast('Failed to delete account.', 'This feature is not implemented yet.');
+}
 
 </script>
