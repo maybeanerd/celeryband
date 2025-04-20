@@ -69,11 +69,11 @@ function calculateStatistics (salaries: SalarySchema[]): {
 
 function groupAndCalculate (salaries: SalarySchema[], groupByKey: keyof SalarySchema) {
   const grouped = salaries.reduce((acc, salary) => {
-    const key = salary[groupByKey] as string;
-    if (!acc[key]) {
-      acc[key] = [];
+    const aggregationKey = String(salary[groupByKey]);
+    if (!acc[aggregationKey]) {
+      acc[aggregationKey] = [];
     }
-    acc[key].push(salary);
+    acc[aggregationKey].push(salary);
     return acc;
   }, {} as Record<string, SalarySchema[]>);
 
