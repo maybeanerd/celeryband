@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-4">
     <SalaryConfigurator />
     <div class="flex gap-4 p-4 border-2 border-warning-500 rounded-lg">
       <UButton class="max-w-36" @click="clear">
