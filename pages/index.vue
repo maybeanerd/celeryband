@@ -4,7 +4,7 @@
       <SalaryStatistics />
     </template>
     <template #personal="{ item }">
-      <p>TODO, how good is your pay in relation to similar positions</p>
+      <PersonalAssessment />
     </template>
   </UTabs>
 </template>

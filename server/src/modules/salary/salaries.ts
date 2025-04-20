@@ -67,7 +67,17 @@ function calculateStatistics (salaries: SalarySchema[]): {
   return { average, median, max, min };
 }
 
-function groupAndCalculate (salaries: SalarySchema[], groupByKey: keyof SalarySchema) {
+type GroupedSalaryStatistics<Key extends keyof SalarySchema> = {
+  statistics: {
+    average: number;
+    median: number;
+    max: number;
+    min: number;
+    }
+  }
+  & Record<Key, string>
+
+function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySchema[], groupByKey: Key): Array<GroupedSalaryStatistics<Key>> {
   const grouped = salaries.reduce((acc, salary) => {
     const aggregationKey = String(salary[groupByKey]);
     if (!acc[aggregationKey]) {
@@ -80,7 +90,7 @@ function groupAndCalculate (salaries: SalarySchema[], groupByKey: keyof SalarySc
   return Object.entries(grouped).map(([key, group]) => ({
     [groupByKey]: key,
     statistics: calculateStatistics(group),
-  }));
+  } as GroupedSalaryStatistics<Key>));
 }
 
 function getStatisticsForSalaries (salaries: SalarySchema[]) {
@@ -128,21 +138,54 @@ function getStatisticsForSalaries (salaries: SalarySchema[]) {
   };
 }
 
-export async function getSalaryStatistics () {
+export async function getSalaryStatistics (userId: string) {
   const { db } = useDrizzle();
+
+  const userSalary = await getSalaryForUser(userId);
+  if (userSalary === null) {
+    return {
+      statistics: null,
+      normalizedStatistics: null,
+      salaryAssessment: null,
+    };
+  }
 
   const salaries = await db.query.salary.findMany();
 
   const normalizedSalaries = salaries.map(s => ({
     ...s,
-    yearlyAmount: (s.yearlyAmount / s.hoursPerWeek) * 40,
+    yearlyAmount: (s.yearlyAmount / s.hoursPerWeek) * userSalary.hoursPerWeek,
   }));
 
   const statistics = getStatisticsForSalaries(salaries);
   const normalizedStatistics = getStatisticsForSalaries(normalizedSalaries);
 
+  const statisticsOfSameRoleAndSeniority = normalizedStatistics.byRoleAndSeniority.find(r => r.role === userSalary.role)?.seniorityLevels
+    .find(s => s.seniorityLevel === userSalary.seniorityLevel)?.statistics ?? null;
+
+  const statisticsOfSameRoleAndSeniorityAndDepartment = normalizedStatistics.byDepartmentAndRoleAndSeniority
+    .find(d => d.department === userSalary.department)?.roles
+    .find(r => r.role === userSalary.role)?.seniorityLevels
+    .find(s => s.seniorityLevel === userSalary.seniorityLevel)?.statistics ?? null;
+
+  const salaryAssessment = {
+    overall: statisticsOfSameRoleAndSeniority
+      ? {
+          average: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniority.average),
+          median: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniority.median),
+        }
+      : null,
+    byDepartment: statisticsOfSameRoleAndSeniorityAndDepartment
+      ? {
+          average: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniorityAndDepartment.average),
+          median: userSalary.yearlyAmount - (statisticsOfSameRoleAndSeniorityAndDepartment.median),
+        }
+      : null,
+  };
+
   return {
     statistics,
     normalizedStatistics,
+    salaryAssessment,
   };
 }

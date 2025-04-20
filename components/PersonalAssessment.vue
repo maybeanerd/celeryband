@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-2 p-4">
     <h1>
-      Salary Statistics
+      Your Salary is
     </h1>
 
     <p> {{ statistics }}</p>
