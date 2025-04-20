@@ -3,8 +3,8 @@
     <template #statistics="{ item }">
       <SalaryStatistics />
     </template>
-    <template #normalized="{ item }">
-      <p>normalizes salaries...</p>
+    <template #personal="{ item }">
+      <p>TODO, how good is your pay in relation to similar positions</p>
     </template>
   </UTabs>
 </template>
@@ -20,9 +20,9 @@ const items = ref<TabsItem[]>([
     slot: 'statistics' as const,
   },
   {
-    label: 'Normalized Salaries',
-    icon: 'i-lucide-chart-column-stacked',
-    slot: 'normalized' as const,
+    label: 'Personal Assessment',
+    icon: 'i-lucide-user-check',
+    slot: 'personal' as const,
   },
 ]);
 </script>
