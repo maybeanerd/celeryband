@@ -35,7 +35,7 @@
       <UInput v-model="selectedHoursPerWeek" type="number" class="w-48" />
 
       <UButton class="max-w-36" :loading="loadingSalaryChange" @click="() => updateSalary()">
-        Change Salary
+        Update Salary
       </UButton>
     </div>
   </div>

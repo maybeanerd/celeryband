@@ -5,9 +5,6 @@
     </template>
     <template #account="{ item }">
       <div class="flex flex-col gap-2">
-        <p>
-          Logged in as: {{ user }}
-        </p>
         <UButton class="max-w-36" @click="clear">
           Log Out
         </UButton>
@@ -21,7 +18,7 @@
 <script setup lang="ts">
 import type { TabsItem } from '@nuxt/ui';
 
-const { user, clear } = useUserSession();
+const { clear } = useUserSession();
 
 const items = ref<TabsItem[]>([
 
