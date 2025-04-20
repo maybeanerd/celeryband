@@ -82,11 +82,8 @@ function groupAndCalculate (salaries: SalarySchema[], groupByKey: keyof SalarySc
     statistics: calculateStatistics(group),
   }));
 }
-export async function getSalaryStatistics () {
-  const { db } = useDrizzle();
 
-  const salaries = await db.query.salary.findMany();
-
+function getStatisticsForSalaries (salaries: SalarySchema[]) {
   const overallStatistics = calculateStatistics(salaries);
 
   const byDepartment = groupAndCalculate(salaries, 'department');
@@ -128,5 +125,24 @@ export async function getSalaryStatistics () {
     byDepartmentAndRole,
     byRoleAndSeniority,
     byDepartmentAndRoleAndSeniority,
+  };
+}
+
+export async function getSalaryStatistics () {
+  const { db } = useDrizzle();
+
+  const salaries = await db.query.salary.findMany();
+
+  const normalizedSalaries = salaries.map(s => ({
+    ...s,
+    yearlyAmount: (s.yearlyAmount / s.hoursPerWeek) * 40,
+  }));
+
+  const statistics = getStatisticsForSalaries(salaries);
+  const normalizedStatistics = getStatisticsForSalaries(normalizedSalaries);
+
+  return {
+    statistics,
+    normalizedStatistics,
   };
 }
