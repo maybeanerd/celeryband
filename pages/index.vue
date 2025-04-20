@@ -27,7 +27,7 @@ const items = ref<TabsItem[]>([
 
   {
     label: 'Statistics',
-    icon: 'i-lucide-lock',
+    icon: 'i-lucide-bar-chart-big',
     slot: 'statistics' as const,
   },
   {
