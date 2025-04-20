@@ -4,12 +4,12 @@
       Salary Statistics
     </h1>
 
-    <p> {{ statistics }}</p>
+    <p> {{ data }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 
-const { statistics } = await useSalaryStatistics();
+const data = await useSalaryStatistics();
 </script>

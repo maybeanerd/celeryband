@@ -172,14 +172,14 @@ export async function getSalaryStatistics (userId: string) {
   const salaryAssessment = {
     overall: statisticsOfSameRoleAndSeniority
       ? {
-          average: ((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.average) / statisticsOfSameRoleAndSeniority.average) * 100,
-          median: ((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.median) / statisticsOfSameRoleAndSeniority.median) * 100,
+          average: Math.round(((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.average) / statisticsOfSameRoleAndSeniority.average) * 100),
+          median: Math.round(((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.median) / statisticsOfSameRoleAndSeniority.median) * 100),
         }
       : null,
     department: statisticsOfSameRoleAndSeniorityAndDepartment
       ? {
-          average: ((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.average) / statisticsOfSameRoleAndSeniorityAndDepartment.average) * 100,
-          median: ((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.median) / statisticsOfSameRoleAndSeniorityAndDepartment.median) * 100,
+          average: Math.round(((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.average) / statisticsOfSameRoleAndSeniorityAndDepartment.average) * 100),
+          median: Math.round(((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.median) / statisticsOfSameRoleAndSeniorityAndDepartment.median) * 100),
         }
       : null,
   };

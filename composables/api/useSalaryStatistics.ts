@@ -1,9 +1,9 @@
+import type { Statistics } from '~/server/api/salary/statistics/index.get';
+
 export async function useSalaryStatistics () {
-  const { data: statistics } = await useFetch<unknown>('/api/salary/statistics', {
+  const { data } = await useFetch<Statistics>('/api/salary/statistics', {
     lazy: true,
   });
 
-  return {
-    statistics,
-  };
+  return data;
 }
