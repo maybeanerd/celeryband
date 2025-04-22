@@ -1,8 +1,6 @@
 import { serverConfiguration } from '~/server/config/server';
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
-
   return {
     roles: serverConfiguration.roles,
     seniorityLevels: serverConfiguration.seniorityLevels,
