@@ -4,7 +4,10 @@ import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentif
 import { sendLoginEmail } from '~/server/src/modules/email';
 
 const emailBodyValidator = z.object({
-  email: z.string().email().min(1).endsWith(`@${serverConfiguration.acceptedDomain}`),
+  // We cant use .email() because it has an issue that would not allow umlauts.
+  // It should be enough to expect the end (which we need to in any case) for us, though.
+  // https://github.com/colinhacks/zod/issues/3073
+  email: z.string().min(1).endsWith(`@${serverConfiguration.acceptedDomain}`),
 });
 
 export default defineEventHandler(async (event) => {
