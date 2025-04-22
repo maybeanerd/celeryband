@@ -33,6 +33,7 @@ services:
       - SENIORITY_LEVELS=junior,professional,senior,staff,principal
       - DEPARTMENTS=gamma,beta,omega
       - CURRENCY=€
+      - ACCEPTED_DOMAIN=your-company.com
 
       - SMTP_HOST=dummy.smtp.com
       - SMTP_PORT=587
