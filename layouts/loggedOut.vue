@@ -7,10 +7,9 @@
             CeleryBand
           </p>
           <p class="text-md self-end text-neutral-400">
-            for {{ config?.acceptedDomain }}
+            for {{ serverInfo?.acceptedDomain }}
           </p>
         </div>
-
       </div>
       <div class="w-screen p-4 overflow-x-hidden">
         <h1>You're logged out. Sign in by requesting a link to your email:</h1>
@@ -24,10 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
+import { usePublicServerInformation } from '~/composables/api/usePublicServerInformation';
 
 const { loggedIn } = useUserSession();
-const { config } = await useServerConfiguration();
+const { serverInfo } = await usePublicServerInformation();
 
 watch(loggedIn,
   (isLoggedIn) => {
