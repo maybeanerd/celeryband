@@ -41,7 +41,7 @@
     "drizzle-kit": "0.31.0",
     "eslint": "8.57.1",
     "git-commit-info": "2.0.2",
-    "nuxt": "3.16.2",
+    "nuxt": "3.17.0",
     "nuxt-auth-utils": "0.5.20",
     "nuxt-cron": "1.8.0",
     "prettier": "3.5.3",
