@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Docker meta
-        id: metal
+        id: metadata
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -42,8 +42,8 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.metal.outputs.tags }}
-          labels: ${{ steps.metal.outputs.labels }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: COMMIT_HASH=${{ env.COMMIT_HASH }}
