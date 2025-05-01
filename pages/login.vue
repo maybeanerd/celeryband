@@ -8,7 +8,7 @@
   <div v-else class="flex flex-col gap-2">
     <UTextarea v-model="email" placeholder="Email" class="max-w-64" :rows="1" />
     <UButton class="max-w-36" :loading="loading" @click="requestToken">
-      Request Token
+      Send Login Email
     </UButton>
   </div>
 </template>

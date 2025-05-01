@@ -1,4 +1,5 @@
 import { createTransport } from 'nodemailer';
+import { serverConfiguration } from '~/server/config/server';
 
 const smtpHost = process.env.SMTP_HOST;
 const smtpPort = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587;
@@ -19,11 +20,10 @@ const emailTransporter = createTransport({
   },
 });
 
-// TODO get service domain dynamically/from env?
-const serviceDomain = new URL('https://celery.band').toString();
+const { serverUrl } = serverConfiguration;
 
 function getLoginLink (token: string) {
-  const urlWithToken = new URL(serviceDomain);
+  const urlWithToken = new URL(serverUrl);
   urlWithToken.searchParams.set('token', token);
   urlWithToken.pathname = '/login';
 
@@ -32,7 +32,7 @@ function getLoginLink (token: string) {
 
 function generateLoginEmailContent (loginToken: string, emailAddress: string) {
   return `Hi there ${emailAddress}!
-You're getting this email because someone tried to sign into ${serviceDomain} using your email.
+You're getting this email because someone tried to sign into ${serverUrl} using your email.
     
 If this wasn't you, you can simply ignore this email.
     
@@ -56,4 +56,5 @@ export async function sendLoginEmail (loginToken: string, emailAddress: string) 
   if (response.accepted.length < 1) {
     throw new Error('Failed to send email.');
   }
+  console.info('Sent login email.');
 }
