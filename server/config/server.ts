@@ -26,6 +26,11 @@ const currency = process.env.CURRENCY || '€' as const;
 
 const acceptedDomain = process.env.ACCEPTED_DOMAIN ?? null;
 
+const serverUrl = process.env.SERVER_URL;
+if (serverUrl === undefined) {
+  throw new Error('SERVER_URL is not set. This is necessary to generate login links correctly.');
+}
+
 if (acceptedDomain === null) {
   throw new Error('ACCEPTED_DOMAIN is not set. This is necessary to limit signups to your company.');
 }
@@ -36,5 +41,5 @@ export const serverConfiguration = {
   departments,
   currency,
   acceptedDomain,
-
+  serverUrl,
 };
