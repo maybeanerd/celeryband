@@ -15,8 +15,8 @@ importers:
         specifier: 0.43.1
         version: 0.43.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@11.9.1)(gel@2.0.0)
       nodemailer:
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 7.0.2
+        version: 7.0.2
       zod:
         specifier: 3.24.3
         version: 3.24.3
@@ -1651,6 +1651,7 @@ packages:
 
   '@oxc-parser/wasm@0.60.0':
     resolution: {integrity: sha512-Dkf9/D87WGBCW3L0+1DtpAfL4SrNsgeRvxwjpKCtbH7Kf6K+pxrT0IridaJfmWKu1Ml+fDvj+7HEyBcfUC/TXQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@oxc-project/types@0.60.0':
     resolution: {integrity: sha512-prhfNnb3ATFHOCv7mzKFfwLij5RzoUz6Y1n525ZhCEqfq5wreCXL+DyVoq3ShukPo7q45ZjYIdjFUgjj+WKzng==}
@@ -4985,8 +4986,8 @@ packages:
     resolution: {integrity: sha512-jn9vOIK/nfqoFCcpK89/VCVaLg1IHE6UVfDOzvqmANaJ/rWCTEdH8RZ1V278nv2jr36BJdyQXIAavBLXpzdlag==}
     engines: {node: '>=14'}
 
-  nodemailer@7.0.0:
-    resolution: {integrity: sha512-9QyEp969UmUWVDB2gVQvxHm1bqkyuC5YZIyX/ySJUpIVyXpuEFyBAuoFFs+G5/C2ZaUp9F5A65DPfxedfVHXXQ==}
+  nodemailer@7.0.2:
+    resolution: {integrity: sha512-SYsisPeLFYli5Q+BCGSyHT5CVvezPmQjHgINV9KVvVLV1aktuoD4E0Np9Q3ND9I481qIHzUQzVT+Tl/Tw7Ivdg==}
     engines: {node: '>=6.0.0'}
 
   nopt@5.0.0:
@@ -12787,7 +12788,7 @@ snapshots:
     dependencies:
       '@babel/parser': 7.26.10
 
-  nodemailer@7.0.0: {}
+  nodemailer@7.0.2: {}
 
   nopt@5.0.0:
     dependencies:
