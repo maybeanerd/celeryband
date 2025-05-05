@@ -23,7 +23,7 @@ const { showErrorToast } = useToastNotifications();
 
 const loading = ref(false);
 
-const email = ref('celeryBandTestEmail@diluz.io');
+const email = ref('');
 
 const emailSent = ref(false);
 
