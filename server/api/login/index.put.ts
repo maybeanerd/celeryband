@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { serverConfiguration } from '~/server/config/server';
 import { createLoginToken, obfuscateEmail } from '~/server/src/modules/authentification';
-import { sendLoginEmail } from '~/server/src/modules/email';
+import { sendLoginEmail, normalizeEmail } from '~/server/src/modules/email';
 
 const emailBodyValidator = z.object({
   // We cant use .email() because it has an issue that would not allow umlauts.
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const { email } = data;
+  const email = normalizeEmail(data.email);
 
   const obfuscatedEmail = await obfuscateEmail(email);
 

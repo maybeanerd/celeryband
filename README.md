@@ -8,6 +8,7 @@ Make sure to install the dependencies:
 
 ```bash
 nvm i
+corepack enable pnpm
 pnpm i
 ```
 

@@ -2,12 +2,15 @@ import { randomBytes, scrypt } from 'crypto';
 import { eq, and, gt } from 'drizzle-orm';
 import { getObfuscationSalt } from '~/server/config/obfuscationSalt';
 import { loginTokenSchema } from '~/server/db/schemas/LoginToken.schema';
+import { normalizeEmail } from '~/server/src/modules/email';
 
 export function obfuscateEmail (email: string): Promise<string> {
   const salt = getObfuscationSalt();
 
+  const normalizedEmail = normalizeEmail(email);
+
   return new Promise<string>((resolve, reject) => {
-    scrypt(email, salt, 64, (err, derivedKey) => {
+    scrypt(normalizedEmail, salt, 64, (err, derivedKey) => {
       if (err) {
         reject(err);
         return;
