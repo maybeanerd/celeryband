@@ -42,7 +42,7 @@ ${getLoginLink(loginToken)}
 This link is only valid once.`;
 }
 
-export function normalizeEmail(email: string) {
+export function normalizeEmail (email: string) {
   return email.toLowerCase().trim();
 }
 
