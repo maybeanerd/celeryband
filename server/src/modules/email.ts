@@ -49,6 +49,9 @@ export function normalizeEmail (email: string) {
 export async function sendLoginEmail (loginToken: string, emailAddress: string) {
   const emailContent = generateLoginEmailContent(loginToken, emailAddress);
 
+
+  console.log('Sending email', emailContent);
+
   const response = await emailTransporter.sendMail({
     from: '"celeryband" <noreply@celery.band>',
     to: emailAddress,
