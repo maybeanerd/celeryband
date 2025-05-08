@@ -107,8 +107,9 @@
               </h2>
             </div>
             <div class="flex items-center gap-2">
-              <USwitch v-model="showAllDepartments" />
-              <span class="text-sm font-medium">Show for all departments</span>
+              <USwitch v-model="showOnlyYourDepartment" />
+              <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
+                }}</span>
             </div>
           </div>
         </template>
@@ -131,7 +132,7 @@ import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
 
 await useServerConfiguration();
 const normalized = ref(true);
-const showAllDepartments = ref(false);
+const showOnlyYourDepartment = ref(true);
 const statistics = await useSalaryStatistics();
 const ownSalary = await useOwnSalary({ lazy: true });
 
@@ -166,7 +167,7 @@ const sameRoleAllSeniorityData = computed(() => {
   }
 
   // Choose the appropriate data source based on the toggle
-  if (showAllDepartments.value) {
+  if (!showOnlyYourDepartment.value) {
     // Use byRoleAndSeniority (across all departments)
     if (!chosenStatistics.value.byRoleAndSeniority) {
       return [];
