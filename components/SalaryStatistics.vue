@@ -33,7 +33,7 @@
             <h2 class="text-xl font-semibold">Overall Statistics</h2>
           </div>
         </template>
-        <div v-if="statistics?.statistics" class="flex flex-col gap-4">
+        <div v-if="chosenStatistics" class="flex flex-col gap-4">
           <!-- Global statistics -->
           <div>
             <h3 class="text-lg font-medium mb-2">All Employees</h3>
@@ -133,9 +133,20 @@ const dataIsAvailable = computed(() => {
   return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
 });
 
+// Central computed property that decides which statistics to use based on the normalized toggle
+const chosenStatistics = computed(() => {
+  if (!dataIsAvailable.value || !statistics.value?.statistics) {
+    return null;
+  }
+
+  return normalized.value && statistics.value.normalizedStatistics
+    ? statistics.value.normalizedStatistics
+    : statistics.value.statistics;
+});
+
 // Computed property for Same Role (All Seniorities) data that switches data sources based on toggle
 const sameRoleAllSeniorityData = computed(() => {
-  if (!dataIsAvailable.value || !ownSalary.value?.role) {
+  if (!chosenStatistics.value || !ownSalary.value?.role) {
     return [];
   }
 
@@ -151,12 +162,12 @@ const sameRoleAllSeniorityData = computed(() => {
   // Choose the appropriate data source based on the toggle
   if (showAllDepartments.value) {
     // Use byRoleAndSeniority (across all departments)
-    if (!statistics.value?.statistics?.byRoleAndSeniority) {
+    if (!chosenStatistics.value.byRoleAndSeniority) {
       return [];
     }
 
     const result: ResultItem[] = [];
-    const roleItem = statistics.value.statistics.byRoleAndSeniority.find(
+    const roleItem = chosenStatistics.value.byRoleAndSeniority.find(
       item => item.role === ownSalary.value?.role,
     );
 
@@ -166,28 +177,24 @@ const sameRoleAllSeniorityData = computed(() => {
 
     // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
-      const stats = normalized.value && (seniorityItem as any).normalizedStatistics
-        ? (seniorityItem as any).normalizedStatistics
-        : seniorityItem.statistics;
-
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
-        average: stats.average,
-        median: stats.median,
-        min: stats.min,
-        max: stats.max,
+        average: seniorityItem.statistics.average,
+        median: seniorityItem.statistics.median,
+        min: seniorityItem.statistics.min,
+        max: seniorityItem.statistics.max,
       });
     });
 
     return result;
   } else {
     // Use byDepartmentAndRoleAndSeniority filtered to own department
-    if (!statistics.value?.statistics?.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
+    if (!chosenStatistics.value.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
       return [];
     }
 
     const result: ResultItem[] = [];
-    const deptItem = statistics.value.statistics.byDepartmentAndRoleAndSeniority.find(
+    const deptItem = chosenStatistics.value.byDepartmentAndRoleAndSeniority.find(
       item => item.department === ownSalary.value?.department,
     );
 
@@ -205,16 +212,12 @@ const sameRoleAllSeniorityData = computed(() => {
 
     // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
-      const stats = normalized.value && (seniorityItem as any).normalizedStatistics
-        ? (seniorityItem as any).normalizedStatistics
-        : seniorityItem.statistics;
-
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
-        average: stats.average,
-        median: stats.median,
-        min: stats.min,
-        max: stats.max,
+        average: seniorityItem.statistics.average,
+        median: seniorityItem.statistics.median,
+        min: seniorityItem.statistics.min,
+        max: seniorityItem.statistics.max,
       });
     });
 
@@ -224,15 +227,11 @@ const sameRoleAllSeniorityData = computed(() => {
 
 // Overall statistics computed property
 const overallStats = computed(() => {
-  if (!statistics.value?.statistics?.overallStatistics) {
+  if (!chosenStatistics.value?.overallStatistics) {
     return { average: 0, median: 0, max: 0, min: 0 };
   }
 
-  const overallData = statistics.value.statistics.overallStatistics;
-  // Choose statistics based on normalization toggle
-  const stats = normalized.value && (overallData as any).normalizedStatistics
-    ? (overallData as any).normalizedStatistics
-    : overallData;
+  const stats = chosenStatistics.value.overallStatistics;
 
   return {
     average: stats.average,
@@ -244,11 +243,11 @@ const overallStats = computed(() => {
 
 // Own department statistics
 const ownDepartmentStats = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics?.byDepartment || !ownSalary.value?.department) {
+  if (!chosenStatistics.value?.byDepartment || !ownSalary.value?.department) {
     return null;
   }
 
-  const departmentStat = statistics.value.statistics.byDepartment.find(
+  const departmentStat = chosenStatistics.value.byDepartment.find(
     item => item.department === ownSalary.value?.department,
   );
 
@@ -256,9 +255,7 @@ const ownDepartmentStats = computed(() => {
     return null;
   }
 
-  const stats = normalized.value && (departmentStat as any).normalizedStatistics
-    ? (departmentStat as any).normalizedStatistics
-    : departmentStat.statistics;
+  const stats = departmentStat.statistics;
 
   return {
     average: stats.average,
@@ -270,15 +267,14 @@ const ownDepartmentStats = computed(() => {
 
 // Own role and seniority statistics
 const ownRoleSeniorityStats = computed(() => {
-  if (!dataIsAvailable.value ||
-    !statistics.value?.statistics?.byRoleAndSeniority ||
+  if (!chosenStatistics.value?.byRoleAndSeniority ||
     !ownSalary.value?.role ||
     !ownSalary.value?.seniorityLevel) {
     return null;
   }
 
   // Find the role item
-  const roleItem = statistics.value.statistics.byRoleAndSeniority.find(
+  const roleItem = chosenStatistics.value.byRoleAndSeniority.find(
     item => item.role === ownSalary.value?.role,
   );
 
@@ -295,9 +291,7 @@ const ownRoleSeniorityStats = computed(() => {
     return null;
   }
 
-  const stats = normalized.value && (seniorityItem as any).normalizedStatistics
-    ? (seniorityItem as any).normalizedStatistics
-    : seniorityItem.statistics;
+  const stats = seniorityItem.statistics;
 
   return {
     average: stats.average,
