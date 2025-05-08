@@ -1,8 +1,5 @@
 <template>
   <div class="flex flex-col gap-4 p-4">
-    <h1 class="text-2xl font-bold">
-      Salary Statistics
-    </h1>
     <div v-if="!dataIsAvailable"
       class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center flex flex-col gap-4 items-center">
       <UIcon name="i-lucide:database-zap" class="text-4xl mb-2 text-gray-500 dark:text-gray-400" />
