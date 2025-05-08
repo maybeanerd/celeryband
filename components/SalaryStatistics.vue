@@ -111,8 +111,11 @@
             </div>
           </div>
         </template>
-        <div>
+        <div v-if="sameRoleAllSeniorityData.length > 0">
           <UTable :data="sameRoleAllSeniorityData" />
+        </div>
+        <div v-else>
+          <p>No data available</p>
         </div>
       </UCard>
     </template>
@@ -148,7 +151,7 @@ const chosenStatistics = computed(() => {
 
 // Computed property for Same Role (All Seniorities) data that switches data sources based on toggle
 const sameRoleAllSeniorityData = computed(() => {
-  if (!chosenStatistics.value || !ownSalary.value?.role) {
+  if (!chosenStatistics.value || !ownSalary.value) {
     return [];
   }
 
