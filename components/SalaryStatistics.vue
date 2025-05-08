@@ -12,6 +12,19 @@
       </UButton>
     </div>
     <template v-else-if="statistics && statistics.statistics">
+      <!-- Normalization Toggle -->
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium">Show normalized data</span>
+          <USwitch v-model="normalized" />
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          <UIcon name="i-lucide-info" class="inline mr-1" />
+          Normalized statistics adjust for part-time positions and show all values adjusted to your amount of weekly
+          hours.
+        </p>
+      </div>
+
       <!-- Overall Statistics -->
       <UCard class="w-full">
         <template #header>
@@ -21,10 +34,10 @@
           </div>
         </template>
         <div v-if="statistics?.statistics" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <p class="p-2">Average: {{ formatNumber(statistics.statistics.overallStatistics.average) }}</p>
-          <p class="p-2">Median: {{ formatNumber(statistics.statistics.overallStatistics.median) }}</p>
-          <p class="p-2">Maximum: {{ formatNumber(statistics.statistics.overallStatistics.max) }}</p>
-          <p class="p-2">Minimum: {{ formatNumber(statistics.statistics.overallStatistics.min) }}</p>
+          <p class="p-2">Average: {{ overallStats.average }}</p>
+          <p class="p-2">Median: {{ overallStats.median }}</p>
+          <p class="p-2">Maximum: {{ overallStats.max }}</p>
+          <p class="p-2">Minimum: {{ overallStats.min }}</p>
         </div>
         <template v-if="statistics.salaryAssessment?.overall" #footer>
           <div class="flex flex-col gap-2">
@@ -33,10 +46,10 @@
             </p>
             <div class="flex gap-4">
               <UBadge color="success" variant="soft">
-                {{ statistics.salaryAssessment.overall.average }}% of average
+                {{ salaryAssessmentValues.avgPercentage }}% of average
               </UBadge>
               <UBadge color="primary" variant="soft">
-                {{ statistics.salaryAssessment.overall.median }}% of median
+                {{ salaryAssessmentValues.medianPercentage }}% of median
               </UBadge>
             </div>
           </div>
@@ -100,13 +113,6 @@
           <UTable :data="seniorityData" />
         </div>
       </UCard>
-
-      <!-- Normalized Stats Disclaimer -->
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-        <UIcon name="i-lucide-info" class="inline mr-1" />
-        Normalized statistics adjust for part-time positions and show all values adjusted to your amount of weekly
-        hours.
-      </p>
     </template>
   </div>
 </template>
@@ -115,36 +121,33 @@
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 
-const { config } = await useServerConfiguration();
-
+await useServerConfiguration();
+const normalized = ref(true);
 const statistics = await useSalaryStatistics();
 
 const dataIsAvailable = computed(() => {
   return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
 });
 
-const currencySymbol = computed(() => {
-  return config.value?.currency ?? '';
-});
-
-const formatNumber = (value: number) => {
-  return new Intl.NumberFormat(undefined, {
-    maximumFractionDigits: 0,
-  }).format(value) + ' ' + currencySymbol.value;
-};
-
 const departmentData = computed(() => {
   if (!dataIsAvailable.value || !statistics.value?.statistics?.byDepartment) {
     return [];
   }
 
-  return statistics.value.statistics.byDepartment.map(item => ({
-    department: item.department,
-    average: formatNumber(item.statistics.average),
-    median: formatNumber(item.statistics.median),
-    min: formatNumber(item.statistics.min),
-    max: formatNumber(item.statistics.max),
-  }));
+  return statistics.value.statistics.byDepartment.map((item) => {
+    // Choose statistics based on normalization toggle
+    const stats = normalized.value && (item as any).normalizedStatistics
+      ? (item as any).normalizedStatistics
+      : item.statistics;
+
+    return {
+      department: item.department,
+      average: stats.average,
+      median: stats.median,
+      min: stats.min,
+      max: stats.max,
+    };
+  });
 });
 
 const roleData = computed(() => {
@@ -152,13 +155,20 @@ const roleData = computed(() => {
     return [];
   }
 
-  return statistics.value.statistics.byRole.map(item => ({
-    role: item.role,
-    average: formatNumber(item.statistics.average),
-    median: formatNumber(item.statistics.median),
-    min: formatNumber(item.statistics.min),
-    max: formatNumber(item.statistics.max),
-  }));
+  return statistics.value.statistics.byRole.map((item) => {
+    // Choose statistics based on normalization toggle
+    const stats = normalized.value && (item as any).normalizedStatistics
+      ? (item as any).normalizedStatistics
+      : item.statistics;
+
+    return {
+      role: item.role,
+      average: stats.average,
+      median: stats.median,
+      min: stats.min,
+      max: stats.max,
+    };
+  });
 });
 
 const seniorityData = computed(() => {
@@ -166,12 +176,57 @@ const seniorityData = computed(() => {
     return [];
   }
 
-  return statistics.value.statistics.bySeniorityLevel.map(item => ({
-    seniorityLevel: item.seniorityLevel,
-    average: formatNumber(item.statistics.average),
-    median: formatNumber(item.statistics.median),
-    min: formatNumber(item.statistics.min),
-    max: formatNumber(item.statistics.max),
-  }));
+  return statistics.value.statistics.bySeniorityLevel.map((item) => {
+    // Choose statistics based on normalization toggle
+    const stats = normalized.value && (item as any).normalizedStatistics
+      ? (item as any).normalizedStatistics
+      : item.statistics;
+
+    return {
+      seniorityLevel: item.seniorityLevel,
+      average: stats.average,
+      median: stats.median,
+      min: stats.min,
+      max: stats.max,
+    };
+  });
+});
+
+// Overall statistics computed property
+const overallStats = computed(() => {
+  if (!statistics.value?.statistics?.overallStatistics) {
+    return { average: 0, median: 0, max: 0, min: 0 };
+  }
+
+  const overallData = statistics.value.statistics.overallStatistics;
+  // Choose statistics based on normalization toggle
+  const stats = normalized.value && (overallData as any).normalizedStatistics
+    ? (overallData as any).normalizedStatistics
+    : overallData;
+
+  return {
+    average: stats.average,
+    median: stats.median,
+    max: stats.max,
+    min: stats.min,
+  };
+});
+
+// Salary assessment computed property
+const salaryAssessmentValues = computed(() => {
+  if (!statistics.value?.salaryAssessment?.overall) {
+    return { avgPercentage: 0, medianPercentage: 0 };
+  }
+
+  const assessment = statistics.value.salaryAssessment;
+  // Choose assessment based on normalization toggle
+  const values = normalized.value && (assessment as any).normalizedOverall
+    ? (assessment as any).normalizedOverall
+    : assessment.overall || { average: 0, median: 0 };
+
+  return {
+    avgPercentage: values.average,
+    medianPercentage: values.median,
+  };
 });
 </script>
