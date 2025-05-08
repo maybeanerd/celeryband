@@ -14,14 +14,14 @@
     <template v-else-if="statistics && statistics.statistics">
       <!-- Normalization Toggle -->
       <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium">Show normalized data</span>
+        <div class="flex items-center justify-start gap-2">
           <USwitch v-model="normalized" />
+          <span class="text-sm font-medium">Show normalized data</span>
         </div>
         <p class="text-sm text-gray-500 dark:text-gray-400">
           <UIcon name="i-lucide-info" class="inline mr-1" />
           Normalized statistics adjust for part-time positions and show all values adjusted to your amount of weekly
-          hours.
+          hours. ({{ ownSalary?.hoursPerWeek ?? 'unknown' }} hours per week)
         </p>
       </div>
 
@@ -86,31 +86,31 @@
         </template>
       </UCard>
 
-      <!-- Roles Statistics -->
+      <!-- Combined Role and Seniority Statistics -->
       <UCard class="w-full">
         <template #header>
           <div class="flex items-center gap-2">
             <UIcon name="i-lucide-users" class="text-xl" />
-            <h2 class="text-xl font-semibold">Statistics by Role</h2>
+            <h2 class="text-xl font-semibold">Statistics by Role and Seniority</h2>
           </div>
         </template>
         <div>
-          <UTable :data="roleData" />
+          <UTable :data="combinedRoleSeniorityData" />
         </div>
       </UCard>
 
-      <!-- Seniority Level Statistics -->
+      <!-- Detailed Overview -->
       <UCard class="w-full">
         <template #header>
           <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-line-chart" class="text-xl" />
+            <UIcon name="i-lucide-layers" class="text-xl" />
             <h2 class="text-xl font-semibold">
-              Statistics by Seniority Level
+              Comprehensive Breakdown by Department, Role, and Seniority
             </h2>
           </div>
         </template>
         <div>
-          <UTable :data="seniorityData" />
+          <UTable :data="comprehensiveData" />
         </div>
       </UCard>
     </template>
@@ -118,12 +118,14 @@
 </template>
 
 <script setup lang="ts">
+import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 
 await useServerConfiguration();
 const normalized = ref(true);
 const statistics = await useSalaryStatistics();
+const ownSalary = await useOwnSalary();
 
 const dataIsAvailable = computed(() => {
   return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
@@ -150,46 +152,94 @@ const departmentData = computed(() => {
   });
 });
 
-const roleData = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics?.byRole) {
+// Combined role and seniority data directly from backend
+const combinedRoleSeniorityData = computed(() => {
+  if (!dataIsAvailable.value || !statistics.value?.statistics?.byRoleAndSeniority) {
     return [];
   }
 
-  return statistics.value.statistics.byRole.map((item) => {
-    // Choose statistics based on normalization toggle
-    const stats = normalized.value && (item as any).normalizedStatistics
-      ? (item as any).normalizedStatistics
-      : item.statistics;
+  // Define the result type
+  interface ResultItem {
+    role: string;
+    seniorityLevel: string;
+    average: number;
+    median: number;
+    min: number;
+    max: number;
+  }
 
-    return {
-      role: item.role,
-      average: stats.average,
-      median: stats.median,
-      min: stats.min,
-      max: stats.max,
-    };
+  // The data is structured as roles with nested seniorityLevels
+  const result: ResultItem[] = [];
+  statistics.value.statistics.byRoleAndSeniority.forEach((roleItem) => {
+    // For each role
+    const roleName = roleItem.role;
+
+    // Process each seniority level for this role
+    roleItem.seniorityLevels.forEach((seniorityItem) => {
+      const stats = normalized.value && (seniorityItem as any).normalizedStatistics
+        ? (seniorityItem as any).normalizedStatistics
+        : seniorityItem.statistics;
+
+      result.push({
+        role: roleName,
+        seniorityLevel: seniorityItem.seniorityLevel,
+        average: stats.average,
+        median: stats.median,
+        min: stats.min,
+        max: stats.max,
+      });
+    });
   });
+
+  return result;
 });
 
-const seniorityData = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics?.bySeniorityLevel) {
+// Comprehensive data directly from backend
+const comprehensiveData = computed(() => {
+  if (!dataIsAvailable.value || !statistics.value?.statistics?.byDepartmentAndRoleAndSeniority) {
     return [];
   }
 
-  return statistics.value.statistics.bySeniorityLevel.map((item) => {
-    // Choose statistics based on normalization toggle
-    const stats = normalized.value && (item as any).normalizedStatistics
-      ? (item as any).normalizedStatistics
-      : item.statistics;
+  // Define the result type
+  interface ResultItem {
+    department: string;
+    role: string;
+    seniorityLevel: string;
+    average: number;
+    median: number;
+    min: number;
+    max: number;
+  }
 
-    return {
-      seniorityLevel: item.seniorityLevel,
-      average: stats.average,
-      median: stats.median,
-      min: stats.min,
-      max: stats.max,
-    };
+  // The data is deeply nested: departments -> roles -> seniorityLevels
+  const result: ResultItem[] = [];
+  statistics.value.statistics.byDepartmentAndRoleAndSeniority.forEach((deptItem) => {
+    const deptName = deptItem.department;
+
+    // Process each role in this department
+    deptItem.roles.forEach((roleItem) => {
+      const roleName = roleItem.role;
+
+      // Process each seniority level for this role
+      roleItem.seniorityLevels.forEach((seniorityItem) => {
+        const stats = normalized.value && (seniorityItem as any).normalizedStatistics
+          ? (seniorityItem as any).normalizedStatistics
+          : seniorityItem.statistics;
+
+        result.push({
+          department: deptName,
+          role: roleName,
+          seniorityLevel: seniorityItem.seniorityLevel,
+          average: stats.average,
+          median: stats.median,
+          min: stats.min,
+          max: stats.max,
+        });
+      });
+    });
   });
+
+  return result;
 });
 
 // Overall statistics computed property
