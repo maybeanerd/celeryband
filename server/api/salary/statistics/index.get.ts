@@ -57,13 +57,13 @@ areAvailable: true;
 statistics: DetailedStatistics;
 normalizedStatistics: DetailedStatistics;
 salaryAssessment: {
-  overall: {
-  average: number;
-  median: number;
+  sameRoleAndSeniority: {
+  average: string;
+  median: string;
 } | null;
-department: {
-  average: number;
-  median: number;
+sameRoleAndSeniorityAndDepartment: {
+  average: string;
+  median: string;
 } | null;}}
 
 export default defineEventHandler(async (event): Promise<Statistics> => {
