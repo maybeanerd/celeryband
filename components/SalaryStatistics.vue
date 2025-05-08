@@ -109,7 +109,7 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-                }}</span>
+              }}</span>
             </div>
           </div>
         </template>
@@ -130,11 +130,13 @@ import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
 
-await useServerConfiguration();
+const { config: serverConfig } = await useServerConfiguration();
 const normalized = ref(true);
 const showOnlyYourDepartment = ref(true);
 const statistics = await useSalaryStatistics();
 const ownSalary = await useOwnSalary({ lazy: true });
+
+const currency = computed(() => serverConfig.value?.currency || '');
 
 const dataIsAvailable = computed(() => {
   return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
@@ -186,10 +188,10 @@ const sameRoleAllSeniorityData = computed(() => {
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
-        average: seniorityItem.statistics.average,
-        median: seniorityItem.statistics.median,
-        min: seniorityItem.statistics.min,
-        max: seniorityItem.statistics.max,
+        average: seniorityItem.statistics.average + ' ' + currency.value,
+        median: seniorityItem.statistics.median + ' ' + currency.value,
+        min: seniorityItem.statistics.min + ' ' + currency.value,
+        max: seniorityItem.statistics.max + ' ' + currency.value,
       });
     });
 
@@ -221,10 +223,10 @@ const sameRoleAllSeniorityData = computed(() => {
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
-        average: seniorityItem.statistics.average,
-        median: seniorityItem.statistics.median,
-        min: seniorityItem.statistics.min,
-        max: seniorityItem.statistics.max,
+        average: seniorityItem.statistics.average + ' ' + currency.value,
+        median: seniorityItem.statistics.median + ' ' + currency.value,
+        min: seniorityItem.statistics.min + ' ' + currency.value,
+        max: seniorityItem.statistics.max + ' ' + currency.value,
       });
     });
 
@@ -241,10 +243,10 @@ const overallStats = computed(() => {
   const stats = chosenStatistics.value.overallStatistics;
 
   return {
-    average: stats.average,
-    median: stats.median,
-    max: stats.max,
-    min: stats.min,
+    average: stats.average + ' ' + currency.value,
+    median: stats.median + ' ' + currency.value,
+    max: stats.max + ' ' + currency.value,
+    min: stats.min + ' ' + currency.value,
   };
 });
 
@@ -265,10 +267,10 @@ const ownDepartmentStats = computed(() => {
   const stats = departmentStat.statistics;
 
   return {
-    average: stats.average,
-    median: stats.median,
-    max: stats.max,
-    min: stats.min,
+    average: stats.average + ' ' + currency.value,
+    median: stats.median + ' ' + currency.value,
+    max: stats.max + ' ' + currency.value,
+    min: stats.min + ' ' + currency.value,
   };
 });
 
@@ -301,10 +303,10 @@ const ownRoleSeniorityStats = computed(() => {
   const stats = seniorityItem.statistics;
 
   return {
-    average: stats.average,
-    median: stats.median,
-    max: stats.max,
-    min: stats.min,
+    average: stats.average + ' ' + currency.value,
+    median: stats.median + ' ' + currency.value,
+    max: stats.max + ' ' + currency.value,
+    min: stats.min + ' ' + currency.value,
   };
 });
 </script>
