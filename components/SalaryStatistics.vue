@@ -109,7 +109,7 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-              }}</span>
+                }}</span>
             </div>
           </div>
         </template>
