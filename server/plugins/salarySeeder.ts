@@ -38,8 +38,7 @@ async function generateRandomUserBatch (
   for (let i = 0; i < batchSize; i++) {
     // Generate random user data
     const userId = randomUUID();
-    const randomNum = Math.floor(Math.random() * 1000000);
-    const email = `random.user${randomNum}@${acceptedDomain}`;
+    const email = `random.user${userId}@${acceptedDomain}`;
     const emailHash = await obfuscateEmail(email);
 
     // Generate random salary data
