@@ -93,46 +93,24 @@
         </div>
       </UCard>
 
-      <!-- Department Statistics -->
+      <!-- Statistics for Same Role (All Seniorities) -->
       <UCard class="w-full">
         <template #header>
-          <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-briefcase" class="text-xl" />
-            <h2 class="text-xl font-semibold">
-              Statistics by Department
-            </h2>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <UIcon name="i-lucide-briefcase" class="text-xl" />
+              <h2 class="text-xl font-semibold">
+                Statistics for {{ ownSalary?.role }} (All Seniority Levels)
+              </h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <USwitch v-model="showAllDepartments" />
+              <span class="text-sm font-medium">Show for all departments</span>
+            </div>
           </div>
         </template>
         <div>
-          <UTable :data="departmentData" />
-        </div>
-      </UCard>
-
-      <!-- Combined Role and Seniority Statistics -->
-      <UCard class="w-full">
-        <template #header>
-          <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-users" class="text-xl" />
-            <h2 class="text-xl font-semibold">Statistics by Role and Seniority</h2>
-          </div>
-        </template>
-        <div>
-          <UTable :data="combinedRoleSeniorityData" />
-        </div>
-      </UCard>
-
-      <!-- Detailed Overview -->
-      <UCard class="w-full">
-        <template #header>
-          <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-layers" class="text-xl" />
-            <h2 class="text-xl font-semibold">
-              Comprehensive Breakdown by Department, Role, and Seniority
-            </h2>
-          </div>
-        </template>
-        <div>
-          <UTable :data="comprehensiveData" />
+          <UTable :data="sameRoleAllSeniorityData" />
         </div>
       </UCard>
     </template>
@@ -147,6 +125,7 @@ import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
 
 await useServerConfiguration();
 const normalized = ref(true);
+const showAllDepartments = ref(false);
 const statistics = await useSalaryStatistics();
 const ownSalary = await useOwnSalary();
 
@@ -154,36 +133,14 @@ const dataIsAvailable = computed(() => {
   return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
 });
 
-const departmentData = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics?.byDepartment) {
-    return [];
-  }
-
-  return statistics.value.statistics.byDepartment.map((item) => {
-    // Choose statistics based on normalization toggle
-    const stats = normalized.value && (item as any).normalizedStatistics
-      ? (item as any).normalizedStatistics
-      : item.statistics;
-
-    return {
-      department: item.department,
-      average: stats.average,
-      median: stats.median,
-      min: stats.min,
-      max: stats.max,
-    };
-  });
-});
-
-// Combined role and seniority data directly from backend
-const combinedRoleSeniorityData = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics?.byRoleAndSeniority) {
+// Computed property for Same Role (All Seniorities) data that switches data sources based on toggle
+const sameRoleAllSeniorityData = computed(() => {
+  if (!dataIsAvailable.value || !ownSalary.value?.role) {
     return [];
   }
 
   // Define the result type
   interface ResultItem {
-    role: string;
     seniorityLevel: string;
     average: number;
     median: number;
@@ -191,11 +148,21 @@ const combinedRoleSeniorityData = computed(() => {
     max: number;
   }
 
-  // The data is structured as roles with nested seniorityLevels
-  const result: ResultItem[] = [];
-  statistics.value.statistics.byRoleAndSeniority.forEach((roleItem) => {
-    // For each role
-    const roleName = roleItem.role;
+  // Choose the appropriate data source based on the toggle
+  if (showAllDepartments.value) {
+    // Use byRoleAndSeniority (across all departments)
+    if (!statistics.value?.statistics?.byRoleAndSeniority) {
+      return [];
+    }
+
+    const result: ResultItem[] = [];
+    const roleItem = statistics.value.statistics.byRoleAndSeniority.find(
+      item => item.role === ownSalary.value?.role,
+    );
+
+    if (!roleItem) {
+      return [];
+    }
 
     // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
@@ -204,7 +171,6 @@ const combinedRoleSeniorityData = computed(() => {
         : seniorityItem.statistics;
 
       result.push({
-        role: roleName,
         seniorityLevel: seniorityItem.seniorityLevel,
         average: stats.average,
         median: stats.median,
@@ -212,57 +178,48 @@ const combinedRoleSeniorityData = computed(() => {
         max: stats.max,
       });
     });
-  });
 
-  return result;
-});
+    return result;
+  } else {
+    // Use byDepartmentAndRoleAndSeniority filtered to own department
+    if (!statistics.value?.statistics?.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
+      return [];
+    }
 
-// Comprehensive data directly from backend
-const comprehensiveData = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics?.byDepartmentAndRoleAndSeniority) {
-    return [];
-  }
+    const result: ResultItem[] = [];
+    const deptItem = statistics.value.statistics.byDepartmentAndRoleAndSeniority.find(
+      item => item.department === ownSalary.value?.department,
+    );
 
-  // Define the result type
-  interface ResultItem {
-    department: string;
-    role: string;
-    seniorityLevel: string;
-    average: number;
-    median: number;
-    min: number;
-    max: number;
-  }
+    if (!deptItem) {
+      return [];
+    }
 
-  // The data is deeply nested: departments -> roles -> seniorityLevels
-  const result: ResultItem[] = [];
-  statistics.value.statistics.byDepartmentAndRoleAndSeniority.forEach((deptItem) => {
-    const deptName = deptItem.department;
+    const roleItem = deptItem.roles.find(
+      item => item.role === ownSalary.value?.role,
+    );
 
-    // Process each role in this department
-    deptItem.roles.forEach((roleItem) => {
-      const roleName = roleItem.role;
+    if (!roleItem) {
+      return [];
+    }
 
-      // Process each seniority level for this role
-      roleItem.seniorityLevels.forEach((seniorityItem) => {
-        const stats = normalized.value && (seniorityItem as any).normalizedStatistics
-          ? (seniorityItem as any).normalizedStatistics
-          : seniorityItem.statistics;
+    // Process each seniority level for this role
+    roleItem.seniorityLevels.forEach((seniorityItem) => {
+      const stats = normalized.value && (seniorityItem as any).normalizedStatistics
+        ? (seniorityItem as any).normalizedStatistics
+        : seniorityItem.statistics;
 
-        result.push({
-          department: deptName,
-          role: roleName,
-          seniorityLevel: seniorityItem.seniorityLevel,
-          average: stats.average,
-          median: stats.median,
-          min: stats.min,
-          max: stats.max,
-        });
+      result.push({
+        seniorityLevel: seniorityItem.seniorityLevel,
+        average: stats.average,
+        median: stats.median,
+        min: stats.min,
+        max: stats.max,
       });
     });
-  });
 
-  return result;
+    return result;
+  }
 });
 
 // Overall statistics computed property
@@ -292,7 +249,7 @@ const ownDepartmentStats = computed(() => {
   }
 
   const departmentStat = statistics.value.statistics.byDepartment.find(
-    (item) => item.department === ownSalary.value?.department,
+    item => item.department === ownSalary.value?.department,
   );
 
   if (!departmentStat) {
@@ -322,7 +279,7 @@ const ownRoleSeniorityStats = computed(() => {
 
   // Find the role item
   const roleItem = statistics.value.statistics.byRoleAndSeniority.find(
-    (item) => item.role === ownSalary.value?.role,
+    item => item.role === ownSalary.value?.role,
   );
 
   if (!roleItem) {
@@ -331,7 +288,7 @@ const ownRoleSeniorityStats = computed(() => {
 
   // Find the seniority level item
   const seniorityItem = roleItem.seniorityLevels.find(
-    (item) => item.seniorityLevel === ownSalary.value?.seniorityLevel,
+    item => item.seniorityLevel === ownSalary.value?.seniorityLevel,
   );
 
   if (!seniorityItem) {
