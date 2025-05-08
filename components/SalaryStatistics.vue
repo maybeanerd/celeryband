@@ -3,6 +3,7 @@
     <h1 class="text-2xl font-bold">
       Salary Statistics
     </h1>
+    {{ statistics }}
     <div v-if="!dataIsAvailable" class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center">
       <UIcon name="i-lucide-database-x" class="text-4xl mb-2 text-gray-500 dark:text-gray-400" />
       <p class="text-lg dark:text-white">No salary data available yet.</p>
