@@ -1,10 +1,10 @@
 <template>
   <UBadge
-    :color="!percentage.startsWith('-') ? 'success' : 'error'"
+    :color="!percentage.startsWith('-') ? 'success' : 'warning'"
     variant="soft"
     class="mt-1 self-start"
   >
-    {{ percentage }}% {{ context }}
+    You're {{ percentage.startsWith('-') ? percentage.substring(1) : percentage }}% {{ percentage.startsWith('-') ? 'below' : 'above' }} {{ context }}
   </UBadge>
 </template>
 

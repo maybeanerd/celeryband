@@ -59,12 +59,12 @@
               <div class="p-2 flex flex-col">
                 <p>Average: {{ ownRoleSeniorityStats.average }}</p>
                 <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniority"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average" context="of average" />
+                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average" context="average" />
               </div>
               <div class="p-2 flex flex-col">
                 <p>Median: {{ ownRoleSeniorityStats.median }}</p>
                 <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniority"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.median" context="of median" />
+                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.median" context="median" />
               </div>
               <p class="p-2">Maximum: {{ ownRoleSeniorityStats.max }}</p>
               <p class="p-2">Minimum: {{ ownRoleSeniorityStats.min }}</p>
@@ -81,13 +81,12 @@
                 <p>Average: {{ ownDepartmentStats.average }}</p>
                 <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment"
                   :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.average"
-                  context="of average" />
+                  context="average" />
               </div>
               <div class="p-2 flex flex-col">
                 <p>Median: {{ ownDepartmentStats.median }}</p>
                 <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.median"
-                  context="of median" />
+                  :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.median" context="median" />
               </div>
               <p class="p-2">Maximum: {{ ownDepartmentStats.max }}</p>
               <p class="p-2">Minimum: {{ ownDepartmentStats.min }}</p>
@@ -109,7 +108,7 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-                }}</span>
+              }}</span>
             </div>
           </div>
         </template>
