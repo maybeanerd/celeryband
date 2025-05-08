@@ -84,6 +84,9 @@ async function updateSalary () {
   }
   showSuccessToast('Salary updated',
     'Your salary has been updated successfully.');
+
+  // Redirect to root page after successful update
+  navigateTo('/');
 }
 
 </script>
