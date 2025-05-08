@@ -3,11 +3,16 @@
     <h1 class="text-2xl font-bold">
       Salary Statistics
     </h1>
-    <div v-if="!dataIsAvailable" class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center">
-      <UIcon name="i-lucide-database-x" class="text-4xl mb-2 text-gray-500 dark:text-gray-400" />
-      <p class="text-lg dark:text-white">No salary data available yet.</p>
-      <p class="text-sm text-gray-500 dark:text-gray-400">Please configure your salary information first.</p>
-      <ULink to="/account">Configure your salary information</ULink>
+    <div v-if="!dataIsAvailable"
+      class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center flex flex-col gap-4 items-center">
+      <UIcon name="i-lucide:database-zap" class="text-4xl mb-2 text-gray-500 dark:text-gray-400" />
+      <p class="text-lg dark:text-white">No statistics available.</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Please configure your salary information first.
+      </p>
+      <UButton to="/account">
+        Go to account
+      </UButton>
     </div>
     <template v-else-if="statistics && statistics.statistics">
       <!-- Overall Statistics -->
@@ -52,7 +57,7 @@
           </div>
         </template>
         <div>
-          <UTable :columns="departmentColumns" :rows="departmentRows" />
+          <UTable :data="departmentData" />
         </div>
         <template v-if="statistics.salaryAssessment?.department" #footer>
           <div class="flex flex-col gap-2">
@@ -80,7 +85,7 @@
           </div>
         </template>
         <div>
-          <UTable :columns="roleColumns" :rows="roleRows" />
+          <UTable :data="roleData" />
         </div>
       </UCard>
 
@@ -95,7 +100,7 @@
           </div>
         </template>
         <div>
-          <UTable :columns="seniorityColumns" :rows="seniorityRows" />
+          <UTable :data="seniorityData" />
         </div>
       </UCard>
 
@@ -106,8 +111,6 @@
         hours.
       </p>
     </template>
-
-    {{ statistics }}
   </div>
 </template>
 
@@ -133,15 +136,7 @@ const formatNumber = (value: number) => {
   }).format(value) + ' ' + currencySymbol.value;
 };
 
-const departmentColumns = [
-  { key: 'department', label: 'Department' },
-  { key: 'average', label: 'Average' },
-  { key: 'median', label: 'Median' },
-  { key: 'min', label: 'Minimum' },
-  { key: 'max', label: 'Maximum' },
-] as any[];
-
-const departmentRows = computed(() => {
+const departmentData = computed(() => {
   if (!dataIsAvailable.value || !statistics.value?.statistics?.byDepartment) {
     return [];
   }
@@ -155,16 +150,7 @@ const departmentRows = computed(() => {
   }));
 });
 
-// Role table configuration
-const roleColumns = [
-  { key: 'role', label: 'Role' },
-  { key: 'average', label: 'Average' },
-  { key: 'median', label: 'Median' },
-  { key: 'min', label: 'Minimum' },
-  { key: 'max', label: 'Maximum' },
-] as any[];
-
-const roleRows = computed(() => {
+const roleData = computed(() => {
   if (!dataIsAvailable.value || !statistics.value?.statistics?.byRole) {
     return [];
   }
@@ -178,16 +164,7 @@ const roleRows = computed(() => {
   }));
 });
 
-// Seniority table configuration
-const seniorityColumns = [
-  { key: 'seniorityLevel', label: 'Seniority Level' },
-  { key: 'average', label: 'Average' },
-  { key: 'median', label: 'Median' },
-  { key: 'min', label: 'Minimum' },
-  { key: 'max', label: 'Maximum' },
-] as any[];
-
-const seniorityRows = computed(() => {
+const seniorityData = computed(() => {
   if (!dataIsAvailable.value || !statistics.value?.statistics?.bySeniorityLevel) {
     return [];
   }
