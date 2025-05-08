@@ -15,8 +15,8 @@ importers:
         specifier: 0.43.1
         version: 0.43.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@11.9.1)(gel@2.0.0)
       nodemailer:
-        specifier: 7.0.2
-        version: 7.0.2
+        specifier: 7.0.3
+        version: 7.0.3
       zod:
         specifier: 3.24.4
         version: 3.24.4
@@ -5002,8 +5002,8 @@ packages:
     resolution: {integrity: sha512-jn9vOIK/nfqoFCcpK89/VCVaLg1IHE6UVfDOzvqmANaJ/rWCTEdH8RZ1V278nv2jr36BJdyQXIAavBLXpzdlag==}
     engines: {node: '>=14'}
 
-  nodemailer@7.0.2:
-    resolution: {integrity: sha512-SYsisPeLFYli5Q+BCGSyHT5CVvezPmQjHgINV9KVvVLV1aktuoD4E0Np9Q3ND9I481qIHzUQzVT+Tl/Tw7Ivdg==}
+  nodemailer@7.0.3:
+    resolution: {integrity: sha512-Ajq6Sz1x7cIK3pN6KesGTah+1gnwMnx5gKl3piQlQQE/PwyJ4Mbc8is2psWYxK3RJTVeqsDaCv8ZzXLCDHMTZw==}
     engines: {node: '>=6.0.0'}
 
   nopt@5.0.0:
@@ -12851,7 +12851,7 @@ snapshots:
     dependencies:
       '@babel/parser': 7.26.10
 
-  nodemailer@7.0.2: {}
+  nodemailer@7.0.3: {}
 
   nopt@5.0.0:
     dependencies:
