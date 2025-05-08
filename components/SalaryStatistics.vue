@@ -19,9 +19,10 @@
           <span class="text-sm font-medium">Show normalized data</span>
         </div>
         <p class="text-sm text-gray-500 dark:text-gray-400">
-          <UIcon name="i-lucide-info" class="inline mr-1" />
           Normalized statistics adjust for part-time positions and show all values adjusted to your amount of weekly
           hours. ({{ ownSalary?.hoursPerWeek ?? 'unknown' }} hours per week)
+          <br>
+          Percentages are always normalized to working hours.
         </p>
       </div>
 

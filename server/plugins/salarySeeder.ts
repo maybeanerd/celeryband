@@ -100,7 +100,7 @@ export default defineNitroPlugin(async () => {
     const salaryCount = await db.select({ count: sql<number>`count(*)` }).from(salarySchema);
     const count = salaryCount[0]?.count ?? 0;
 
-    if (count >= 100) {
+    if (count >= 2000) {
       console.log(`Found ${count} existing salaries, no need to generate random data.`);
       return;
     }
@@ -111,7 +111,7 @@ export default defineNitroPlugin(async () => {
     const { roles, seniorityLevels, departments, acceptedDomain } = serverConfiguration;
 
     // Generate 10,000 users with random salaries
-    const batchSize = 100; // Process in batches to avoid memory issues
+    const batchSize = 1000; // Process in batches to avoid memory issues
     const totalToGenerate = 10000;
 
     for (let i = 0; i < totalToGenerate; i += batchSize) {
