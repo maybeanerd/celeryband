@@ -51,8 +51,8 @@
 
           <!-- Your role and seniority statistics -->
           <div v-if="ownRoleSeniorityStats">
-            <h3 class="text-lg font-medium mb-2">Same Role & Seniority ({{ ownSalary?.role }} - {{
-              ownSalary?.seniorityLevel }})
+            <h3 class="text-lg font-medium mb-2">
+              {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div class="p-2 flex flex-col">
@@ -72,7 +72,9 @@
 
           <!-- Your department statistics -->
           <div v-if="ownDepartmentStats">
-            <h3 class="text-lg font-medium mb-2">Same Role & Seniority in {{ ownSalary?.department }}</h3>
+            <h3 class="text-lg font-medium mb-2">
+              {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
+              in {{ ownSalary?.department }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div class="p-2 flex flex-col">
                 <p>Average: {{ ownDepartmentStats.average }}</p>
@@ -100,7 +102,7 @@
             <div class="flex items-center gap-2">
               <UIcon name="i-lucide-briefcase" class="text-xl" />
               <h2 class="text-xl font-semibold">
-                Statistics for {{ ownSalary?.role }} (All Seniority Levels)
+                Statistics for {{ ownSalary?.role }}s
               </h2>
             </div>
             <div class="flex items-center gap-2">
@@ -127,7 +129,7 @@ await useServerConfiguration();
 const normalized = ref(true);
 const showAllDepartments = ref(false);
 const statistics = await useSalaryStatistics();
-const ownSalary = await useOwnSalary();
+const ownSalary = await useOwnSalary({ lazy: true });
 
 const dataIsAvailable = computed(() => {
   return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
@@ -153,10 +155,10 @@ const sameRoleAllSeniorityData = computed(() => {
   // Define the result type
   interface ResultItem {
     seniorityLevel: string;
-    average: number;
-    median: number;
-    min: number;
-    max: number;
+    average: string;
+    median: string;
+    min: string;
+    max: string;
   }
 
   // Choose the appropriate data source based on the toggle
@@ -228,7 +230,7 @@ const sameRoleAllSeniorityData = computed(() => {
 // Overall statistics computed property
 const overallStats = computed(() => {
   if (!chosenStatistics.value?.overallStatistics) {
-    return { average: 0, median: 0, max: 0, min: 0 };
+    return { average: '0', median: '0', max: '0', min: '0' };
   }
 
   const stats = chosenStatistics.value.overallStatistics;
