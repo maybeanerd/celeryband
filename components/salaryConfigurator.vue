@@ -43,21 +43,20 @@
 
 <script setup lang="ts">
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
+import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 
 const { showErrorToast, showSuccessToast } = useToastNotifications();
 
 const { config } = await useServerConfiguration();
 
-const { data } = await useFetch<SalarySchema>('/api/salary', {
-  lazy: false,
-});
+const ownSalary = await useOwnSalary();
 
-const selectedRole = ref(data.value?.role || '');
-const selectedSeniorityLevel = ref(data.value?.seniorityLevel || '');
-const selectedDepartment = ref(data.value?.department || '');
-const selectedYearlyAmount = ref(data.value?.yearlyAmount || 0);
-const selectedHoursPerWeek = ref(data.value?.hoursPerWeek || 0);
+const selectedRole = ref(ownSalary.value?.role || '');
+const selectedSeniorityLevel = ref(ownSalary.value?.seniorityLevel || '');
+const selectedDepartment = ref(ownSalary.value?.department || '');
+const selectedYearlyAmount = ref(ownSalary.value?.yearlyAmount || 0);
+const selectedHoursPerWeek = ref(ownSalary.value?.hoursPerWeek || 0);
 
 const loadingSalaryChange = ref(false);
 
