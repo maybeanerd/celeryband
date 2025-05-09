@@ -32,10 +32,17 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Account Settings - CeleryBand',
+  meta: [
+    { name: 'description', content: 'Manage your salary information and account settings' },
+  ],
+});
+
 const { clear } = useUserSession();
 
 const { showErrorToast } = useToastNotifications();
-function deleteAccount () {
+function deleteAccount() {
   showErrorToast('Failed to delete account.', 'This feature is not implemented yet.');
 }
 </script>

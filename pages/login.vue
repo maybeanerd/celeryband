@@ -36,6 +36,13 @@ definePageMeta({
   layout: 'logged-out',
 });
 
+useHead({
+  title: 'Login - CeleryBand',
+  meta: [
+    { name: 'description', content: 'Log in to CeleryBand to access transparent workplace compensation data' },
+  ],
+});
+
 const { fetch: fetchUserSession } = useUserSession();
 const { showErrorToast } = useToastNotifications();
 const { serverInfo } = await usePublicServerInformation();
