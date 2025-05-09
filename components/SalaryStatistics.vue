@@ -143,7 +143,7 @@
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ capitalizeWords(ownSalary?.department) ||
                 'your department'
-              }}</span>
+                }}</span>
             </div>
           </div>
         </template>
