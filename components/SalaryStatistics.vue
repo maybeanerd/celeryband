@@ -72,7 +72,7 @@
           <!-- Your role and seniority statistics -->
           <div>
             <h3 class="text-lg font-medium mb-1">
-              {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
+              {{ capitalizeWords(ownSalary?.seniorityLevel) }} {{ capitalizeWords(ownSalary?.role) }}s
             </h3>
             <div v-if="ownRoleSeniorityStats">
               <p class="text-xs text-gray-500 mb-2">Based on {{ ownRoleSeniorityStats.count }} data points</p>
@@ -87,7 +87,6 @@
                 </div>
               </div>
 
-              <!-- Keep percentage badges but in a simpler layout -->
               <div v-if="statistics.salaryAssessment?.sameRoleAndSeniority" class="flex gap-4">
                 <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average"
                   context="average" />
@@ -98,18 +97,16 @@
             <NoStatisticsAvailable v-else />
           </div>
 
-          <!-- Your department statistics -->
           <div>
             <h3 class="text-lg font-medium mb-1">
-              {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
-              in {{ ownSalary?.department }}
+              {{ capitalizeWords(ownSalary?.seniorityLevel) }} {{ capitalizeWords(ownSalary?.role) }}s
+              in {{ capitalizeWords(ownSalary?.department) }}
             </h3>
             <div v-if="ownRoleAndSeniorityAndDepartmentStats">
               <p class="text-xs text-gray-500 mb-2">Based on {{ ownRoleAndSeniorityAndDepartmentStats.count }} data
                 points
               </p>
 
-              <!-- Add visualization for department statistics -->
               <div class="mb-6 mt-4">
                 <div class="relative">
                   <SalaryBandLine :min="ownRoleAndSeniorityAndDepartmentStats.min"
@@ -120,7 +117,6 @@
                 </div>
               </div>
 
-              <!-- Keep percentage badges but in a simpler layout -->
               <div v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment" class="flex gap-4">
                 <SalaryPercentageBadge
                   :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.average"
@@ -134,42 +130,39 @@
         </div>
       </UCard>
 
-      <!-- Statistics for Same Role (All Seniorities) -->
       <UCard class="w-full">
         <template #header>
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <UIcon name="i-lucide-briefcase" class="text-xl" />
               <h2 class="text-xl font-semibold">
-                Statistics for {{ ownSalary?.role }}s
+                Statistics for {{ capitalizeWords(ownSalary?.role) }}s
               </h2>
             </div>
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
-              <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-                }}</span>
+              <span class="text-sm font-medium">Only include salaries from {{ capitalizeWords(ownSalary?.department) ||
+                'your department'
+              }}</span>
             </div>
           </div>
         </template>
         <div v-if="sameRoleAllSeniorityData.length > 0">
           <div class="relative mt-4">
             <div class="w-full h-[300px] rounded-lg p-4">
-              <!-- Y-axis labels (seniority levels) with data point counts -->
               <div class="absolute left-0 top-0 bottom-0 w-[180px] flex flex-col justify-around pr-2">
                 <div v-for="(item, index) in sameRoleAllSeniorityData" :key="index" class="text-sm">
-                  <div class="font-medium truncate">{{ item.seniorityLevel }}</div>
+                  <div class="font-medium truncate">{{ capitalizeWords(item.seniorityLevel) }}</div>
                   <div class="text-xs text-gray-500">Based on {{ item.count }} data points</div>
                 </div>
               </div>
 
-              <!-- Visualization area -->
               <div class="ml-[180px] h-full flex flex-col justify-around">
                 <SalaryBandLine v-for="(item, index) in sameRoleAllSeniorityData" :key="index" :min="item.min"
                   :max="item.max" :median="item.median" :average="item.average" :global-min="roleStatsMinValue"
                   :global-max="roleStatsMaxValue" :currency="currency" />
               </div>
 
-              <!-- Legend -->
               <div class="absolute bottom-[-30px] left-[180px] right-0 flex justify-center gap-4 text-xs">
                 <div class="flex items-center">
                   <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
@@ -193,10 +186,14 @@
 import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
-import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
-import SalaryBandVisualization from '~/components/SalaryBandVisualization.vue';
-import SalaryBandLine from '~/components/SalaryBandLine.vue';
-import NoStatisticsAvailable from '~/components/NoStatisticsAvailable.vue';
+
+// Utility function to capitalize first letter of each word
+function capitalizeWords(text: string | undefined | null): string {
+  if (!text) { return ''; }
+  return text.split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
 
 // Define interfaces to ensure types are correct
 interface SalaryStatistics {
