@@ -1,21 +1,8 @@
 <template>
   <div>
-    <div class="flex flex-col min-h-screen justify-between">
-      <div class="h-8 mb-4 px-4 pt-4 w-full flex justify-start items-center">
-        <div class="flex items-center gap-2">
-          <p class="text-xl">
-            CeleryBand
-          </p>
-          <p class="text-md self-end text-neutral-400">
-            for {{ serverInfo?.acceptedDomain }}
-          </p>
-        </div>
-      </div>
-      <div class="w-screen p-4 overflow-x-hidden">
-        <h1>You're logged out. Sign in by requesting a link to your email:</h1>
-        <div>
-          <slot />
-        </div>
+    <div class="flex flex-col min-h-screen">
+      <div class="w-screen p-4 overflow-x-hidden flex-grow flex items-center justify-center">
+        <slot />
       </div>
       <Footer />
     </div>
@@ -23,10 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePublicServerInformation } from '~/composables/api/usePublicServerInformation';
-
 const { loggedIn } = useUserSession();
-const { serverInfo } = await usePublicServerInformation();
 
 watch(loggedIn,
   (isLoggedIn) => {
