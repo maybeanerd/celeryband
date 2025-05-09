@@ -160,9 +160,10 @@
 
               <!-- Visualization area -->
               <div class="ml-[180px] h-full flex flex-col justify-around">
-                <SalaryBandLine v-for="(item, index) in sameRoleAllSeniorityData" :key="index" :min="item.min"
-                  :max="item.max" :median="item.median" :average="item.average" :global-min="globalMin"
-                  :global-max="globalMax" :currency="currency" />
+                <SalaryBandLine v-for="(item, index) in sameRoleAllSeniorityData" :key="index"
+                  :min="parseSalaryValue(item.min)" :max="parseSalaryValue(item.max)"
+                  :median="parseSalaryValue(item.median)" :average="parseSalaryValue(item.average)"
+                  :global-min="roleStatsMinValue" :global-max="roleStatsMaxValue" :currency="currency" />
               </div>
 
               <!-- Legend -->
@@ -440,4 +441,23 @@ const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
 function parseSalaryValue(value: string): number {
   return parseFloat(value.replace(/[^\d.-]/g, ''));
 }
+
+// Compute min and max values for the role statistics visualization
+const roleStatsMinValue = computed<number>(() => {
+  if (sameRoleAllSeniorityData.value.length === 0) {
+    return 0;
+  }
+
+  // Find the minimum value across all seniority levels
+  return Math.min(...sameRoleAllSeniorityData.value.map(item => parseSalaryValue(item.min)));
+});
+
+const roleStatsMaxValue = computed<number>(() => {
+  if (sameRoleAllSeniorityData.value.length === 0) {
+    return 0;
+  }
+
+  // Find the maximum value across all seniority levels
+  return Math.max(...sameRoleAllSeniorityData.value.map(item => parseSalaryValue(item.max)));
+});
 </script>
