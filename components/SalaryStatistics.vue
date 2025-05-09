@@ -94,7 +94,7 @@
           </div>
 
           <!-- Your department statistics -->
-          <div v-if="ownDepartmentStats">
+          <div v-if="ownRoleAndSeniorityAndDepartmentStats">
             <h3 class="text-lg font-medium mb-2">
               {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
               in {{ ownSalary?.department }}</h3>
@@ -102,11 +102,13 @@
             <!-- Add visualization for department statistics -->
             <div class="mb-6 mt-4">
               <div class="relative">
-                <SalaryBandLine :min="parseSalaryValue(ownDepartmentStats.min)"
-                  :max="parseSalaryValue(ownDepartmentStats.max)" :median="parseSalaryValue(ownDepartmentStats.median)"
-                  :average="parseSalaryValue(ownDepartmentStats.average)"
-                  :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
-                  :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
+                <SalaryBandLine :min="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.min)"
+                  :max="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.max)"
+                  :median="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.median)"
+                  :average="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.average)"
+                  :global-min="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.min)"
+                  :global-max="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.max)" :currency="currency"
+                  :own-salary="ownSalary?.yearlyAmount" />
               </div>
             </div>
 
@@ -134,7 +136,7 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-              }}</span>
+                }}</span>
             </div>
           </div>
         </template>
@@ -268,6 +270,46 @@ const overallStats = computed(() => {
   }
 
   const stats = chosenStatistics.value.overallStatistics;
+
+  return {
+    average: stats.average + ' ' + currency.value,
+    median: stats.median + ' ' + currency.value,
+    max: stats.max + ' ' + currency.value,
+    min: stats.min + ' ' + currency.value,
+  };
+});
+
+// Own department statistics
+const ownRoleAndSeniorityAndDepartmentStats = computed(() => {
+  if (!chosenStatistics.value?.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
+    return null;
+  }
+
+  const departmentStat = chosenStatistics.value.byDepartmentAndRoleAndSeniority.find(
+    item => item.department === ownSalary.value?.department,
+  );
+
+  if (!departmentStat) {
+    return null;
+  }
+
+  const roleStat = departmentStat.roles.find(
+    item => item.role === ownSalary.value?.role,
+  );
+
+  if (!roleStat) {
+    return null;
+  }
+
+  const seniorityStat = roleStat.seniorityLevels.find(
+    item => item.seniorityLevel === ownSalary.value?.seniorityLevel,
+  );
+
+  if (!seniorityStat) {
+    return null;
+  }
+
+  const stats = seniorityStat.statistics;
 
   return {
     average: stats.average + ' ' + currency.value,
