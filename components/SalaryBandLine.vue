@@ -9,19 +9,27 @@
     </div>
     
     <!-- Min marker -->
-    <div class="absolute bottom-6 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400"
-      :style="{ left: `${getPercentPosition(min)}%` }">
+    <div class="absolute top-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap"
+      :style="{ 
+        left: `${getPercentPosition(min)}%`, 
+        transform: 'translateX(-100%) translateY(-50%)', 
+        marginLeft: '-4px' 
+      }">
       {{ formatValue(min) }}
     </div>
     
     <!-- Max marker -->
-    <div class="absolute bottom-6 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400"
-      :style="{ left: `${getPercentPosition(max)}%` }">
+    <div class="absolute top-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap"
+      :style="{ 
+        left: `${getPercentPosition(max)}%`, 
+        transform: 'translateY(-50%)', 
+        marginLeft: '4px' 
+      }">
       {{ formatValue(max) }}
     </div>
     
     <!-- Median marker -->
-    <div class="absolute w-2 h-4 bg-blue-500 rounded-full transform -translate-x-1/2"
+    <div class="absolute w-1 h-4 bg-blue-500 rounded-full transform -translate-x-1/2"
       :style="{ left: `${getPercentPosition(median)}%` }">
       <div class="absolute top-4 transform -translate-x-1/2 text-xs text-blue-500 whitespace-nowrap">
         {{ formatValue(median) }}
@@ -29,7 +37,7 @@
     </div>
     
     <!-- Average marker -->
-    <div class="absolute w-2 h-4 bg-green-500 rounded-full transform -translate-x-1/2"
+    <div class="absolute w-1 h-4 bg-green-500 rounded-full transform -translate-x-1/2"
       :style="{ left: `${getPercentPosition(average)}%` }">
       <div class="absolute top-[-16px] transform -translate-x-1/2 text-xs text-green-500 whitespace-nowrap">
         {{ formatValue(average) }}
@@ -38,9 +46,9 @@
 
     <!-- Own salary marker (optional) -->
     <div v-if="ownSalary" 
-      class="absolute w-2 h-6 bg-purple-500 rounded-full transform -translate-x-1/2"
+      class="absolute w-1 h-6 bg-purple-500 rounded-full transform -translate-x-1/2"
       :style="{ left: `${getPercentPosition(ownSalary)}%` }">
-      <div class="absolute top-6 transform -translate-x-1/2 text-xs text-purple-500 whitespace-nowrap">
+      <div class="absolute top-8 transform -translate-x-1/2 text-xs text-purple-500 whitespace-nowrap">
         {{ formatValue(ownSalary) }}
       </div>
     </div>
@@ -96,6 +104,6 @@ function formatValue (value: string | number): string {
   if (typeof value === 'string') {
     return value;
   }
-  return `${value} ${props.currency || ''}`;
+  return `${value}${props.currency ? ` ${props.currency}` : ''}`;
 }
 </script>

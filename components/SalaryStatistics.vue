@@ -35,22 +35,6 @@
           </div>
         </template>
         <div v-if="chosenStatistics" class="flex flex-col gap-4">
-          <!-- Shared legend for all visualizations -->
-          <div class="flex items-center gap-4 text-xs mb-2">
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
-              <span>Median</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-              <span>Average</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
-              <span>Your Salary</span>
-            </div>
-          </div>
-
           <!-- Global statistics -->
           <div>
             <h3 class="text-lg font-medium mb-1">All Employees</h3>
@@ -58,7 +42,7 @@
               <p class="text-xs text-gray-500 mb-2">Based on {{ overallStats.count }} data points</p>
 
               <!-- Add visualization for overall statistics -->
-              <div class="mb-6 mt-4">
+              <div class="mb-4 mt-4">
                 <div class="relative">
                   <SalaryBandLine :min="overallStats.min" :max="overallStats.max" :median="overallStats.median"
                     :average="overallStats.average" :global-min="globalMinValue" :global-max="globalMaxValue"
@@ -78,7 +62,7 @@
               <p class="text-xs text-gray-500 mb-2">Based on {{ ownRoleSeniorityStats.count }} data points</p>
 
               <!-- Add visualization for role & seniority statistics -->
-              <div class="mb-6 mt-4">
+              <div class="mb-4 mt-4">
                 <div class="relative">
                   <SalaryBandLine :min="ownRoleSeniorityStats.min" :max="ownRoleSeniorityStats.max"
                     :median="ownRoleSeniorityStats.median" :average="ownRoleSeniorityStats.average"
@@ -107,7 +91,7 @@
                 points
               </p>
 
-              <div class="mb-6 mt-4">
+              <div class="mb-4 mt-4">
                 <div class="relative">
                   <SalaryBandLine :min="ownRoleAndSeniorityAndDepartmentStats.min"
                     :max="ownRoleAndSeniorityAndDepartmentStats.max"
@@ -126,6 +110,22 @@
               </div>
             </div>
             <NoStatisticsAvailable v-else />
+          </div>
+
+          <!-- Legend for all visualizations moved to the end -->
+          <div class="flex items-center gap-4 text-xs mt-2 mb-2 justify-center">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+              <span>Median</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+              <span>Average</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
+              <span>Your Salary</span>
+            </div>
           </div>
         </div>
       </UCard>
@@ -162,17 +162,18 @@
                   :max="item.max" :median="item.median" :average="item.average" :global-min="roleStatsMinValue"
                   :global-max="roleStatsMaxValue" :currency="currency" />
               </div>
+            </div>
+          </div>
 
-              <div class="absolute bottom-[-30px] left-[180px] right-0 flex justify-center gap-4 text-xs">
-                <div class="flex items-center">
-                  <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
-                  <span>Median</span>
-                </div>
-                <div class="flex items-center">
-                  <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-                  <span>Average</span>
-                </div>
-              </div>
+          <!-- Legend moved below the visualization -->
+          <div class="flex items-center gap-4 text-xs mt-4 mb-2 justify-center">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+              <span>Median</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+              <span>Average</span>
             </div>
           </div>
         </div>
