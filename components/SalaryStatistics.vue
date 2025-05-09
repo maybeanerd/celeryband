@@ -16,7 +16,6 @@
       </UButton>
     </div>
     <template v-else-if="statistics && statistics.statistics">
-      <!-- Normalization Toggle -->
       <div class="flex flex-col gap-2">
         <div class="flex items-center justify-start gap-2">
           <USwitch v-model="normalized" />
@@ -30,143 +29,7 @@
         </p>
       </div>
 
-      <!-- Overall Statistics -->
-      <UCard class="w-full">
-        <template #header>
-          <div class="flex items-center gap-2">
-            <UIcon name="i-lucide-bar-chart-big" class="text-xl" />
-            <h2 class="text-xl font-semibold">
-              Overall Statistics
-            </h2>
-          </div>
-        </template>
-        <div v-if="chosenStatistics" class="flex flex-col gap-4">
-          <!-- Global statistics -->
-          <div>
-            <h3 class="text-lg font-medium mb-1">
-              All Employees
-            </h3>
-            <div v-if="chosenStatistics?.overallStatistics">
-              <p class="text-xs text-gray-500 mb-2">
-                Based on {{ overallStats.count }} data points
-              </p>
-
-              <!-- Add visualization for overall statistics -->
-              <div class="mb-4 mt-4">
-                <div class="relative">
-                  <SalaryBandLine
-                    :min="overallStats.min"
-                    :max="overallStats.max"
-                    :median="overallStats.median"
-                    :average="overallStats.average"
-                    :global-min="globalMinValue"
-                    :global-max="globalMaxValue"
-                    :currency="currency"
-                    :own-salary="ownSalary?.yearlyAmount"
-                  />
-                </div>
-              </div>
-            </div>
-            <NoStatisticsAvailable v-else />
-          </div>
-
-          <!-- Your role and seniority statistics -->
-          <div>
-            <h3 class="text-lg font-medium mb-1">
-              {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
-            </h3>
-            <div v-if="ownRoleSeniorityStats">
-              <p class="text-xs text-gray-500 mb-2">
-                Based on {{ ownRoleSeniorityStats.count }} data points
-              </p>
-
-              <!-- Add visualization for role & seniority statistics -->
-              <div class="mb-4 mt-4">
-                <div class="relative">
-                  <SalaryBandLine
-                    :min="ownRoleSeniorityStats.min"
-                    :max="ownRoleSeniorityStats.max"
-                    :median="ownRoleSeniorityStats.median"
-                    :average="ownRoleSeniorityStats.average"
-                    :global-min="globalMinValue"
-                    :global-max="globalMaxValue"
-                    :currency="currency"
-                    :own-salary="ownSalary?.yearlyAmount"
-                  />
-                </div>
-              </div>
-
-              <div v-if="statistics.salaryAssessment?.sameRoleAndSeniority" class="flex gap-4">
-                <SalaryPercentageBadge
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average"
-                  context="average"
-                />
-                <SalaryPercentageBadge
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.median"
-                  context="median"
-                />
-              </div>
-            </div>
-            <NoStatisticsAvailable v-else />
-          </div>
-
-          <div>
-            <h3 class="text-lg font-medium mb-1">
-              {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
-              in {{ capitalizeFirstCharacterOfWords(ownSalary?.department) }}
-            </h3>
-            <div v-if="ownRoleAndSeniorityAndDepartmentStats">
-              <p class="text-xs text-gray-500 mb-2">
-                Based on {{ ownRoleAndSeniorityAndDepartmentStats.count }} data
-                points
-              </p>
-
-              <div class="mb-4 mt-4">
-                <div class="relative">
-                  <SalaryBandLine
-                    :min="ownRoleAndSeniorityAndDepartmentStats.min"
-                    :max="ownRoleAndSeniorityAndDepartmentStats.max"
-                    :median="ownRoleAndSeniorityAndDepartmentStats.median"
-                    :average="ownRoleAndSeniorityAndDepartmentStats.average"
-                    :global-min="globalMinValue"
-                    :global-max="globalMaxValue"
-                    :currency="currency"
-                    :own-salary="ownSalary?.yearlyAmount"
-                  />
-                </div>
-              </div>
-
-              <div v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment" class="flex gap-4">
-                <SalaryPercentageBadge
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.average"
-                  context="average"
-                />
-                <SalaryPercentageBadge
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.median"
-                  context="median"
-                />
-              </div>
-            </div>
-            <NoStatisticsAvailable v-else />
-          </div>
-
-          <!-- Legend for all visualizations moved to the end -->
-          <div class="flex items-center gap-4 text-xs mt-2 mb-2 justify-center">
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1" />
-              <span>Median</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-green-500 rounded-full mr-1" />
-              <span>Average</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-purple-500 rounded-full mr-1" />
-              <span>Your Salary</span>
-            </div>
-          </div>
-        </div>
-      </UCard>
+      <OverallStatistics :salary-statistics="chosenStatistics" :salary-assessment="statistics.salaryAssessment" :own-salary="ownSalary" :currency="currency" />
 
       <SalaryBandVisualization :salary-statistics="chosenStatistics" :own-salary="ownSalary" :currency="currency" />
     </template>
@@ -177,7 +40,6 @@
 import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
-import type { SalaryStatistics } from '~/server/api/salary/statistics/index.get';
 
 const { config: serverConfig } = await useServerConfiguration();
 const normalized = ref(true);
@@ -201,95 +63,4 @@ const chosenStatistics = computed(() => {
     : statistics.value.statistics;
 });
 
-// Overall statistics computed property
-const overallStats = computed<SalaryStatistics>(() => {
-  if (!chosenStatistics.value?.overallStatistics) {
-    return { average: 0, median: 0, max: 0, min: 0, count: 0 };
-  }
-
-  return chosenStatistics.value.overallStatistics;
-});
-
-// Own department statistics
-const ownRoleAndSeniorityAndDepartmentStats = computed<SalaryStatistics | null>(() => {
-  if (!chosenStatistics.value?.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
-    return null;
-  }
-
-  const departmentStat = chosenStatistics.value.byDepartmentAndRoleAndSeniority.find(
-    item => item.department === ownSalary.value?.department,
-  );
-
-  if (!departmentStat) {
-    return null;
-  }
-
-  const roleStat = departmentStat.roles.find(
-    item => item.role === ownSalary.value?.role,
-  );
-
-  if (!roleStat) {
-    return null;
-  }
-
-  const seniorityStat = roleStat.seniorityLevels.find(
-    item => item.seniorityLevel === ownSalary.value?.seniorityLevel,
-  );
-
-  if (!seniorityStat || seniorityStat.statistics.count < 3) {
-    return null;
-  }
-
-  return seniorityStat.statistics;
-});
-
-// Own role and seniority statistics
-const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
-  if (!chosenStatistics.value?.byRoleAndSeniority ||
-    !ownSalary.value?.role ||
-    !ownSalary.value?.seniorityLevel) {
-    return null;
-  }
-
-  // Find the role item
-  const roleItem = chosenStatistics.value.byRoleAndSeniority.find(
-    item => item.role === ownSalary.value?.role,
-  );
-
-  if (!roleItem) {
-    return null;
-  }
-
-  // Find the seniority level item
-  const seniorityItem = roleItem.seniorityLevels.find(
-    item => item.seniorityLevel === ownSalary.value?.seniorityLevel,
-  );
-
-  if (!seniorityItem || seniorityItem.statistics.count < 3) {
-    return null;
-  }
-
-  return seniorityItem.statistics;
-});
-
-// Helper function to parse salary values for legacy string values - can be removed if all values are now numbers
-function getSalaryNumericValue (value: string | number): number {
-  if (typeof value === 'number') { return value; }
-  return parseFloat(value);
-}
-
-// Define global min and max values for consistent scaling across all visualizations
-const globalMinValue = computed(() => {
-  if (!chosenStatistics.value?.overallStatistics) {
-    return 0;
-  }
-  return getSalaryNumericValue(chosenStatistics.value.overallStatistics.min);
-});
-
-const globalMaxValue = computed(() => {
-  if (!chosenStatistics.value?.overallStatistics) {
-    return 0;
-  }
-  return getSalaryNumericValue(chosenStatistics.value.overallStatistics.max);
-});
 </script>
