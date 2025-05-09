@@ -20,7 +20,7 @@ const emailTransporter = createTransport({
   },
 });
 
-const { serverUrl } = serverConfiguration;
+const { serverUrl, developmentMode } = serverConfiguration;
 
 function getLoginLink (token: string) {
   const urlWithToken = new URL(serverUrl);
@@ -48,6 +48,12 @@ export function normalizeEmail (email: string) {
 
 export async function sendLoginEmail (loginToken: string, emailAddress: string) {
   const emailContent = generateLoginEmailContent(loginToken, emailAddress);
+
+  if (developmentMode) {
+    console.debug('--------- EMAIL CONTENT START ---------');
+    console.debug(emailContent);
+    console.debug('---------- EMAIL CONTENT END ----------');
+  }
 
   const response = await emailTransporter.sendMail({
     from: '"celeryband" <noreply@celery.band>',

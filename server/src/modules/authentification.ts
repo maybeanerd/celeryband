@@ -25,7 +25,6 @@ export async function createLoginToken (obfuscatedEmail: string) {
 
   const { db } = useDrizzle();
 
-  // TODO write cronjob to remove outdated login tokens
   const dayOffsetInMs = 1000 * 60 * 60 * 24;
 
   await db.insert(loginTokenSchema).values({

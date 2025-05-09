@@ -1,14 +1,15 @@
 import { getSalaryStatistics } from '~/server/src/modules/salary/salaries';
 
-type SalaryStatistics = {
+export type SalaryStatistics = {
+  average: number;
+  median: number;
+  max: number;
+  min: number;
+  count: number;
+}
 
-    average: number;
-    median: number;
-    max: number;
-    min: number;}
-
-type DetailedStatistics = {
-  overallStatistics: SalaryStatistics;
+export type DetailedStatistics = {
+  overallStatistics: SalaryStatistics | null;
   byDepartment: Array<{
     department: string;
     statistics: SalaryStatistics;
@@ -34,7 +35,7 @@ type DetailedStatistics = {
       seniorityLevel: string;
       statistics: SalaryStatistics;
     }>;
-    }>;
+  }>;
   byDepartmentAndRoleAndSeniority: Array<{
     department: string;
     roles: Array<{
@@ -45,26 +46,30 @@ type DetailedStatistics = {
       }>;
     }>;
   }>;
-  };
+};
+
+export type SalaryAssessment = {
+  sameRoleAndSeniority: {
+    average: string;
+    median: string;
+  } | null;
+  sameRoleAndSeniorityAndDepartment: {
+    average: string;
+    median: string;
+  } | null
+}
 
 export type Statistics = {
-areAvailable: false;
-statistics: null;
-normalizedStatistics: null;
-salaryAssessment: null;
+  areAvailable: false;
+  statistics: null;
+  normalizedStatistics: null;
+  salaryAssessment: null;
 } | {
-areAvailable: true;
-statistics: DetailedStatistics;
-normalizedStatistics: DetailedStatistics;
-salaryAssessment: {
-  overall: {
-  average: number;
-  median: number;
-} | null;
-department: {
-  average: number;
-  median: number;
-} | null;}}
+  areAvailable: true;
+  statistics: DetailedStatistics;
+  normalizedStatistics: DetailedStatistics;
+  salaryAssessment: SalaryAssessment;
+}
 
 export default defineEventHandler(async (event): Promise<Statistics> => {
   const { user } = await requireUserSession(event);

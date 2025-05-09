@@ -52,10 +52,12 @@ function calculateStatistics (salaries: SalarySchema[]): {
   median: number;
   max: number;
   min: number;
+  count: number;
 } {
+  const count = salaries.length;
   const amounts = salaries.map(s => s.yearlyAmount);
   const sum = amounts.reduce((a, b) => a + b, 0);
-  const average = sum / amounts.length;
+  const average = sum / count;
   const sortedAmounts = [...amounts].sort((a, b) => a - b);
   const median = sortedAmounts.length % 2 === 0
     ? ((sortedAmounts.at(sortedAmounts.length / 2 - 1) ?? 0) + (sortedAmounts.at(sortedAmounts.length / 2) ?? 0)) / 2
@@ -64,7 +66,13 @@ function calculateStatistics (salaries: SalarySchema[]): {
   const min = sortedAmounts.at(0) ?? 0;
   const max = sortedAmounts.pop() ?? 0;
 
-  return { average, median, max, min };
+  return {
+    average: Math.ceil(average),
+    median: Math.ceil(median),
+    max: Math.ceil(max),
+    min: Math.ceil(min),
+    count,
+  };
 }
 
 type GroupedSalaryStatistics<Key extends keyof SalarySchema> = {
@@ -73,28 +81,32 @@ type GroupedSalaryStatistics<Key extends keyof SalarySchema> = {
     median: number;
     max: number;
     min: number;
+    count: number;
     }
   }
   & Record<Key, string>
 
 function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySchema[], groupByKey: Key): Array<GroupedSalaryStatistics<Key>> {
-  const grouped = salaries.reduce((acc, salary) => {
+  const grouped = salaries.reduce<Record<string, SalarySchema[]>>((acc, salary) => {
     const aggregationKey = String(salary[groupByKey]);
     if (!acc[aggregationKey]) {
       acc[aggregationKey] = [];
     }
     acc[aggregationKey].push(salary);
     return acc;
-  }, {} as Record<string, SalarySchema[]>);
+  }, {});
 
-  return Object.entries(grouped).map(([key, group]) => ({
-    [groupByKey]: key,
-    statistics: calculateStatistics(group),
-  } as GroupedSalaryStatistics<Key>));
+  return Object.entries(grouped)
+    .filter(([_, group]) => group.length >= 3) // Only include groups with at least 3 entries
+    .map(([key, group]) => ({
+      [groupByKey]: key,
+      statistics: calculateStatistics(group),
+    } as GroupedSalaryStatistics<Key>))
+    .sort((a, b) => a.statistics.average - b.statistics.average);
 }
 
 function getStatisticsForSalaries (salaries: SalarySchema[]) {
-  const overallStatistics = calculateStatistics(salaries);
+  const overallStatistics = salaries.length >= 3 ? calculateStatistics(salaries) : null;
 
   const byDepartment = groupAndCalculate(salaries, 'department');
   const byRole = groupAndCalculate(salaries, 'role');
@@ -170,13 +182,13 @@ export async function getSalaryStatistics (userId: string) {
     .find(s => s.seniorityLevel === userSalary.seniorityLevel)?.statistics ?? null;
 
   const salaryAssessment = {
-    overall: statisticsOfSameRoleAndSeniority
+    sameRoleAndSeniority: statisticsOfSameRoleAndSeniority
       ? {
           average: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.average) / statisticsOfSameRoleAndSeniority.average) * 100).toFixed(2),
           median: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.median) / statisticsOfSameRoleAndSeniority.median) * 100).toFixed(2),
         }
       : null,
-    department: statisticsOfSameRoleAndSeniorityAndDepartment
+    sameRoleAndSeniorityAndDepartment: statisticsOfSameRoleAndSeniorityAndDepartment
       ? {
           average: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.average) / statisticsOfSameRoleAndSeniorityAndDepartment.average) * 100).toFixed(2),
           median: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.median) / statisticsOfSameRoleAndSeniorityAndDepartment.median) * 100).toFixed(2),

@@ -1,7 +1,7 @@
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const userSchema = sqliteTable('user', {
-  id: text().primaryKey(), // TODO somehow generate UUIDs here, preferrably by default
+  id: text().primaryKey(),
   emailHash: text().unique().notNull(),
 });
 

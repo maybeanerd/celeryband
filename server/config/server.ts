@@ -35,6 +35,12 @@ if (acceptedDomain === null) {
   throw new Error('ACCEPTED_DOMAIN is not set. This is necessary to limit signups to your company.');
 }
 
+const developmentMode = process.env.DEVELOPMENT_MODE === 'true';
+
+if (developmentMode) {
+  console.warn('Development mode is enabled. This will generate test data and leak sensitive information like emails into the logs. DO NOT USE IN PRODUCTION.');
+}
+
 export const serverConfiguration = {
   roles,
   seniorityLevels,
@@ -42,4 +48,5 @@ export const serverConfiguration = {
   currency,
   acceptedDomain,
   serverUrl,
+  developmentMode,
 };

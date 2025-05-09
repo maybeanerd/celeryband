@@ -3,6 +3,8 @@ WORKDIR /app
 
 ARG COMMIT_HASH
 ENV COMMIT_HASH=$COMMIT_HASH
+ARG VERSION
+ENV VERSION=$VERSION
 
 COPY ["package.json", ".npmrc", "pnpm-lock.yaml", "./"]
 # Install pnpm
