@@ -48,10 +48,10 @@ export async function getSalaryForUser (userId: string): Promise<SalarySchema | 
 }
 
 function calculateStatistics (salaries: SalarySchema[]): {
-  average: string;
-  median: string;
-  max: string;
-  min: string;
+  average: number;
+  median: number;
+  max: number;
+  min: number;
 } {
   const amounts = salaries.map(s => s.yearlyAmount);
   const sum = amounts.reduce((a, b) => a + b, 0);
@@ -65,19 +65,19 @@ function calculateStatistics (salaries: SalarySchema[]): {
   const max = sortedAmounts.pop() ?? 0;
 
   return {
-    average: Math.ceil(average).toString(),
-    median: Math.ceil(median).toString(),
-    max: Math.ceil(max).toString(),
-    min: Math.ceil(min).toString(),
+    average: Math.ceil(average),
+    median: Math.ceil(median),
+    max: Math.ceil(max),
+    min: Math.ceil(min),
   };
 }
 
 type GroupedSalaryStatistics<Key extends keyof SalarySchema> = {
   statistics: {
-    average: string;
-    median: string;
-    max: string;
-    min: string;
+    average: number;
+    median: number;
+    max: number;
+    min: number;
     }
   }
   & Record<Key, string>
@@ -95,7 +95,8 @@ function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySche
   return Object.entries(grouped).map(([key, group]) => ({
     [groupByKey]: key,
     statistics: calculateStatistics(group),
-  } as GroupedSalaryStatistics<Key>));
+  } as GroupedSalaryStatistics<Key>))
+    .sort((a, b) => a.statistics.average - b.statistics.average);
 }
 
 function getStatisticsForSalaries (salaries: SalarySchema[]) {
@@ -177,14 +178,14 @@ export async function getSalaryStatistics (userId: string) {
   const salaryAssessment = {
     sameRoleAndSeniority: statisticsOfSameRoleAndSeniority
       ? {
-          average: (((userSalary.yearlyAmount - Number(statisticsOfSameRoleAndSeniority.average)) / Number(statisticsOfSameRoleAndSeniority.average)) * 100).toFixed(2),
-          median: (((userSalary.yearlyAmount - Number(statisticsOfSameRoleAndSeniority.median)) / Number(statisticsOfSameRoleAndSeniority.median)) * 100).toFixed(2),
+          average: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.average) / statisticsOfSameRoleAndSeniority.average) * 100).toFixed(2),
+          median: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniority.median) / statisticsOfSameRoleAndSeniority.median) * 100).toFixed(2),
         }
       : null,
     sameRoleAndSeniorityAndDepartment: statisticsOfSameRoleAndSeniorityAndDepartment
       ? {
-          average: (((userSalary.yearlyAmount - Number(statisticsOfSameRoleAndSeniorityAndDepartment.average)) / Number(statisticsOfSameRoleAndSeniorityAndDepartment.average)) * 100).toFixed(2),
-          median: (((userSalary.yearlyAmount - Number(statisticsOfSameRoleAndSeniorityAndDepartment.median)) / Number(statisticsOfSameRoleAndSeniorityAndDepartment.median)) * 100).toFixed(2),
+          average: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.average) / statisticsOfSameRoleAndSeniorityAndDepartment.average) * 100).toFixed(2),
+          median: (((userSalary.yearlyAmount - statisticsOfSameRoleAndSeniorityAndDepartment.median) / statisticsOfSameRoleAndSeniorityAndDepartment.median) * 100).toFixed(2),
         }
       : null,
   };
