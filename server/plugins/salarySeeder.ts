@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { sql } from 'drizzle-orm';
+import { count } from 'drizzle-orm';
 import { salarySchema } from '~/server/db/schemas/Salary.schema';
 import { userSchema } from '~/server/db/schemas/User.schema';
 import { serverConfiguration } from '~/server/config/server';
@@ -46,8 +46,8 @@ async function generateRandomUserBatch (
     const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)];
     const department = departments[Math.floor(Math.random() * departments.length)];
 
-    // Base salary range (50k-150k)
-    let baseSalary = 50000 + Math.floor(Math.random() * 100000);
+    // Base salary range (30k-130k)
+    let baseSalary = 30000 + Math.floor(Math.random() * 100000);
 
     // Adjust based on seniority level (junior: -20%, professional: +0%, senior: +20%, etc.)
     const seniorityIndex = seniorityLevels.indexOf(seniorityLevel);
@@ -103,15 +103,14 @@ export default defineNitroPlugin(async () => {
     const { db } = useDrizzle();
 
     // Check if we have at least 100 salaries
-    const salaryCount = await db.select({ count: sql<number>`count(*)` }).from(salarySchema);
-    const count = salaryCount[0]?.count ?? 0;
+    const salaryCount = (await db.select({ count: count(salarySchema.ownerId) }).from(salarySchema)).at(0)?.count ?? 0;
 
-    if (count >= 2000) {
-      console.info(`Found ${count} existing salaries, no need to generate random data.`);
+    if (salaryCount >= 2000) {
+      console.info(`Found ${salaryCount} existing salaries, no need to generate random data.`);
       return;
     }
 
-    console.info(`Only ${count} salaries found. Generating 10,000 random salaries...`);
+    console.info(`Only ${salaryCount} salaries found. Generating 10,000 random salaries...`);
 
     // Get available options from server config
     const { roles, seniorityLevels, departments, acceptedDomain } = serverConfiguration;

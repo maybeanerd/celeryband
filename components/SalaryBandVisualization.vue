@@ -1,13 +1,17 @@
 <template>
   <div class="mt-4">
     <div class="relative w-full h-[300px] rounded-lg p-4">
+      <!-- TODO move to flex to make nicer on mobile -->
+
       <!-- Y-axis labels (seniority levels) -->
       <div class="absolute left-0 top-0 bottom-0 w-[120px] flex flex-col justify-around pr-2">
         <div v-for="(item, index) in salaryData" :key="index" class="text-sm font-medium">
-          <div class="truncate">{{ item.seniorityLevel }}</div>
+          <div class="truncate">
+            {{ item.seniorityLevel }}
+          </div>
         </div>
       </div>
-      
+
       <!-- Visualization area -->
       <div class="ml-[120px] h-full flex flex-col justify-around">
         <SalaryBandLine
@@ -22,15 +26,15 @@
           :currency="currency"
         />
       </div>
-      
+
       <!-- Legend -->
       <div class="absolute bottom-[-30px] left-[120px] right-0 flex justify-center gap-4 text-xs">
         <div class="flex items-center">
-          <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+          <div class="w-3 h-3 bg-blue-500 rounded-full mr-1" />
           <span>Median</span>
         </div>
         <div class="flex items-center">
-          <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+          <div class="w-3 h-3 bg-green-500 rounded-full mr-1" />
           <span>Average</span>
         </div>
       </div>
@@ -41,12 +45,12 @@
 <script setup lang="ts">
 import SalaryBandLine from '~/components/SalaryBandLine.vue';
 
-interface SalaryDataItem {
+type SalaryDataItem = {
   seniorityLevel: string;
-  min: string | number;
-  max: string | number;
-  average: string | number;
-  median: string | number;
+  min: number;
+  max: number;
+  average:number;
+  median: number;
   count: number;
 }
 
@@ -57,21 +61,13 @@ const props = defineProps<{
 
 // Find global min and max for scaling
 const globalMin = computed(() => {
-  const values = props.salaryData.map(item => getSalaryNumericValue(item.min));
+  const values = props.salaryData.map(item => item.min);
   return Math.min(...values);
 });
 
 const globalMax = computed(() => {
-  const values = props.salaryData.map(item => getSalaryNumericValue(item.max));
+  const values = props.salaryData.map(item => item.max);
   return Math.max(...values);
 });
 
-// Helper function to parse string values with currency
-function getSalaryNumericValue (value: string | number): number {
-  if (typeof value === 'number') {
-    return value;
-  }
-  // Parse string to number
-  return parseFloat(value);
-}
-</script> 
+</script>

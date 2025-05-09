@@ -1,37 +1,46 @@
 <template>
-  <div class="flex flex-col gap-2 p-4">
-    <div v-if="config" class="flex flex-col gap-2">
-      <p>
-        Role:
-      </p>
-      <USelect v-model="selectedRole" :items="config.roles" class="w-48" />
+  <div class="flex flex-col gap-2">
+    <div v-if="config">
+      <div class="flex gap-4 flex-wrap">
+        <div>
+          <p>
+            Seniority Level:
+          </p>
+          <USelect v-model="selectedSeniorityLevel" :items="config.seniorityLevels" class="w-48" />
+        </div>
+        <div>
+          <p>
+            Role:
+          </p>
+          <USelect v-model="selectedRole" :items="config.roles" class="w-48" />
+        </div>
+        <div>
+          <p>
+            Department:
+          </p>
+          <USelect v-model="selectedDepartment" :items="config.departments" class="w-48" />
+        </div>
+        <div class="flex gap-4 flex-wrap">
+          <div>
+            <p>
+              Yearly Amount:
+            </p>
 
-      <p>
-        Seniority Level:
-      </p>
-      <USelect v-model="selectedSeniorityLevel" :items="config.seniorityLevels" class="w-48" />
-
-      <p>
-        Department:
-      </p>
-      <USelect v-model="selectedDepartment" :items="config.departments" class="w-48" />
-
-      <p>
-        Yearly Amount:
-      </p>
-      <div>
-        <UInput v-model="selectedYearlyAmount" type="number" class="w-48">
-          <template #trailing>
-            {{ config.currency }}
-          </template>
-        </UInput>
+            <UInput v-model="selectedYearlyAmount" type="number" class="w-48">
+              <template #trailing>
+                {{ config.currency }}
+              </template>
+            </UInput>
+          </div>      <div>
+            <p>
+              Hours Per Week:
+            </p>
+            <UInput v-model="selectedHoursPerWeek" type="number" class="w-48" />
+          </div>
+        </div>
       </div>
-      <p>
-        Hours Per Week:
-      </p>
-      <UInput v-model="selectedHoursPerWeek" type="number" class="w-48" />
 
-      <UButton class="max-w-36" :loading="loadingSalaryChange" @click="() => updateSalary()">
+      <UButton class="max-w-36 mt-6" :loading="loadingSalaryChange" @click="() => updateSalary()">
         Update Salary
       </UButton>
     </div>
@@ -66,7 +75,6 @@ async function updateSalary () {
     department: selectedDepartment.value,
     yearlyAmount: selectedYearlyAmount.value,
     hoursPerWeek: selectedHoursPerWeek.value,
-
   };
 
   const { error } = await useFetch<SalarySchema>('/api/salary', {
@@ -82,7 +90,6 @@ async function updateSalary () {
   showSuccessToast('Salary updated',
     'Your salary has been updated successfully.');
 
-  // Redirect to root page after successful update
   navigateTo('/');
 }
 

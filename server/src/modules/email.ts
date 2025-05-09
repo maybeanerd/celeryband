@@ -50,9 +50,9 @@ export async function sendLoginEmail (loginToken: string, emailAddress: string) 
   const emailContent = generateLoginEmailContent(loginToken, emailAddress);
 
   if (developmentMode) {
-    console.log('--------- EMAIL CONTENT START ---------');
-    console.log(emailContent);
-    console.log('---------- EMAIL CONTENT END ----------');
+    console.debug('--------- EMAIL CONTENT START ---------');
+    console.debug(emailContent);
+    console.debug('---------- EMAIL CONTENT END ----------');
   }
 
   const response = await emailTransporter.sendMail({

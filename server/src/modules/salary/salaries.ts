@@ -87,14 +87,14 @@ type GroupedSalaryStatistics<Key extends keyof SalarySchema> = {
   & Record<Key, string>
 
 function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySchema[], groupByKey: Key): Array<GroupedSalaryStatistics<Key>> {
-  const grouped = salaries.reduce((acc, salary) => {
+  const grouped = salaries.reduce<Record<string, SalarySchema[]>>((acc, salary) => {
     const aggregationKey = String(salary[groupByKey]);
     if (!acc[aggregationKey]) {
       acc[aggregationKey] = [];
     }
     acc[aggregationKey].push(salary);
     return acc;
-  }, {} as Record<string, SalarySchema[]>);
+  }, {});
 
   return Object.entries(grouped)
     .filter(([_, group]) => group.length >= 3) // Only include groups with at least 3 entries

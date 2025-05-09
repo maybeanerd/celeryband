@@ -5,7 +5,9 @@
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon name="i-lucide-user-cog" class="text-xl" />
-          <h2 class="text-xl font-semibold">Your Salary Information</h2>
+          <h2 class="text-xl font-semibold">
+            Your Salary Information
+          </h2>
         </div>
       </template>
       <SalaryConfigurator />
@@ -16,10 +18,12 @@
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon name="i-lucide-alert-triangle" class="text-xl" />
-          <h2 class="text-xl font-semibold">Danger Zone</h2>
+          <h2 class="text-xl font-semibold">
+            Danger Zone
+          </h2>
         </div>
       </template>
-      <div class="flex gap-4 p-4">
+      <div class="flex gap-4">
         <UButton class="max-w-36" variant="soft" @click="clear">
           Log Out
         </UButton>
@@ -42,7 +46,8 @@ useHead({
 const { clear } = useUserSession();
 
 const { showErrorToast } = useToastNotifications();
-function deleteAccount() {
+function deleteAccount () {
+  // TODO implement account deletion
   showErrorToast('Failed to delete account.', 'This feature is not implemented yet.');
 }
 </script>

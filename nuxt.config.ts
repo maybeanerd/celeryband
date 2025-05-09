@@ -1,10 +1,9 @@
 import gitCommitInfo from 'git-commit-info';
-import packageJson from './package.json';
 
 // When built in GitHub Actions, the commit hash is available in the environment, and gitCommitInfo won't find it.
 const commitHash = gitCommitInfo().shortHash ?? process.env.COMMIT_HASH;
 
-const { version } = packageJson; // TODO get version from git tag during container build
+const version = process.env.VERSION ?? 'local development'; // TODO test and pass this in pipeline builds
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
