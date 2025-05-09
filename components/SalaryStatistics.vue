@@ -185,48 +185,7 @@
             </div>
           </div>
         </template>
-        <div v-if="sameRoleAllSeniorityData.length > 0">
-          <div class="relative mt-4">
-            <div class="w-full h-[300px] rounded-lg p-4">
-              <div class="absolute left-0 top-0 bottom-0 w-[180px] flex flex-col justify-around pr-2">
-                <div v-for="(item, index) in sameRoleAllSeniorityData" :key="index" class="text-sm">
-                  <div class="font-medium truncate">
-                    {{ capitalizeWords(item.seniorityLevel) }}
-                  </div>
-                  <div class="text-xs text-gray-500">
-                    Based on {{ item.count }} data points
-                  </div>
-                </div>
-              </div>
-
-              <div class="ml-[180px] h-full flex flex-col justify-around">
-                <SalaryBandLine
-                  v-for="(item, index) in sameRoleAllSeniorityData"
-                  :key="index"
-                  :min="item.min"
-                  :max="item.max"
-                  :median="item.median"
-                  :average="item.average"
-                  :global-min="roleStatsMinValue"
-                  :global-max="roleStatsMaxValue"
-                  :currency="currency"
-                />
-              </div>
-            </div>
-          </div>
-
-          <!-- Legend moved below the visualization -->
-          <div class="flex items-center gap-4 text-xs mt-4 mb-2 justify-center">
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1" />
-              <span>Median</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-green-500 rounded-full mr-1" />
-              <span>Average</span>
-            </div>
-          </div>
-        </div>
+        <SalaryBandVisualization v-if="sameRoleAllSeniorityData.length > 0" :salary-data="sameRoleAllSeniorityData" :currency="currency" />
         <NoStatisticsAvailable v-else />
       </UCard>
     </template>
@@ -451,24 +410,5 @@ const globalMaxValue = computed(() => {
     return 0;
   }
   return getSalaryNumericValue(chosenStatistics.value.overallStatistics.max);
-});
-
-// Compute min and max values for the role statistics visualization
-const roleStatsMinValue = computed<number>(() => {
-  if (sameRoleAllSeniorityData.value.length === 0) {
-    return 0;
-  }
-
-  // Find the minimum value across all seniority levels
-  return Math.min(...sameRoleAllSeniorityData.value.map(item => getSalaryNumericValue(item.min)));
-});
-
-const roleStatsMaxValue = computed<number>(() => {
-  if (sameRoleAllSeniorityData.value.length === 0) {
-    return 0;
-  }
-
-  // Find the maximum value across all seniority levels
-  return Math.max(...sameRoleAllSeniorityData.value.map(item => getSalaryNumericValue(item.max)));
 });
 </script>
