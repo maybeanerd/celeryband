@@ -73,7 +73,7 @@
           <!-- Your role and seniority statistics -->
           <div>
             <h3 class="text-lg font-medium mb-1">
-              {{ capitalizeWords(ownSalary?.seniorityLevel) }} {{ capitalizeWords(ownSalary?.role) }}s
+              {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
             </h3>
             <div v-if="ownRoleSeniorityStats">
               <p class="text-xs text-gray-500 mb-2">
@@ -112,8 +112,8 @@
 
           <div>
             <h3 class="text-lg font-medium mb-1">
-              {{ capitalizeWords(ownSalary?.seniorityLevel) }} {{ capitalizeWords(ownSalary?.role) }}s
-              in {{ capitalizeWords(ownSalary?.department) }}
+              {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
+              in {{ capitalizeFirstCharacterOfWords(ownSalary?.department) }}
             </h3>
             <div v-if="ownRoleAndSeniorityAndDepartmentStats">
               <p class="text-xs text-gray-500 mb-2">
@@ -168,26 +168,7 @@
         </div>
       </UCard>
 
-      <UCard class="w-full">
-        <template #header>
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-briefcase" class="text-xl" />
-              <h2 class="text-xl font-semibold">
-                Statistics for {{ capitalizeWords(ownSalary?.role) }}s
-              </h2>
-            </div>
-            <div class="flex items-center gap-2">
-              <USwitch v-model="showOnlyYourDepartment" />
-              <span class="text-sm font-medium">Only include salaries from {{ capitalizeWords(ownSalary?.department) ||
-                'your department'
-              }}</span>
-            </div>
-          </div>
-        </template>
-        <SalaryBandVisualization v-if="sameRoleAllSeniorityData.length > 0" :salary-data="sameRoleAllSeniorityData" :currency="currency" />
-        <NoStatisticsAvailable v-else />
-      </UCard>
+      <SalaryBandVisualization :salary-statistics="chosenStatistics" :own-salary="ownSalary" :currency="currency" />
     </template>
   </div>
 </template>
@@ -196,36 +177,10 @@
 import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
-
-// Utility function to capitalize first letter of each word
-function capitalizeWords (text: string | undefined | null): string {
-  if (!text) { return ''; }
-  return text.split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-}
-
-// Define interfaces to ensure types are correct
-interface SalaryStatistics {
-  average: number;
-  median: number;
-  max: number;
-  min: number;
-  count: number;
-}
-
-interface ResultItem {
-  seniorityLevel: string;
-  average: number;
-  median: number;
-  min: number;
-  max: number;
-  count: number;
-}
+import type { SalaryStatistics } from '~/server/api/salary/statistics/index.get';
 
 const { config: serverConfig } = await useServerConfiguration();
 const normalized = ref(true);
-const showOnlyYourDepartment = ref(true);
 const statistics = await useSalaryStatistics();
 const ownSalary = await useOwnSalary({ lazy: true });
 
@@ -244,80 +199,6 @@ const chosenStatistics = computed(() => {
   return normalized.value && statistics.value.normalizedStatistics
     ? statistics.value.normalizedStatistics
     : statistics.value.statistics;
-});
-
-// Computed property for Same Role (All Seniorities) data that switches data sources based on toggle
-const sameRoleAllSeniorityData = computed(() => {
-  if (!chosenStatistics.value || !ownSalary.value) {
-    return [];
-  }
-
-  // Choose the appropriate data source based on the toggle
-  if (!showOnlyYourDepartment.value) {
-    // Use byRoleAndSeniority (across all departments)
-    if (!chosenStatistics.value.byRoleAndSeniority) {
-      return [];
-    }
-
-    const result: ResultItem[] = [];
-    const roleItem = chosenStatistics.value.byRoleAndSeniority.find(
-      item => item.role === ownSalary.value?.role,
-    );
-
-    if (!roleItem) {
-      return [];
-    }
-
-    // Process each seniority level for this role
-    roleItem.seniorityLevels.forEach((seniorityItem) => {
-      result.push({
-        seniorityLevel: seniorityItem.seniorityLevel,
-        average: seniorityItem.statistics.average,
-        median: seniorityItem.statistics.median,
-        min: seniorityItem.statistics.min,
-        max: seniorityItem.statistics.max,
-        count: seniorityItem.statistics.count,
-      });
-    });
-
-    return result;
-  } else {
-    // Use byDepartmentAndRoleAndSeniority filtered to own department
-    if (!chosenStatistics.value.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
-      return [];
-    }
-
-    const result: ResultItem[] = [];
-    const deptItem = chosenStatistics.value.byDepartmentAndRoleAndSeniority.find(
-      item => item.department === ownSalary.value?.department,
-    );
-
-    if (!deptItem) {
-      return [];
-    }
-
-    const roleItem = deptItem.roles.find(
-      item => item.role === ownSalary.value?.role,
-    );
-
-    if (!roleItem) {
-      return [];
-    }
-
-    // Process each seniority level for this role
-    roleItem.seniorityLevels.forEach((seniorityItem) => {
-      result.push({
-        seniorityLevel: seniorityItem.seniorityLevel,
-        average: seniorityItem.statistics.average,
-        median: seniorityItem.statistics.median,
-        min: seniorityItem.statistics.min,
-        max: seniorityItem.statistics.max,
-        count: seniorityItem.statistics.count,
-      });
-    });
-
-    return result;
-  }
 });
 
 // Overall statistics computed property

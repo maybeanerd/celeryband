@@ -1,6 +1,6 @@
 import { getSalaryStatistics } from '~/server/src/modules/salary/salaries';
 
-type SalaryStatistics = {
+export type SalaryStatistics = {
     average: number;
     median: number;
     max: number;
@@ -8,7 +8,7 @@ type SalaryStatistics = {
     count: number;
 }
 
-type DetailedStatistics = {
+export type DetailedStatistics = {
   overallStatistics: SalaryStatistics | null;
   byDepartment: Array<{
     department: string;
