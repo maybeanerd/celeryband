@@ -59,9 +59,8 @@
             <!-- Add visualization for overall statistics -->
             <div class="mb-6 mt-4">
               <div class="relative">
-                <SalaryBandLine :min="parseSalaryValue(overallStats.min)" :max="parseSalaryValue(overallStats.max)"
-                  :median="parseSalaryValue(overallStats.median)" :average="parseSalaryValue(overallStats.average)"
-                  :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
+                <SalaryBandLine :min="overallStats.min" :max="overallStats.max" :median="overallStats.median"
+                  :average="overallStats.average" :global-min="globalMinValue" :global-max="globalMaxValue"
                   :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
               </div>
             </div>
@@ -77,12 +76,10 @@
             <!-- Add visualization for role & seniority statistics -->
             <div class="mb-6 mt-4">
               <div class="relative">
-                <SalaryBandLine :min="parseSalaryValue(ownRoleSeniorityStats.min)"
-                  :max="parseSalaryValue(ownRoleSeniorityStats.max)"
-                  :median="parseSalaryValue(ownRoleSeniorityStats.median)"
-                  :average="parseSalaryValue(ownRoleSeniorityStats.average)"
-                  :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
-                  :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
+                <SalaryBandLine :min="ownRoleSeniorityStats.min" :max="ownRoleSeniorityStats.max"
+                  :median="ownRoleSeniorityStats.median" :average="ownRoleSeniorityStats.average"
+                  :global-min="globalMinValue" :global-max="globalMaxValue" :currency="currency"
+                  :own-salary="ownSalary?.yearlyAmount" />
               </div>
             </div>
 
@@ -108,13 +105,11 @@
             <!-- Add visualization for department statistics -->
             <div class="mb-6 mt-4">
               <div class="relative">
-                <SalaryBandLine :min="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.min)"
-                  :max="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.max)"
-                  :median="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.median)"
-                  :average="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.average)"
-                  :global-min="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.min)"
-                  :global-max="parseSalaryValue(ownRoleAndSeniorityAndDepartmentStats.max)" :currency="currency"
-                  :own-salary="ownSalary?.yearlyAmount" />
+                <SalaryBandLine :min="ownRoleAndSeniorityAndDepartmentStats.min"
+                  :max="ownRoleAndSeniorityAndDepartmentStats.max"
+                  :median="ownRoleAndSeniorityAndDepartmentStats.median"
+                  :average="ownRoleAndSeniorityAndDepartmentStats.average" :global-min="globalMinValue"
+                  :global-max="globalMaxValue" :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
               </div>
             </div>
 
@@ -143,7 +138,7 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-              }}</span>
+                }}</span>
             </div>
           </div>
         </template>
@@ -160,10 +155,9 @@
 
               <!-- Visualization area -->
               <div class="ml-[180px] h-full flex flex-col justify-around">
-                <SalaryBandLine v-for="(item, index) in sameRoleAllSeniorityData" :key="index"
-                  :min="parseSalaryValue(item.min)" :max="parseSalaryValue(item.max)"
-                  :median="parseSalaryValue(item.median)" :average="parseSalaryValue(item.average)"
-                  :global-min="roleStatsMinValue" :global-max="roleStatsMaxValue" :currency="currency" />
+                <SalaryBandLine v-for="(item, index) in sameRoleAllSeniorityData" :key="index" :min="item.min"
+                  :max="item.max" :median="item.median" :average="item.average" :global-min="roleStatsMinValue"
+                  :global-max="roleStatsMaxValue" :currency="currency" />
               </div>
 
               <!-- Legend -->
@@ -199,19 +193,19 @@ import NoStatisticsAvailable from '~/components/NoStatisticsAvailable.vue';
 
 // Define interfaces to ensure types are correct
 interface SalaryStatistics {
-  average: string;
-  median: string;
-  max: string;
-  min: string;
+  average: number;
+  median: number;
+  max: number;
+  min: number;
   count: number;
 }
 
 interface ResultItem {
   seniorityLevel: string;
-  average: string;
-  median: string;
-  min: string;
-  max: string;
+  average: number;
+  median: number;
+  min: number;
+  max: number;
   count: number;
 }
 
@@ -265,10 +259,10 @@ const sameRoleAllSeniorityData = computed(() => {
       if (seniorityItem.statistics.count >= 3) {
         result.push({
           seniorityLevel: seniorityItem.seniorityLevel,
-          average: seniorityItem.statistics.average + ' ' + currency.value,
-          median: seniorityItem.statistics.median + ' ' + currency.value,
-          min: seniorityItem.statistics.min + ' ' + currency.value,
-          max: seniorityItem.statistics.max + ' ' + currency.value,
+          average: seniorityItem.statistics.average,
+          median: seniorityItem.statistics.median,
+          min: seniorityItem.statistics.min,
+          max: seniorityItem.statistics.max,
           count: seniorityItem.statistics.count
         });
       }
@@ -303,10 +297,10 @@ const sameRoleAllSeniorityData = computed(() => {
       if (seniorityItem.statistics.count >= 3) {
         result.push({
           seniorityLevel: seniorityItem.seniorityLevel,
-          average: seniorityItem.statistics.average + ' ' + currency.value,
-          median: seniorityItem.statistics.median + ' ' + currency.value,
-          min: seniorityItem.statistics.min + ' ' + currency.value,
-          max: seniorityItem.statistics.max + ' ' + currency.value,
+          average: seniorityItem.statistics.average,
+          median: seniorityItem.statistics.median,
+          min: seniorityItem.statistics.min,
+          max: seniorityItem.statistics.max,
           count: seniorityItem.statistics.count
         });
       }
@@ -319,18 +313,10 @@ const sameRoleAllSeniorityData = computed(() => {
 // Overall statistics computed property
 const overallStats = computed<SalaryStatistics>(() => {
   if (!chosenStatistics.value?.overallStatistics) {
-    return { average: '0', median: '0', max: '0', min: '0', count: 0 };
+    return { average: 0, median: 0, max: 0, min: 0, count: 0 };
   }
 
-  const stats = chosenStatistics.value.overallStatistics;
-
-  return {
-    average: stats.average + ' ' + currency.value,
-    median: stats.median + ' ' + currency.value,
-    max: stats.max + ' ' + currency.value,
-    min: stats.min + ' ' + currency.value,
-    count: stats.count
-  };
+  return chosenStatistics.value.overallStatistics;
 });
 
 // Own department statistics
@@ -363,15 +349,7 @@ const ownRoleAndSeniorityAndDepartmentStats = computed<SalaryStatistics | null>(
     return null;
   }
 
-  const stats = seniorityStat.statistics;
-
-  return {
-    average: stats.average + ' ' + currency.value,
-    median: stats.median + ' ' + currency.value,
-    max: stats.max + ' ' + currency.value,
-    min: stats.min + ' ' + currency.value,
-    count: stats.count
-  };
+  return seniorityStat.statistics;
 });
 
 // Own department statistics
@@ -389,15 +367,7 @@ const ownDepartmentStats = computed<SalaryStatistics | null>(() => {
     return null;
   }
 
-  const stats = departmentStat.statistics;
-
-  return {
-    average: stats.average + ' ' + currency.value,
-    median: stats.median + ' ' + currency.value,
-    max: stats.max + ' ' + currency.value,
-    min: stats.min + ' ' + currency.value,
-    count: stats.count
-  };
+  return departmentStat.statistics;
 });
 
 // Own role and seniority statistics
@@ -426,21 +396,29 @@ const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
     return null;
   }
 
-  const stats = seniorityItem.statistics;
-
-  return {
-    average: stats.average + ' ' + currency.value,
-    median: stats.median + ' ' + currency.value,
-    max: stats.max + ' ' + currency.value,
-    min: stats.min + ' ' + currency.value,
-    count: stats.count
-  };
+  return seniorityItem.statistics;
 });
 
-// Helper function to parse salary values
-function parseSalaryValue(value: string): number {
-  return parseFloat(value.replace(/[^\d.-]/g, ''));
+// Helper function to parse salary values for legacy string values - can be removed if all values are now numbers
+function getSalaryNumericValue(value: string | number): number {
+  if (typeof value === 'number') return value;
+  return parseFloat(value);
 }
+
+// Define global min and max values for consistent scaling across all visualizations
+const globalMinValue = computed(() => {
+  if (!chosenStatistics.value?.overallStatistics) {
+    return 0;
+  }
+  return getSalaryNumericValue(chosenStatistics.value.overallStatistics.min);
+});
+
+const globalMaxValue = computed(() => {
+  if (!chosenStatistics.value?.overallStatistics) {
+    return 0;
+  }
+  return getSalaryNumericValue(chosenStatistics.value.overallStatistics.max);
+});
 
 // Compute min and max values for the role statistics visualization
 const roleStatsMinValue = computed<number>(() => {
@@ -449,7 +427,7 @@ const roleStatsMinValue = computed<number>(() => {
   }
 
   // Find the minimum value across all seniority levels
-  return Math.min(...sameRoleAllSeniorityData.value.map(item => parseSalaryValue(item.min)));
+  return Math.min(...sameRoleAllSeniorityData.value.map(item => getSalaryNumericValue(item.min)));
 });
 
 const roleStatsMaxValue = computed<number>(() => {
@@ -458,6 +436,14 @@ const roleStatsMaxValue = computed<number>(() => {
   }
 
   // Find the maximum value across all seniority levels
-  return Math.max(...sameRoleAllSeniorityData.value.map(item => parseSalaryValue(item.max)));
+  return Math.max(...sameRoleAllSeniorityData.value.map(item => getSalaryNumericValue(item.max)));
 });
+
+// Helper function to format numbers with currency for display
+function formatCurrency(value: string | number): string {
+  if (typeof value === 'string') {
+    return `${value} ${currency.value}`;
+  }
+  return `${value} ${currency.value}`;
+}
 </script>

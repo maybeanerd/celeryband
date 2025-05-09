@@ -61,17 +61,17 @@ const props = defineProps<{
 }>();
 
 // Helper function to parse string values with currency
-function parseValue (value: string | number): number {
+function getSalaryNumericValue (value: string | number): number {
   if (typeof value === 'number') {
     return value;
   }
-  // Remove currency symbol and any non-numeric characters except for decimal point
-  return parseFloat(value.toString().replace(/[^\d.-]/g, ''));
+  // Parse string to number without removing currency symbols
+  return parseFloat(value);
 }
 
 // Calculate position percentage based on the global scale
 function getPercentPosition (value: string | number) {
-  const numValue = parseValue(value);
+  const numValue = getSalaryNumericValue(value);
   const range = props.globalMax - props.globalMin;
   if (range === 0) {
     return 50;
@@ -82,8 +82,8 @@ function getPercentPosition (value: string | number) {
 
 // Calculate width percentage for the salary band
 function getPercentWidth (min: string | number, max: string | number) {
-  const minValue = parseValue(min);
-  const maxValue = parseValue(max);
+  const minValue = getSalaryNumericValue(min);
+  const maxValue = getSalaryNumericValue(max);
   const range = props.globalMax - props.globalMin;
   if (range === 0) {
     return 80;

@@ -8,13 +8,13 @@
         Your Salary is
       </h1>
 
-      <p v-if="data.salaryAssessment.overall">
-        Overall {{ data.salaryAssessment.overall.average }}% better than the average and {{
-          data.salaryAssessment.overall.median }}% better than the median.
+      <p v-if="data.salaryAssessment.sameRoleAndSeniority">
+        Compared to same role and seniority: {{ data.salaryAssessment.sameRoleAndSeniority.average }}% compared to the average and {{
+          data.salaryAssessment.sameRoleAndSeniority.median }}% compared to the median.
       </p>
-      <p v-if="data.salaryAssessment.department">
-        In you department, {{ data.salaryAssessment.department.average }}% better than the average and {{
-          data.salaryAssessment.department.median }}% better than the median.
+      <p v-if="data.salaryAssessment.sameRoleAndSeniorityAndDepartment">
+        Within your department, role and seniority: {{ data.salaryAssessment.sameRoleAndSeniorityAndDepartment.average }}% compared to the average and {{
+          data.salaryAssessment.sameRoleAndSeniorityAndDepartment.median }}% compared to the median.
       </p>
     </template>
   </div>

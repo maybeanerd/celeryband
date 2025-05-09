@@ -1,10 +1,10 @@
 import { getSalaryStatistics } from '~/server/src/modules/salary/salaries';
 
 type SalaryStatistics = {
-    average: string;
-    median: string;
-    max: string;
-    min: string;
+    average: number;
+    median: number;
+    max: number;
+    min: number;
     count: number;
 }
 

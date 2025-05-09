@@ -57,21 +57,21 @@ const props = defineProps<{
 
 // Find global min and max for scaling
 const globalMin = computed(() => {
-  const values = props.salaryData.map(item => parseValue(item.min));
+  const values = props.salaryData.map(item => getSalaryNumericValue(item.min));
   return Math.min(...values);
 });
 
 const globalMax = computed(() => {
-  const values = props.salaryData.map(item => parseValue(item.max));
+  const values = props.salaryData.map(item => getSalaryNumericValue(item.max));
   return Math.max(...values);
 });
 
 // Helper function to parse string values with currency
-function parseValue (value: string | number): number {
+function getSalaryNumericValue (value: string | number): number {
   if (typeof value === 'number') {
     return value;
   }
-  // Remove currency symbol and any non-numeric characters except for decimal point
-  return parseFloat(value.toString().replace(/[^\d.-]/g, ''));
+  // Parse string to number
+  return parseFloat(value);
 }
 </script> 
