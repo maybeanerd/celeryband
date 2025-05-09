@@ -10,47 +10,17 @@
       
       <!-- Visualization area -->
       <div class="ml-[120px] h-full flex flex-col justify-around">
-        <div
+        <SalaryBandLine
           v-for="(item, index) in salaryData"
           :key="index"
-          class="relative h-10 flex items-center"
-        >
-          <!-- Salary band line -->
-          <div class="absolute h-2 bg-gray-200 dark:bg-gray-700 rounded-full"
-               :style="{
-                 left: `${getPercentPosition(item.min)}%`,
-                 width: `${getPercentWidth(item.min, item.max)}%`
-               }">
-          </div>
-          
-          <!-- Min marker -->
-          <div class="absolute bottom-6 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400"
-               :style="{ left: `${getPercentPosition(item.min)}%` }">
-            {{ formatValue(item.min) }}
-          </div>
-          
-          <!-- Max marker -->
-          <div class="absolute bottom-6 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400"
-               :style="{ left: `${getPercentPosition(item.max)}%` }">
-            {{ formatValue(item.max) }}
-          </div>
-          
-          <!-- Median marker -->
-          <div class="absolute w-2 h-4 bg-blue-500 rounded-full transform -translate-x-1/2"
-               :style="{ left: `${getPercentPosition(item.median)}%` }">
-            <div class="absolute top-4 transform -translate-x-1/2 text-xs text-blue-500 whitespace-nowrap">
-              {{ formatValue(item.median) }}
-            </div>
-          </div>
-          
-          <!-- Average marker -->
-          <div class="absolute w-2 h-4 bg-green-500 rounded-full transform -translate-x-1/2"
-               :style="{ left: `${getPercentPosition(item.average)}%` }">
-            <div class="absolute top-[-16px] transform -translate-x-1/2 text-xs text-green-500 whitespace-nowrap">
-              {{ formatValue(item.average) }}
-            </div>
-          </div>
-        </div>
+          :min="item.min"
+          :max="item.max"
+          :median="item.median"
+          :average="item.average"
+          :global-min="globalMin"
+          :global-max="globalMax"
+          :currency="currency"
+        />
       </div>
       
       <!-- Legend -->
@@ -69,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import SalaryBandLine from '~/components/SalaryBandLine.vue';
+
 interface SalaryDataItem {
   seniorityLevel: string;
   min: string | number;
@@ -95,34 +67,10 @@ const globalMax = computed(() => {
 
 // Helper function to parse string values with currency
 function parseValue(value: string | number): number {
-  if (typeof value === 'number') return value;
-  // Remove currency symbol and any non-numeric characters except for decimal point
-  return parseFloat(value.toString().replace(/[^\d.-]/g, ''));
-}
-
-// Calculate position percentage based on the global scale
-function getPercentPosition(value: string | number) {
-  const numValue = parseValue(value);
-  const range = globalMax.value - globalMin.value;
-  if (range === 0) { return 50; } // Handle case where all values are the same
-  // Add padding of 10% on each side
-  return 10 + ((numValue - globalMin.value) / range) * 80;
-}
-
-// Calculate width percentage for the salary band
-function getPercentWidth(min: string | number, max: string | number) {
-  const minValue = parseValue(min);
-  const maxValue = parseValue(max);
-  const range = globalMax.value - globalMin.value;
-  if (range === 0) { return 80; } // Handle case where all values are the same
-  return ((maxValue - minValue) / range) * 80;
-}
-
-// Format the value for display
-function formatValue(value: string | number): string {
-  if (typeof value === 'string') {
+  if (typeof value === 'number') {
     return value;
   }
-  return `${value} ${props.currency || ''}`;
+  // Remove currency symbol and any non-numeric characters except for decimal point
+  return parseFloat(value.toString().replace(/[^\d.-]/g, ''));
 }
 </script> 

@@ -35,18 +35,34 @@
           </div>
         </template>
         <div v-if="chosenStatistics" class="flex flex-col gap-4">
+          <!-- Shared legend for all visualizations -->
+          <div class="flex items-center gap-4 text-xs mb-2 ml-[120px]">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+              <span>Median</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+              <span>Average</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
+              <span>Your Salary</span>
+            </div>
+          </div>
+
           <!-- Global statistics -->
           <div>
             <h3 class="text-lg font-medium mb-2">All Employees</h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="p-2 flex flex-col">
-                <p>Average: {{ overallStats.average }}</p>
+
+            <!-- Add visualization for overall statistics -->
+            <div class="mb-6 mt-4 ml-2">
+              <div class="relative ml-[120px]">
+                <SalaryBandLine :min="parseSalaryValue(overallStats.min)" :max="parseSalaryValue(overallStats.max)"
+                  :median="parseSalaryValue(overallStats.median)" :average="parseSalaryValue(overallStats.average)"
+                  :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
+                  :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
               </div>
-              <div class="p-2 flex flex-col">
-                <p>Median: {{ overallStats.median }}</p>
-              </div>
-              <p class="p-2">Maximum: {{ overallStats.max }}</p>
-              <p class="p-2">Minimum: {{ overallStats.min }}</p>
             </div>
           </div>
 
@@ -55,19 +71,25 @@
             <h3 class="text-lg font-medium mb-2">
               {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="p-2 flex flex-col">
-                <p>Average: {{ ownRoleSeniorityStats.average }}</p>
-                <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniority"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average" context="average" />
+
+            <!-- Add visualization for role & seniority statistics -->
+            <div class="mb-6 mt-4 ml-2">
+              <div class="relative ml-[120px]">
+                <SalaryBandLine :min="parseSalaryValue(ownRoleSeniorityStats.min)"
+                  :max="parseSalaryValue(ownRoleSeniorityStats.max)"
+                  :median="parseSalaryValue(ownRoleSeniorityStats.median)"
+                  :average="parseSalaryValue(ownRoleSeniorityStats.average)"
+                  :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
+                  :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
               </div>
-              <div class="p-2 flex flex-col">
-                <p>Median: {{ ownRoleSeniorityStats.median }}</p>
-                <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniority"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniority.median" context="median" />
-              </div>
-              <p class="p-2">Maximum: {{ ownRoleSeniorityStats.max }}</p>
-              <p class="p-2">Minimum: {{ ownRoleSeniorityStats.min }}</p>
+            </div>
+
+            <!-- Keep percentage badges but in a simpler layout -->
+            <div v-if="statistics.salaryAssessment?.sameRoleAndSeniority" class="flex gap-4 ml-[120px]">
+              <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average"
+                context="average" />
+              <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniority.median"
+                context="median" />
             </div>
           </div>
 
@@ -76,20 +98,24 @@
             <h3 class="text-lg font-medium mb-2">
               {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
               in {{ ownSalary?.department }}</h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="p-2 flex flex-col">
-                <p>Average: {{ ownDepartmentStats.average }}</p>
-                <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.average"
-                  context="average" />
+
+            <!-- Add visualization for department statistics -->
+            <div class="mb-6 mt-4 ml-2">
+              <div class="relative ml-[120px]">
+                <SalaryBandLine :min="parseSalaryValue(ownDepartmentStats.min)"
+                  :max="parseSalaryValue(ownDepartmentStats.max)" :median="parseSalaryValue(ownDepartmentStats.median)"
+                  :average="parseSalaryValue(ownDepartmentStats.average)"
+                  :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
+                  :currency="currency" :own-salary="ownSalary?.yearlyAmount" />
               </div>
-              <div class="p-2 flex flex-col">
-                <p>Median: {{ ownDepartmentStats.median }}</p>
-                <SalaryPercentageBadge v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment"
-                  :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.median" context="median" />
-              </div>
-              <p class="p-2">Maximum: {{ ownDepartmentStats.max }}</p>
-              <p class="p-2">Minimum: {{ ownDepartmentStats.min }}</p>
+            </div>
+
+            <!-- Keep percentage badges but in a simpler layout -->
+            <div v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment" class="flex gap-4 ml-[120px]">
+              <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.average"
+                context="average" />
+              <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.median"
+                context="median" />
             </div>
           </div>
         </div>
@@ -129,6 +155,7 @@ import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
 import SalaryBandVisualization from '~/components/SalaryBandVisualization.vue';
+import SalaryBandLine from '~/components/SalaryBandLine.vue';
 
 const { config: serverConfig } = await useServerConfiguration();
 const normalized = ref(true);
@@ -309,4 +336,9 @@ const ownRoleSeniorityStats = computed(() => {
     min: stats.min + ' ' + currency.value,
   };
 });
+
+// Helper function to parse salary values
+function parseSalaryValue(value: string): number {
+  return parseFloat(value.replace(/[^\d.-]/g, ''));
+}
 </script>
