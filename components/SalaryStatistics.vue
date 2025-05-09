@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 p-4">
+  <div class="flex flex-col gap-4">
     <div
       v-if="!dataIsAvailable"
       class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center flex flex-col gap-4 items-center"
@@ -16,7 +16,7 @@
       </UButton>
     </div>
     <template v-else-if="statistics && statistics.statistics">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2 p-2 md:p-4">
         <div class="flex items-center justify-start gap-2">
           <USwitch v-model="normalized" />
           <span class="text-sm font-medium">Show normalized data</span>

@@ -19,7 +19,7 @@
     <div v-if="sameRoleAllSeniorityData.length > 0" class="mt-4">
       <div class="w-full rounded-lg p-2">
         <div class="flex flex-col gap-6">
-          <div v-for="(item, index) in sameRoleAllSeniorityData" :key="index" class="flex w-full">
+          <div v-for="(item, index) in sameRoleAllSeniorityData" :key="index" class="flex w-full flex-wrap md:flex-nowrap">
             <div class="w-32 flex flex-col justify-around pr-2">
               <div class="text-sm font-medium">
                 <div class="truncate">
@@ -29,7 +29,7 @@
                 </div>
               </div>
             </div>
-            <div class="w-full">
+            <div class="w-full mt-1">
               <SalaryBandLine
                 :key="index"
                 :min="item.min"
