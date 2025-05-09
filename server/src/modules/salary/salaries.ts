@@ -106,7 +106,7 @@ function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySche
 }
 
 function getStatisticsForSalaries (salaries: SalarySchema[]) {
-  const overallStatistics = calculateStatistics(salaries);
+  const overallStatistics = salaries.length >= 3 ? calculateStatistics(salaries) : null;
 
   const byDepartment = groupAndCalculate(salaries, 'department');
   const byRole = groupAndCalculate(salaries, 'role');

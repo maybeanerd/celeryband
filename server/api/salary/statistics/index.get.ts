@@ -9,7 +9,7 @@ type SalaryStatistics = {
 }
 
 type DetailedStatistics = {
-  overallStatistics: SalaryStatistics;
+  overallStatistics: SalaryStatistics | null;
   byDepartment: Array<{
     department: string;
     statistics: SalaryStatistics;
