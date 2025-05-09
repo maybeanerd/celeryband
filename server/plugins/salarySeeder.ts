@@ -92,8 +92,14 @@ async function generateRandomUserBatch (
 }
 
 export default defineNitroPlugin(async () => {
+  // Only run the seeder in development mode
+  if (!serverConfiguration.developmentMode) {
+    return;
+  }
+
+  console.info('Salary seeder is enabled due to development mode.');
+
   try {
-    console.log('Checking if random salary data needs to be generated...');
     const { db } = useDrizzle();
 
     // Check if we have at least 100 salaries
@@ -101,30 +107,30 @@ export default defineNitroPlugin(async () => {
     const count = salaryCount[0]?.count ?? 0;
 
     if (count >= 2000) {
-      console.log(`Found ${count} existing salaries, no need to generate random data.`);
+      console.info(`Found ${count} existing salaries, no need to generate random data.`);
       return;
     }
 
-    console.log(`Only ${count} salaries found. Generating 10,000 random salaries...`);
+    console.info(`Only ${count} salaries found. Generating 10,000 random salaries...`);
 
     // Get available options from server config
     const { roles, seniorityLevels, departments, acceptedDomain } = serverConfiguration;
 
     // Generate 10,000 users with random salaries
-    const batchSize = 1000; // Process in batches to avoid memory issues
+    const batchSize = 100; // Process in batches to avoid memory issues
     const totalToGenerate = 10000;
 
     for (let i = 0; i < totalToGenerate; i += batchSize) {
       const currentBatchSize = Math.min(batchSize, totalToGenerate - i);
-      console.log(`Generating batch ${i / batchSize + 1}/${Math.ceil(totalToGenerate / batchSize)} (${currentBatchSize} users)...`);
+      console.info(`Generating batch ${i / batchSize + 1}/${Math.ceil(totalToGenerate / batchSize)} (${currentBatchSize} users)...`);
 
       await generateRandomUserBatch(currentBatchSize, roles, seniorityLevels, departments, acceptedDomain);
 
       // Simple progress report
-      console.log(`Generated ${Math.min(i + currentBatchSize, totalToGenerate)}/${totalToGenerate} random users with salaries`);
+      console.info(`Generated ${Math.min(i + currentBatchSize, totalToGenerate)}/${totalToGenerate} random users with salaries`);
     }
 
-    console.log('Finished generating random salary data.');
+    console.info('Finished generating random salary data.');
   } catch (error) {
     console.error('Error generating random salary data:', error);
   }
