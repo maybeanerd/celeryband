@@ -1,7 +1,15 @@
 <template>
   <div class="flex flex-col gap-4">
     <div
-      v-if="!dataIsAvailable"
+      v-if="!statistics"
+      class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center flex flex-col gap-4 items-center"
+    >
+      <p class="text-lg dark:text-white">
+        Loading...
+      </p>
+    </div>
+    <div
+      v-else-if="!statistics.areAvailable"
       class="p-6 bg-gray-100 dark:bg-gray-800 rounded-lg text-center flex flex-col gap-4 items-center"
     >
       <UIcon name="i-lucide-file-lock-2" class="text-4xl mb-2 text-gray-500 dark:text-gray-400" />
@@ -48,13 +56,8 @@ const ownSalary = await useOwnSalary({ lazy: true });
 
 const currency = computed(() => serverConfig.value?.currency || '');
 
-const dataIsAvailable = computed(() => {
-  return statistics.value?.areAvailable === true && !!statistics.value?.statistics;
-});
-
-// Central computed property that decides which statistics to use based on the normalized toggle
 const chosenStatistics = computed(() => {
-  if (!dataIsAvailable.value || !statistics.value?.statistics) {
+  if (!statistics.value?.statistics) {
     return null;
   }
 
