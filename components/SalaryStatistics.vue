@@ -36,7 +36,7 @@
         </template>
         <div v-if="chosenStatistics" class="flex flex-col gap-4">
           <!-- Shared legend for all visualizations -->
-          <div class="flex items-center gap-4 text-xs mb-2 ml-[120px]">
+          <div class="flex items-center gap-4 text-xs mb-2">
             <div class="flex items-center">
               <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
               <span>Median</span>
@@ -56,8 +56,8 @@
             <h3 class="text-lg font-medium mb-2">All Employees</h3>
 
             <!-- Add visualization for overall statistics -->
-            <div class="mb-6 mt-4 ml-2">
-              <div class="relative ml-[120px]">
+            <div class="mb-6 mt-4">
+              <div class="relative">
                 <SalaryBandLine :min="parseSalaryValue(overallStats.min)" :max="parseSalaryValue(overallStats.max)"
                   :median="parseSalaryValue(overallStats.median)" :average="parseSalaryValue(overallStats.average)"
                   :global-min="parseSalaryValue(overallStats.min)" :global-max="parseSalaryValue(overallStats.max)"
@@ -73,8 +73,8 @@
             </h3>
 
             <!-- Add visualization for role & seniority statistics -->
-            <div class="mb-6 mt-4 ml-2">
-              <div class="relative ml-[120px]">
+            <div class="mb-6 mt-4">
+              <div class="relative">
                 <SalaryBandLine :min="parseSalaryValue(ownRoleSeniorityStats.min)"
                   :max="parseSalaryValue(ownRoleSeniorityStats.max)"
                   :median="parseSalaryValue(ownRoleSeniorityStats.median)"
@@ -85,7 +85,7 @@
             </div>
 
             <!-- Keep percentage badges but in a simpler layout -->
-            <div v-if="statistics.salaryAssessment?.sameRoleAndSeniority" class="flex gap-4 ml-[120px]">
+            <div v-if="statistics.salaryAssessment?.sameRoleAndSeniority" class="flex gap-4">
               <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniority.average"
                 context="average" />
               <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniority.median"
@@ -100,8 +100,8 @@
               in {{ ownSalary?.department }}</h3>
 
             <!-- Add visualization for department statistics -->
-            <div class="mb-6 mt-4 ml-2">
-              <div class="relative ml-[120px]">
+            <div class="mb-6 mt-4">
+              <div class="relative">
                 <SalaryBandLine :min="parseSalaryValue(ownDepartmentStats.min)"
                   :max="parseSalaryValue(ownDepartmentStats.max)" :median="parseSalaryValue(ownDepartmentStats.median)"
                   :average="parseSalaryValue(ownDepartmentStats.average)"
@@ -111,7 +111,7 @@
             </div>
 
             <!-- Keep percentage badges but in a simpler layout -->
-            <div v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment" class="flex gap-4 ml-[120px]">
+            <div v-if="statistics.salaryAssessment?.sameRoleAndSeniorityAndDepartment" class="flex gap-4">
               <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.average"
                 context="average" />
               <SalaryPercentageBadge :percentage="statistics.salaryAssessment.sameRoleAndSeniorityAndDepartment.median"
@@ -134,7 +134,7 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-                }}</span>
+              }}</span>
             </div>
           </div>
         </template>
