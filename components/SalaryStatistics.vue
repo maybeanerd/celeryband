@@ -113,7 +113,7 @@
           </div>
         </template>
         <div v-if="sameRoleAllSeniorityData.length > 0">
-          <UTable :data="sameRoleAllSeniorityData" />
+          <SalaryBandVisualization :salary-data="sameRoleAllSeniorityData" :currency="currency" />
         </div>
         <div v-else>
           <p>No data available</p>
@@ -128,6 +128,7 @@ import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useSalaryStatistics } from '~/composables/api/useSalaryStatistics';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
+import SalaryBandVisualization from '~/components/SalaryBandVisualization.vue';
 
 const { config: serverConfig } = await useServerConfiguration();
 const normalized = ref(true);
