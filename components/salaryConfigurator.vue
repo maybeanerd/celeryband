@@ -1,8 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 border-primary-500 border-2 rounded-lg p-4">
-    <h1>
-      Your Salary
-    </h1>
+  <div class="flex flex-col gap-2 p-4">
     <div v-if="config" class="flex flex-col gap-2">
       <p>
         Role:
