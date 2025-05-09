@@ -3,8 +3,8 @@
     <div class="relative w-full h-[300px] rounded-lg p-4">
       <!-- Y-axis labels (seniority levels) -->
       <div class="absolute left-0 top-0 bottom-0 w-[120px] flex flex-col justify-around pr-2">
-        <div v-for="(item, index) in salaryData" :key="index" class="text-sm font-medium truncate">
-          {{ item.seniorityLevel }}
+        <div v-for="(item, index) in salaryData" :key="index" class="text-sm font-medium">
+          <div class="truncate">{{ item.seniorityLevel }}</div>
         </div>
       </div>
       
@@ -47,6 +47,7 @@ interface SalaryDataItem {
   max: string | number;
   average: string | number;
   median: string | number;
+  count: number;
 }
 
 const props = defineProps<{
@@ -66,7 +67,7 @@ const globalMax = computed(() => {
 });
 
 // Helper function to parse string values with currency
-function parseValue(value: string | number): number {
+function parseValue (value: string | number): number {
   if (typeof value === 'number') {
     return value;
   }

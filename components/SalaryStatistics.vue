@@ -53,7 +53,8 @@
 
           <!-- Global statistics -->
           <div>
-            <h3 class="text-lg font-medium mb-2">All Employees</h3>
+            <h3 class="text-lg font-medium mb-1">All Employees</h3>
+            <p class="text-xs text-gray-500 mb-2">Based on {{ overallStats.count }} data points</p>
 
             <!-- Add visualization for overall statistics -->
             <div class="mb-6 mt-4">
@@ -68,9 +69,10 @@
 
           <!-- Your role and seniority statistics -->
           <div v-if="ownRoleSeniorityStats">
-            <h3 class="text-lg font-medium mb-2">
+            <h3 class="text-lg font-medium mb-1">
               {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
             </h3>
+            <p class="text-xs text-gray-500 mb-2">Based on {{ ownRoleSeniorityStats.count }} data points</p>
 
             <!-- Add visualization for role & seniority statistics -->
             <div class="mb-6 mt-4">
@@ -92,12 +94,16 @@
                 context="median" />
             </div>
           </div>
+          <NoStatisticsAvailable v-else />
 
           <!-- Your department statistics -->
           <div v-if="ownRoleAndSeniorityAndDepartmentStats">
-            <h3 class="text-lg font-medium mb-2">
+            <h3 class="text-lg font-medium mb-1">
               {{ ownSalary?.seniorityLevel }} {{ ownSalary?.role }}s
-              in {{ ownSalary?.department }}</h3>
+              in {{ ownSalary?.department }}
+            </h3>
+            <p class="text-xs text-gray-500 mb-2">Based on {{ ownRoleAndSeniorityAndDepartmentStats.count }} data points
+            </p>
 
             <!-- Add visualization for department statistics -->
             <div class="mb-6 mt-4">
@@ -120,6 +126,7 @@
                 context="median" />
             </div>
           </div>
+          <NoStatisticsAvailable v-else />
         </div>
       </UCard>
 
@@ -136,15 +143,44 @@
             <div class="flex items-center gap-2">
               <USwitch v-model="showOnlyYourDepartment" />
               <span class="text-sm font-medium">Only include salaries from {{ ownSalary?.department || 'your department'
-                }}</span>
+              }}</span>
             </div>
           </div>
         </template>
         <div v-if="sameRoleAllSeniorityData.length > 0">
-          <SalaryBandVisualization :salary-data="sameRoleAllSeniorityData" :currency="currency" />
+          <div class="relative mt-4">
+            <div class="w-full h-[300px] rounded-lg p-4">
+              <!-- Y-axis labels (seniority levels) with data point counts -->
+              <div class="absolute left-0 top-0 bottom-0 w-[180px] flex flex-col justify-around pr-2">
+                <div v-for="(item, index) in sameRoleAllSeniorityData" :key="index" class="text-sm">
+                  <div class="font-medium truncate">{{ item.seniorityLevel }}</div>
+                  <div class="text-xs text-gray-500">Based on {{ item.count }} data points</div>
+                </div>
+              </div>
+
+              <!-- Visualization area -->
+              <div class="ml-[180px] h-full flex flex-col justify-around">
+                <SalaryBandLine v-for="(item, index) in sameRoleAllSeniorityData" :key="index" :min="item.min"
+                  :max="item.max" :median="item.median" :average="item.average" :global-min="globalMin"
+                  :global-max="globalMax" :currency="currency" />
+              </div>
+
+              <!-- Legend -->
+              <div class="absolute bottom-[-30px] left-[180px] right-0 flex justify-center gap-4 text-xs">
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+                  <span>Median</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                  <span>Average</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div v-else>
-          <p>No data available</p>
+          <NoStatisticsAvailable />
         </div>
       </UCard>
     </template>
@@ -158,6 +194,25 @@ import { useServerConfiguration } from '~/composables/api/useServerConfiguration
 import SalaryPercentageBadge from '~/components/SalaryPercentageBadge.vue';
 import SalaryBandVisualization from '~/components/SalaryBandVisualization.vue';
 import SalaryBandLine from '~/components/SalaryBandLine.vue';
+import NoStatisticsAvailable from '~/components/NoStatisticsAvailable.vue';
+
+// Define interfaces to ensure types are correct
+interface SalaryStatistics {
+  average: string;
+  median: string;
+  max: string;
+  min: string;
+  count: number;
+}
+
+interface ResultItem {
+  seniorityLevel: string;
+  average: string;
+  median: string;
+  min: string;
+  max: string;
+  count: number;
+}
 
 const { config: serverConfig } = await useServerConfiguration();
 const normalized = ref(true);
@@ -188,15 +243,6 @@ const sameRoleAllSeniorityData = computed(() => {
     return [];
   }
 
-  // Define the result type
-  interface ResultItem {
-    seniorityLevel: string;
-    average: string;
-    median: string;
-    min: string;
-    max: string;
-  }
-
   // Choose the appropriate data source based on the toggle
   if (!showOnlyYourDepartment.value) {
     // Use byRoleAndSeniority (across all departments)
@@ -215,13 +261,16 @@ const sameRoleAllSeniorityData = computed(() => {
 
     // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
-      result.push({
-        seniorityLevel: seniorityItem.seniorityLevel,
-        average: seniorityItem.statistics.average + ' ' + currency.value,
-        median: seniorityItem.statistics.median + ' ' + currency.value,
-        min: seniorityItem.statistics.min + ' ' + currency.value,
-        max: seniorityItem.statistics.max + ' ' + currency.value,
-      });
+      if (seniorityItem.statistics.count >= 3) {
+        result.push({
+          seniorityLevel: seniorityItem.seniorityLevel,
+          average: seniorityItem.statistics.average + ' ' + currency.value,
+          median: seniorityItem.statistics.median + ' ' + currency.value,
+          min: seniorityItem.statistics.min + ' ' + currency.value,
+          max: seniorityItem.statistics.max + ' ' + currency.value,
+          count: seniorityItem.statistics.count
+        });
+      }
     });
 
     return result;
@@ -250,13 +299,16 @@ const sameRoleAllSeniorityData = computed(() => {
 
     // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
-      result.push({
-        seniorityLevel: seniorityItem.seniorityLevel,
-        average: seniorityItem.statistics.average + ' ' + currency.value,
-        median: seniorityItem.statistics.median + ' ' + currency.value,
-        min: seniorityItem.statistics.min + ' ' + currency.value,
-        max: seniorityItem.statistics.max + ' ' + currency.value,
-      });
+      if (seniorityItem.statistics.count >= 3) {
+        result.push({
+          seniorityLevel: seniorityItem.seniorityLevel,
+          average: seniorityItem.statistics.average + ' ' + currency.value,
+          median: seniorityItem.statistics.median + ' ' + currency.value,
+          min: seniorityItem.statistics.min + ' ' + currency.value,
+          max: seniorityItem.statistics.max + ' ' + currency.value,
+          count: seniorityItem.statistics.count
+        });
+      }
     });
 
     return result;
@@ -264,9 +316,9 @@ const sameRoleAllSeniorityData = computed(() => {
 });
 
 // Overall statistics computed property
-const overallStats = computed(() => {
+const overallStats = computed<SalaryStatistics>(() => {
   if (!chosenStatistics.value?.overallStatistics) {
-    return { average: '0', median: '0', max: '0', min: '0' };
+    return { average: '0', median: '0', max: '0', min: '0', count: 0 };
   }
 
   const stats = chosenStatistics.value.overallStatistics;
@@ -276,11 +328,12 @@ const overallStats = computed(() => {
     median: stats.median + ' ' + currency.value,
     max: stats.max + ' ' + currency.value,
     min: stats.min + ' ' + currency.value,
+    count: stats.count
   };
 });
 
 // Own department statistics
-const ownRoleAndSeniorityAndDepartmentStats = computed(() => {
+const ownRoleAndSeniorityAndDepartmentStats = computed<SalaryStatistics | null>(() => {
   if (!chosenStatistics.value?.byDepartmentAndRoleAndSeniority || !ownSalary.value?.department) {
     return null;
   }
@@ -305,7 +358,7 @@ const ownRoleAndSeniorityAndDepartmentStats = computed(() => {
     item => item.seniorityLevel === ownSalary.value?.seniorityLevel,
   );
 
-  if (!seniorityStat) {
+  if (!seniorityStat || seniorityStat.statistics.count < 3) {
     return null;
   }
 
@@ -316,11 +369,13 @@ const ownRoleAndSeniorityAndDepartmentStats = computed(() => {
     median: stats.median + ' ' + currency.value,
     max: stats.max + ' ' + currency.value,
     min: stats.min + ' ' + currency.value,
+    count: stats.count
   };
 });
 
 // Own department statistics
-const ownDepartmentStats = computed(() => {
+// This could be removed as it's not used, but keeping for reference
+const ownDepartmentStats = computed<SalaryStatistics | null>(() => {
   if (!chosenStatistics.value?.byDepartment || !ownSalary.value?.department) {
     return null;
   }
@@ -340,11 +395,12 @@ const ownDepartmentStats = computed(() => {
     median: stats.median + ' ' + currency.value,
     max: stats.max + ' ' + currency.value,
     min: stats.min + ' ' + currency.value,
+    count: stats.count
   };
 });
 
 // Own role and seniority statistics
-const ownRoleSeniorityStats = computed(() => {
+const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
   if (!chosenStatistics.value?.byRoleAndSeniority ||
     !ownSalary.value?.role ||
     !ownSalary.value?.seniorityLevel) {
@@ -365,7 +421,7 @@ const ownRoleSeniorityStats = computed(() => {
     item => item.seniorityLevel === ownSalary.value?.seniorityLevel,
   );
 
-  if (!seniorityItem) {
+  if (!seniorityItem || seniorityItem.statistics.count < 3) {
     return null;
   }
 
@@ -376,6 +432,7 @@ const ownRoleSeniorityStats = computed(() => {
     median: stats.median + ' ' + currency.value,
     max: stats.max + ' ' + currency.value,
     min: stats.min + ' ' + currency.value,
+    count: stats.count
   };
 });
 

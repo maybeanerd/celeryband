@@ -5,6 +5,7 @@ type SalaryStatistics = {
     median: string;
     max: string;
     min: string;
+    count: number;
 }
 
 type DetailedStatistics = {
