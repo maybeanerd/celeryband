@@ -20,7 +20,7 @@
         Please configure your salary information first.
       </p>
       <UButton to="/account">
-        Go to account
+        Go To Account
       </UButton>
     </div>
     <template v-else-if="statistics && statistics.statistics">
