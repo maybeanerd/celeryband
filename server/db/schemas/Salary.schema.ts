@@ -2,7 +2,7 @@ import { int, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { userSchema } from './User.schema';
 
 export const salarySchema = sqliteTable('salary', {
-  ownerId: text().primaryKey().references(() => userSchema.id),
+  ownerId: text().primaryKey().references(() => userSchema.id, { onDelete: 'cascade' }),
 
   role: text().notNull(),
   seniorityLevel: text().notNull(),
