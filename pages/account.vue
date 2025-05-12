@@ -79,7 +79,7 @@ async function deleteAccount () {
   });
 
   if (error.value) {
-    showErrorToast('Failed to delete account.', error.value.statusMessage ?? error.value.message);
+    showErrorToast('Failed to delete account.', error.value.data.statusMessage ?? error.value.data.message);
     return;
   }
 
