@@ -52,5 +52,7 @@ export async function validateLoginToken (token: string): Promise<string | null>
     return null;
   }
 
+  console.info('User was logged in using token:', loginTokenData.token.slice(0, 3), '...', loginTokenData.token.slice(-3));
+
   return loginTokenData.emailHash;
 }
