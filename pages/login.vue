@@ -21,7 +21,7 @@
       <p class="dark:text-gray-300 mb-4">
         Click below to complete your login
       </p>
-      <UButton @click="completeLogin">
+      <UButton :loading="loadingLogin" @click="completeLogin">
         Complete Login
       </UButton>
     </div>
@@ -88,9 +88,11 @@ const requestToken = async () => {
 
 const route = useRoute();
 const loginToken = ref(route.query.token);
+const loadingLogin = ref(false);
 
 const completeLogin = async () => {
   if (!loginToken.value) { return; }
+  loadingLogin.value = true;
 
   const { error } = await useFetch('/api/login', {
     method: 'POST',
@@ -100,6 +102,8 @@ const completeLogin = async () => {
   });
 
   await fetchUserSession();
+
+  loadingLogin.value = false;
 
   if (error.value) {
     const { push } = useRouter();
