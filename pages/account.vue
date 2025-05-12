@@ -36,7 +36,7 @@
             Delete Account
           </UButton>
           <template #body>
-            <div class="w-full flex justify-between">
+            <div class="w-full flex justify-between gap-4">
               <UButton
                 class="max-w-64"
                 variant="soft"
