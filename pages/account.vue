@@ -27,9 +27,34 @@
         <UButton class="max-w-36" variant="soft" @click="clear">
           Log Out
         </UButton>
-        <UButton class="max-w-64" variant="ghost" color="error" @click="deleteAccount">
-          Delete Account
-        </UButton>
+        <UModal
+          v-model:open="deleteAccountModalOpen"
+          title="Do you really want to delete your account?"
+          description="This will permanently remove all your data. Your datapoints will not be part of the statistics anymore. You will be able to create a new account with the same email."
+        >
+          <UButton class="max-w-64" variant="ghost" color="error">
+            Delete Account
+          </UButton>
+          <template #body>
+            <div class="w-full flex justify-between">
+              <UButton
+                class="max-w-64"
+                variant="soft"
+                color="neutral"
+                @click="()=> {deleteAccountModalOpen = false}"
+              >
+                Keep Account
+              </UButton>
+              <UButton
+                class="max-w-64"
+                color="error"
+                @click="deleteAccount"
+              >
+                Permanently Delete Account
+              </UButton>
+            </div>
+          </template>
+        </UModal>
       </div>
     </UCard>
   </div>
@@ -45,9 +70,20 @@ useHead({
 
 const { clear } = useUserSession();
 
-const { showErrorToast } = useToastNotifications();
-function deleteAccount () {
-  // TODO implement account deletion
-  showErrorToast('Failed to delete account.', 'This feature is not implemented yet.');
+const deleteAccountModalOpen = ref(false);
+
+const { showErrorToast, showSuccessToast } = useToastNotifications();
+async function deleteAccount () {
+  const { error } = await useFetch<{}>('/api/account', {
+    method: 'delete',
+  });
+
+  if (error.value) {
+    showErrorToast('Failed to delete account.', error.value.message);
+    return;
+  }
+
+  showSuccessToast('Deleted account.', 'Sad to see you go.');
+  await clear();
 }
 </script>
