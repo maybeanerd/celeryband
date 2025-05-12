@@ -1,9 +1,9 @@
 <template>
   <UCard class="w-full">
     <template #header>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between gap-4">
         <div class="flex items-center gap-2">
-          <UIcon name="i-lucide-briefcase" class="text-xl" />
+          <UIcon name="i-lucide-chart-bar-stacked" class="text-xl shrink-0" />
           <h2 class="text-xl font-semibold">
             Statistics for {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
           </h2>
