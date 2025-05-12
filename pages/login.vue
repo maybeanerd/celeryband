@@ -10,15 +10,20 @@
       <p class="text-gray-700 dark:text-gray-300 text-left">
         Welcome to CeleryBand, an open source platform that brings transparency to workplace compensation
         at your organization. Share and compare salaries anonymously within your organization
-        to understand your market value and advocate for fair pay. Built by the community, for the community –
-        creating a more equitable workplace, one data point at a time.
+        to understand your market value and advocate for fair pay.
       </p>
     </div>
 
     <div v-if="loginToken" class="flex flex-col gap-2 items-center">
       <h2 class="text-xl dark:text-white">
-        Logging in...
+        Login link detected
       </h2>
+      <p class="dark:text-gray-300 mb-4">
+        Click below to complete your login
+      </p>
+      <UButton @click="completeLogin">
+        Complete Login
+      </UButton>
     </div>
     <div v-else-if="emailSent" class="flex flex-col gap-2 items-center">
       <h2 class="text-xl dark:text-white">
@@ -84,10 +89,8 @@ const requestToken = async () => {
 const route = useRoute();
 const loginToken = ref(route.query.token);
 
-onMounted(async () => {
-  if (!loginToken.value) {
-    return;
-  }
+const completeLogin = async () => {
+  if (!loginToken.value) { return; }
 
   const { error } = await useFetch('/api/login', {
     method: 'POST',
@@ -103,5 +106,5 @@ onMounted(async () => {
     await push({ query: { token: undefined } });
     loginToken.value = null;
   }
-});
+};
 </script>
