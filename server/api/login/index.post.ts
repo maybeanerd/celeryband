@@ -37,9 +37,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const clientIP = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown';
-  console.debug(`Successful login from IP: ${clientIP} for user login.`);
-
   const user = await ensureUserExists(obfuscatedEmail);
   if (!user) {
     throw new Error('Was not able to ensure user exists');
