@@ -80,7 +80,7 @@ const requestToken = async () => {
   loading.value = false;
 
   if (error.value) {
-    showErrorToast('Failed log in.', JSON.stringify(error.value.message));
+    showErrorToast('Failed log in.', error.value.statusMessage ?? error.value.message);
     return;
   }
   emailSent.value = true;

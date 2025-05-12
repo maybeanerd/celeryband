@@ -52,7 +52,7 @@ import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 
-const { showErrorToast, showSuccessToast } = useToastNotifications();
+const { showZodErrorToast, showSuccessToast } = useToastNotifications();
 
 const { config } = await useServerConfiguration();
 
@@ -84,7 +84,7 @@ async function updateSalary () {
   loadingSalaryChange.value = false;
 
   if (error.value) {
-    showErrorToast('Error while updating salary', JSON.stringify(error.value.data?.data?.fieldErrors));
+    showZodErrorToast('Error while updating salary', error);
     return;
   }
   showSuccessToast('Salary updated',
