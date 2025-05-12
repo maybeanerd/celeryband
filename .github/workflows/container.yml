@@ -48,4 +48,4 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             COMMIT_HASH=${{ env.COMMIT_HASH }}
-            VERSION=${{ github.ref }}
+            VERSION=${{ github.ref_name }}
