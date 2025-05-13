@@ -5,7 +5,7 @@ CeleryBand is an open source platform that brings transparency to workplace comp
 It is built to be selfhosted by anyone, but you can also reach out if you e.g. don't have people skilled in hosting software within your group or company.
 We might be able to add a new instance for you on the *.celery.band domain hosted in Germany.
 
-There's a public, official test instance for you to try it out on https://test.celery.band/ which allows signups from gmail address.
+There's a public, official test instance for you to try it out on https://test.celery.band/ which allows signups from gmail addresses.
 
 # Features
 
@@ -15,7 +15,15 @@ Get an intuitive overview of your compensation compared to other employees acros
 
 ![Screenshot 2025-05-13 at 20 50 11](https://github.com/user-attachments/assets/a7e7c73b-9b7a-4016-a2a8-f1ef988f3875)
 
+The bands are scaled to be relative to eachother, which helps compare a role across multiple seniority levels and see what future potential one has.
+
 ![Screenshot 2025-05-13 at 20 49 52](https://github.com/user-attachments/assets/dd50f226-feb6-4b41-a6b6-346cc7bd04e3)
+
+## Time Model Normalization
+
+You can choose to view statistics normalized to the hours per week you yourself work, or in absoluet numbers. This helps to give perspective and put things into context better.
+
+![image](https://github.com/user-attachments/assets/8d13883b-6e1a-4da2-b957-7ad14c3271c4)
 
 
 ## Truly Anonymous
@@ -34,7 +42,7 @@ You can update, change, or delete all your data at any point in time. As long as
 
 ## Customizable
 
-You can configure what seniority levels, roles and departments are available to users. The currency symbol is also fully customizable, as the statistics don't care about conversion - all salaries share the same currency.
+You (as the provide of the platform) can configure what seniority levels, roles and departments are available to users. The currency symbol is also fully customizable, as the statistics don't care about conversion - all salaries share the same currency.
 
 ![image](https://github.com/user-attachments/assets/2b212b4f-2743-41db-ab70-e181ef4f9866)
 
