@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-2 items-center">
+  <div class="flex gap-1 items-center">
     <!-- Min label -->
     <div
-      class="text-xs text-gray-500 dark:text-gray-400 w-16"
+      class="text-xs text-gray-500 dark:text-gray-400 w-16 whitespace-nowrap"
     >
       {{ formatValue(min) }}
     </div>
@@ -52,7 +52,7 @@
 
     <!-- Max label -->
     <div
-      class="text-xs text-gray-500 dark:text-gray-400 w-16"
+      class="text-xs text-gray-500 dark:text-gray-400 w-18 whitespace-nowrap"
     >
       {{ formatValue(max) }}
     </div>
