@@ -13,7 +13,10 @@ There's a public, official test instance for you to try it out on https://test.c
 
 Get an intuitive overview of your compensation compared to other employees across your entire organisation, or scoped to your role and department.
 
-TODO image
+![Screenshot 2025-05-13 at 20 50 11](https://github.com/user-attachments/assets/a7e7c73b-9b7a-4016-a2a8-f1ef988f3875)
+
+![Screenshot 2025-05-13 at 20 49 52](https://github.com/user-attachments/assets/dd50f226-feb6-4b41-a6b6-346cc7bd04e3)
+
 
 ## Truly Anonymous
 When signing up, your email is securely hashed and stored in a way that nobody can (reasonably) link your account to your identity.
