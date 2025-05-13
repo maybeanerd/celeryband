@@ -1,67 +1,60 @@
 <template>
-  <div class="relative h-10 flex items-center">
-    <!-- Salary band line -->
+  <div class="flex gap-2 items-center">
+    <!-- Min label -->
     <div
-      class="absolute h-2 bg-gray-200 dark:bg-gray-700 rounded-full"
-      :style="{
-        left: `${getPercentPosition(min)}%`,
-        width: `${getPercentWidth(min, max)}%`
-      }"
-    />
-
-    <!-- Min marker -->
-    <div
-      class="absolute top-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap"
-      :style="{
-        left: `${getPercentPosition(min)}%`,
-        transform: 'translateX(-100%) translateY(-50%)',
-        marginLeft: '-4px'
-      }"
+      class="text-xs text-gray-500 dark:text-gray-400 w-16"
     >
       {{ formatValue(min) }}
     </div>
 
-    <!-- Max marker -->
+    <!-- Line with markers -->
+    <div class="relative h-10 flex items-center w-full">
+      <!-- Salary band line -->
+      <div
+        class="absolute h-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+        :style="{
+          left: `${getPercentPosition(min)}%`,
+          width: `${getPercentWidth(min, max)}%`
+        }"
+      />
+
+      <!-- Median marker -->
+      <div
+        class="absolute w-1 h-4 bg-blue-500 rounded-full transform -translate-x-1/2"
+        :style="{ left: `${getPercentPosition(median)}%` }"
+      >
+        <div class="absolute top-4 transform -translate-x-1/2 text-xs text-blue-500 whitespace-nowrap">
+          {{ formatValue(median) }}
+        </div>
+      </div>
+
+      <!-- Average marker -->
+      <div
+        class="absolute w-1 h-4 bg-green-500 rounded-full transform -translate-x-1/2"
+        :style="{ left: `${getPercentPosition(average)}%` }"
+      >
+        <div class="absolute top-[-16px] transform -translate-x-1/2 text-xs text-green-500 whitespace-nowrap">
+          {{ formatValue(average) }}
+        </div>
+      </div>
+
+      <!-- Own salary marker (optional) -->
+      <div
+        v-if="ownSalary"
+        class="absolute w-1 h-6 bg-purple-500 rounded-full transform -translate-x-1/2"
+        :style="{ left: `${getPercentPosition(ownSalary)}%` }"
+      >
+        <div class="absolute top-8 transform -translate-x-1/2 text-xs text-purple-500 whitespace-nowrap">
+          {{ formatValue(ownSalary) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Max label -->
     <div
-      class="absolute top-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap"
-      :style="{
-        left: `${getPercentPosition(max)}%`,
-        transform: 'translateY(-50%)',
-        marginLeft: '4px'
-      }"
+      class="text-xs text-gray-500 dark:text-gray-400 w-16"
     >
       {{ formatValue(max) }}
-    </div>
-
-    <!-- Median marker -->
-    <div
-      class="absolute w-1 h-4 bg-blue-500 rounded-full transform -translate-x-1/2"
-      :style="{ left: `${getPercentPosition(median)}%` }"
-    >
-      <div class="absolute top-4 transform -translate-x-1/2 text-xs text-blue-500 whitespace-nowrap">
-        {{ formatValue(median) }}
-      </div>
-    </div>
-
-    <!-- Average marker -->
-    <div
-      class="absolute w-1 h-4 bg-green-500 rounded-full transform -translate-x-1/2"
-      :style="{ left: `${getPercentPosition(average)}%` }"
-    >
-      <div class="absolute top-[-16px] transform -translate-x-1/2 text-xs text-green-500 whitespace-nowrap">
-        {{ formatValue(average) }}
-      </div>
-    </div>
-
-    <!-- Own salary marker (optional) -->
-    <div
-      v-if="ownSalary"
-      class="absolute w-1 h-6 bg-purple-500 rounded-full transform -translate-x-1/2"
-      :style="{ left: `${getPercentPosition(ownSalary)}%` }"
-    >
-      <div class="absolute top-8 transform -translate-x-1/2 text-xs text-purple-500 whitespace-nowrap">
-        {{ formatValue(ownSalary) }}
-      </div>
     </div>
   </div>
 </template>
@@ -85,8 +78,7 @@ function getPercentPosition (value: number | string) {
   if (range === 0) {
     return 50;
   }
-  // Add padding of 10% on each side
-  return 10 + ((numValue - props.globalMin) / range) * 80;
+  return ((numValue - props.globalMin) / range) * 100;
 }
 
 // Calculate width percentage for the salary band
@@ -97,7 +89,7 @@ function getPercentWidth (min: number, max: number) {
   if (range === 0) {
     return 80;
   }
-  return ((maxValue - minValue) / range) * 80;
+  return ((maxValue - minValue) / range) * 100;
 }
 
 // Format the value for display
