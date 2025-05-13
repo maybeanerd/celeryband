@@ -9,7 +9,7 @@ There's a public, official test server for you to try it out on https://test.cel
 
 # Features
 
-## Salary Band Visualisations
+## Salary Band Visualizations
 
 Get an intuitive overview of your compensation compared to other employees across your entire organization, or scoped to your role and department.
 
@@ -34,7 +34,7 @@ Statistics are only provided when their aggregate consists of at least 3 distinc
 ![image](https://github.com/user-attachments/assets/4f7c7fe2-97c4-46b9-ac20-4a78bfac343c)
 
 
-## Own your data
+## Own Your Data
 You can update, change, or delete all your data at any point in time. As long as you have control of your email, you have full control over the account. No data is kept after you delete your account, and statistics will not include you salary anymore.
 
 ![image](https://github.com/user-attachments/assets/dad6c858-8757-4708-9bd2-6a02290575e9)
@@ -46,11 +46,11 @@ You (as the provider of the server) can configure what seniority levels, roles a
 
 ![image](https://github.com/user-attachments/assets/2b212b4f-2743-41db-ab70-e181ef4f9866)
 
-# Running your own server
+# Running Your Own Server
 
 You can run CeleryBand in a few ways. We provide a container image [as part of this repository](https://github.com/maybeanerd/celeryband/pkgs/container/celeryband) which can be run using docker, kubernetes, or any other container runtime.
 
-It is a monolithic image that, for simplicities sake, includes frontend, backend and database all in one.
+It is a monolithic image that, for simplicity's sake, includes frontend, backend and database all in one.
 
 You can check out [the example docker compose file](https://github.com/maybeanerd/celeryband/blob/main/docker-compose.yml) or the [test deployment's helm chart](https://github.com/maybeanerd/home-cluster/tree/main/charts/celeryband-test) for some example configurations to follow along.
 
