@@ -75,7 +75,7 @@ const props = defineProps<{
 function getPercentPosition (value: number | string) {
   const numValue = Number(value);
   const range = props.globalMax - props.globalMin;
-  if (range === 0) {
+  if (range <= 0) {
     return 50;
   }
   return ((numValue - props.globalMin) / range) * 100;
@@ -86,8 +86,8 @@ function getPercentWidth (min: number, max: number) {
   const minValue = min;
   const maxValue = max;
   const range = props.globalMax - props.globalMin;
-  if (range === 0) {
-    return 80;
+  if (range <= 0) {
+    return 100;
   }
   return ((maxValue - minValue) / range) * 100;
 }
