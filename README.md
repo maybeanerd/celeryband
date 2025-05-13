@@ -35,7 +35,7 @@ Statistics are only provided when their aggregate consists of at least 3 distinc
 
 
 ## Own Your Data
-You can update, change, or delete all your data at any point in time. As long as you have control of your email, you have full control over the account. No data is kept after you delete your account, and statistics will not include you salary anymore.
+You can update, change, or delete all your data at any point in time. As long as you have control of your email, you have full control over the account. No data is kept after you delete your account, and statistics will not include your salary anymore.
 
 ![image](https://github.com/user-attachments/assets/dad6c858-8757-4708-9bd2-6a02290575e9)
 
