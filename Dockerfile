@@ -1,4 +1,4 @@
-FROM node:22.15.0-slim
+FROM node:22.15.1-slim
 WORKDIR /app
 
 ARG COMMIT_HASH
