@@ -8,8 +8,12 @@
         for {{ serverInfo.acceptedDomain }}
       </p>
       <p class="text-gray-700 dark:text-gray-300 text-left">
-        Welcome to CeleryBand, an open source platform that brings transparency to workplace compensation
-        at your organization. Share and compare salaries anonymously within your organization
+        Welcome to CeleryBand, an
+        <CustomLink :url="gitHubProjectUrl">
+          open source
+        </CustomLink>
+        platform that brings transparency to workplace compensation at your organization.
+        Share and compare salaries anonymously within your organization
         to understand your market value and advocate for fair pay.
       </p>
     </div>
