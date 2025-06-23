@@ -44,7 +44,7 @@
     "nuxt": "3.17.5",
     "nuxt-auth-utils": "0.5.20",
     "nuxt-cron": "1.8.0",
-    "prettier": "3.5.3",
+    "prettier": "3.6.0",
     "tailwindcss": "4.1.10",
     "tsx": "4.20.3",
     "typescript": "5.8.3"
