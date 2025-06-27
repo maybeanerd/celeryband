@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Create salary bands for your company in an anonymous and safe way.",
   "author": "Sebastian Di Luzio",
-  "packageManager": "pnpm@10.12.3",
+  "packageManager": "pnpm@10.12.4",
   "private": true,
   "repository": {
     "type": "git",
