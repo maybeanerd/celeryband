@@ -28,7 +28,9 @@ export default defineNuxtConfig({
     },
   },
 
-  build: {},
+  build: {
+    transpile: ['unhead'],
+  },
   vite: {},
 
   app: {
