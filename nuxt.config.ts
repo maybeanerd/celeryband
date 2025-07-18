@@ -28,7 +28,9 @@ export default defineNuxtConfig({
     },
   },
 
-  build: {},
+  build: {
+    transpile: ['unhead'],
+  },
   vite: {},
 
   app: {
@@ -48,6 +50,7 @@ export default defineNuxtConfig({
       commitHash,
       version,
       buildDate: new Date().toISOString(),
+      disclaimer: undefined,
     },
   },
 

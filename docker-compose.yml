@@ -35,6 +35,7 @@ services:
       - CURRENCY=€
       - ACCEPTED_DOMAIN=your-company.com
       - SERVER_URL=https://your-celeryband.com
+      - NUXT_PUBLIC_DISCLAIMER="This is a legal disclaimer that this platform is pretty cool."
 
       - SMTP_HOST=dummy.smtp.com
       - SMTP_PORT=587
