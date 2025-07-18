@@ -50,6 +50,7 @@ export default defineNuxtConfig({
       commitHash,
       version,
       buildDate: new Date().toISOString(),
+      disclaimer: undefined,
     },
   },
 

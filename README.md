@@ -81,6 +81,9 @@ ACCEPTED_DOMAIN=your-company.com
 # The domain you host your server on. It will be used e.g. in the login emails to generate links
 SERVER_URL=https://your-celeryband.com
 
+# A dislaimer text that will be added to the footer of all pages. By default, it's empty.
+NUXT_PUBLIC_DISCLAIMER=This is a legal disclaimer that this platform is pretty cool.
+
 # Your email servers credentials which will be used to send login emails
 SMTP_HOST=dummy.smtp.com
 SMTP_PORT=587
