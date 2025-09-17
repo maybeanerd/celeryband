@@ -67,8 +67,8 @@ importers:
         specifier: 3.19.2
         version: 3.19.2(@netlify/blobs@8.2.0)(@parcel/watcher@2.4.1)(@types/node@22.17.1)(@vue/compiler-sfc@3.5.21)(better-sqlite3@12.2.0)(db0@0.3.2(better-sqlite3@12.2.0)(drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.2.0)(gel@2.0.0)))(drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.2.0)(gel@2.0.0))(eslint@8.57.1)(ioredis@5.7.0)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.50.1)(terser@5.34.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.1.5(@types/node@22.17.1)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.34.1)(tsx@4.20.5)(yaml@2.8.0))(yaml@2.8.0)
       nuxt-auth-utils:
-        specifier: 0.5.24
-        version: 0.5.24(magicast@0.3.5)
+        specifier: 0.5.25
+        version: 0.5.25(magicast@0.3.5)
       nuxt-cron:
         specifier: 1.8.0
         version: 1.8.0(magicast@0.3.5)(rollup@4.50.1)
@@ -1750,6 +1750,10 @@ packages:
 
   '@nuxt/kit@4.1.1':
     resolution: {integrity: sha512-2MGfOXtbcxdkbUNZDjyEv4xmokicZhTrQBMrmNJQztrePfpKOVBe8AiGf/BfbHelXMKio5PgktiRoiEIyIsX4g==}
+    engines: {node: '>=18.12.0'}
+
+  '@nuxt/kit@4.1.2':
+    resolution: {integrity: sha512-P5q41xeEOa6ZQC0PvIP7TSBmOAMxXK4qihDcCbYIJq8RcVsEPbGZVlidmxE6EOw1ucSyodq9nbV31FAKwoL4NQ==}
     engines: {node: '>=18.12.0'}
 
   '@nuxt/schema@3.15.0':
@@ -5636,8 +5640,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-auth-utils@0.5.24:
-    resolution: {integrity: sha512-BfVr/zEGH23Dbs5jCFVg/IQEe+07bRdA0/j5Ufo1aiVzh/pZjYtRWg+cMs7/7wIeQw7zfkrtadhVm4QRidFOmQ==}
+  nuxt-auth-utils@0.5.25:
+    resolution: {integrity: sha512-tL9Y0duW3a133BZxy5917KvZ9iLX900PW47Qr80IPytwFspEzyqD7c1/zWACUVPv7QPTTD3LxT7LOtK4aJnfEw==}
     peerDependencies:
       '@atproto/api': ^0.13.15
       '@atproto/oauth-client-node': ^0.2.0
@@ -5749,8 +5753,8 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  openid-client@6.7.1:
-    resolution: {integrity: sha512-kOiE4q0kNogr90hXsxPrKeEDuY+V0kkZazvZScOwZkYept9slsaQ3usXTaKkm6I04vLNuw5caBoX7UfrwC6x8w==}
+  openid-client@6.8.0:
+    resolution: {integrity: sha512-oG1d1nAVhIIE+JSjLS+7E9wY1QOJpZltkzlJdbZ7kEn7Hp3hqur2TEeQ8gLOHoHkhbRAGZJKoOnEQcLOQJuIyg==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -9709,6 +9713,33 @@ snapshots:
       - magicast
 
   '@nuxt/kit@4.1.1(magicast@0.3.5)':
+    dependencies:
+      c12: 3.2.0(magicast@0.3.5)
+      consola: 3.4.2
+      defu: 6.1.4
+      destr: 2.0.5
+      errx: 0.1.0
+      exsolve: 1.0.7
+      ignore: 7.0.5
+      jiti: 2.5.1
+      klona: 2.0.6
+      mlly: 1.8.0
+      ohash: 2.0.11
+      pathe: 2.0.3
+      pkg-types: 2.3.0
+      rc9: 2.1.2
+      scule: 1.3.0
+      semver: 7.7.2
+      std-env: 3.9.0
+      tinyglobby: 0.2.15
+      ufo: 1.6.1
+      unctx: 2.4.1
+      unimport: 5.2.0
+      untyped: 2.0.0
+    transitivePeerDependencies:
+      - magicast
+
+  '@nuxt/kit@4.1.2(magicast@0.3.5)':
     dependencies:
       c12: 3.2.0(magicast@0.3.5)
       consola: 3.4.2
@@ -14093,16 +14124,16 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-auth-utils@0.5.24(magicast@0.3.5):
+  nuxt-auth-utils@0.5.25(magicast@0.3.5):
     dependencies:
       '@adonisjs/hash': 9.1.1
-      '@nuxt/kit': 4.1.1(magicast@0.3.5)
+      '@nuxt/kit': 4.1.2(magicast@0.3.5)
       defu: 6.1.4
       h3: 1.15.4
       hookable: 5.5.3
       jose: 6.1.0
       ofetch: 1.4.1
-      openid-client: 6.7.1
+      openid-client: 6.8.0
       pathe: 2.0.3
       scule: 1.3.0
       uncrypto: 0.1.3
@@ -14339,7 +14370,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openid-client@6.7.1:
+  openid-client@6.8.0:
     dependencies:
       jose: 6.1.0
       oauth4webapi: 3.8.1
