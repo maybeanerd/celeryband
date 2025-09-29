@@ -43,8 +43,8 @@ importers:
         specifier: 22.17.1
         version: 22.17.1
       '@types/nodemailer':
-        specifier: 7.0.1
-        version: 7.0.1
+        specifier: 7.0.2
+        version: 7.0.2
       '@typescript-eslint/parser':
         specifier: 7.18.0
         version: 7.18.0(eslint@8.57.1)(typescript@5.9.2)
@@ -2805,8 +2805,8 @@ packages:
   '@types/node@22.17.1':
     resolution: {integrity: sha512-y3tBaz+rjspDTylNjAX37jEC3TETEFGNJL6uQDxwF9/8GLLIjW1rvVHlynyuUKMnMr1Roq8jOv3vkopBjC4/VA==}
 
-  '@types/nodemailer@7.0.1':
-    resolution: {integrity: sha512-UfHAghPmGZVzaL8x9y+mKZMWyHC399+iq0MOmya5tIyenWX3lcdSb60vOmp0DocR6gCDTYTozv/ULQnREyyjkg==}
+  '@types/nodemailer@7.0.2':
+    resolution: {integrity: sha512-Zo6uOA9157WRgBk/ZhMpTQ/iCWLMk7OIs/Q9jvHarMvrzUUP/MDdPHL2U1zpf57HrrWGv4nYQn5uIxna0xY3xw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -10758,7 +10758,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/nodemailer@7.0.1':
+  '@types/nodemailer@7.0.2':
     dependencies:
       '@aws-sdk/client-sesv2': 3.876.0
       '@types/node': 22.17.1
