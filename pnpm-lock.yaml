@@ -49,8 +49,8 @@ importers:
         specifier: 7.18.0
         version: 7.18.0(eslint@8.57.1)(typescript@5.9.3)
       '@vite-pwa/nuxt':
-        specifier: 1.0.6
-        version: 1.0.6(magicast@0.3.5)(vite@7.1.9(@types/node@22.18.11)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.34.1)(tsx@4.20.6)(yaml@2.8.0))(workbox-build@7.1.1)(workbox-window@7.1.0)
+        specifier: 1.0.7
+        version: 1.0.7(magicast@0.3.5)(vite@7.1.9(@types/node@22.18.11)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.34.1)(tsx@4.20.6)(yaml@2.8.0))(workbox-build@7.1.1)(workbox-window@7.1.0)
       autoprefixer:
         specifier: 10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -3032,8 +3032,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@vite-pwa/nuxt@1.0.6':
-    resolution: {integrity: sha512-gNAo3HgSQbLdyBw/BhXEzTagZNzgypE/20bGpscz0gfla+qAS2oy6WPz8kU4td83Ub3aod4Q1WXLq+09H2xLig==}
+  '@vite-pwa/nuxt@1.0.7':
+    resolution: {integrity: sha512-AA6E2M6Nr9eZqE371R7LYPmfhZ9H/MxWt8GAR65hUQLdBzIAJtDmGoLB52tVdto8RXj5C3tYkr8XQdIY4+mr6w==}
     peerDependencies:
       '@vite-pwa/assets-generator': ^1.0.0
     peerDependenciesMeta:
@@ -11190,7 +11190,7 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vite-pwa/nuxt@1.0.6(magicast@0.3.5)(vite@7.1.9(@types/node@22.18.11)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.34.1)(tsx@4.20.6)(yaml@2.8.0))(workbox-build@7.1.1)(workbox-window@7.1.0)':
+  '@vite-pwa/nuxt@1.0.7(magicast@0.3.5)(vite@7.1.9(@types/node@22.18.11)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.34.1)(tsx@4.20.6)(yaml@2.8.0))(workbox-build@7.1.1)(workbox-window@7.1.0)':
     dependencies:
       '@nuxt/kit': 3.19.3(magicast@0.3.5)
       pathe: 1.1.2
