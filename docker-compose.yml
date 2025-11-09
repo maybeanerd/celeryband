@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: 'traefik:v3.5.4'
+    image: 'traefik:v3.6.0'
     container_name: 'Reverse-Proxy'
     command:
       - '--providers.docker=true'
