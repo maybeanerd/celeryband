@@ -18,8 +18,8 @@ importers:
         specifier: 7.0.11
         version: 7.0.11
       zod:
-        specifier: 4.2.0
-        version: 4.2.0
+        specifier: 4.2.1
+        version: 4.2.1
     devDependencies:
       '@nuxt/devtools':
         specifier: latest
@@ -29,7 +29,7 @@ importers:
         version: 1.11.0(@netlify/blobs@8.2.0)(db0@0.3.4(better-sqlite3@12.5.0)(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.5.0)(gel@2.0.0)))(ioredis@5.8.2)(magicast@0.5.1)
       '@nuxt/ui':
         specifier: 3.3.7
-        version: 3.3.7(@babel/parser@7.28.5)(@netlify/blobs@8.2.0)(change-case@5.4.4)(db0@0.3.4(better-sqlite3@12.5.0)(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.5.0)(gel@2.0.0)))(embla-carousel@8.6.0)(ioredis@5.8.2)(jwt-decode@4.0.0)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@22.18.13)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.34.1)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.3(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))(zod@4.2.0)
+        version: 3.3.7(@babel/parser@7.28.5)(@netlify/blobs@8.2.0)(change-case@5.4.4)(db0@0.3.4(better-sqlite3@12.5.0)(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.5.0)(gel@2.0.0)))(embla-carousel@8.6.0)(ioredis@5.8.2)(jwt-decode@4.0.0)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@22.18.13)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.34.1)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.3(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))(zod@4.2.1)
       '@nuxtjs/eslint-config-typescript':
         specifier: 12.1.0
         version: 12.1.0(eslint@8.57.1)(typescript@5.9.3)
@@ -8006,8 +8006,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod@4.2.0:
-    resolution: {integrity: sha512-Bd5fw9wlIhtqCCxotZgdTOMwGm1a0u75wARVEY9HMs1X17trvA/lMi4+MGK5EUfYkXVTbX8UDiDKW4OgzHVUZw==}
+  zod@4.2.1:
+    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
 snapshots:
 
@@ -10537,7 +10537,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxt/ui@3.3.7(@babel/parser@7.28.5)(@netlify/blobs@8.2.0)(change-case@5.4.4)(db0@0.3.4(better-sqlite3@12.5.0)(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.5.0)(gel@2.0.0)))(embla-carousel@8.6.0)(ioredis@5.8.2)(jwt-decode@4.0.0)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@22.18.13)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.34.1)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.3(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))(zod@4.2.0)':
+  '@nuxt/ui@3.3.7(@babel/parser@7.28.5)(@netlify/blobs@8.2.0)(change-case@5.4.4)(db0@0.3.4(better-sqlite3@12.5.0)(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.11.10)(better-sqlite3@12.5.0)(gel@2.0.0)))(embla-carousel@8.6.0)(ioredis@5.8.2)(jwt-decode@4.0.0)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@22.18.13)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.34.1)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.3(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))(zod@4.2.1)':
     dependencies:
       '@iconify/vue': 5.0.0(vue@3.5.25(typescript@5.9.3))
       '@internationalized/date': 3.10.0
@@ -10585,7 +10585,7 @@ snapshots:
       vue-component-type-helpers: 3.1.1
     optionalDependencies:
       vue-router: 4.6.3(vue@3.5.25(typescript@5.9.3))
-      zod: 4.2.0
+      zod: 4.2.1
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -17269,4 +17269,4 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod@4.2.0: {}
+  zod@4.2.1: {}
