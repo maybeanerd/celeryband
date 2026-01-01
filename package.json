@@ -53,7 +53,7 @@
     "better-sqlite3": "12.5.0",
     "drizzle-orm": "0.45.1",
     "nodemailer": "7.0.12",
-    "zod": "4.3.3"
+    "zod": "4.3.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
