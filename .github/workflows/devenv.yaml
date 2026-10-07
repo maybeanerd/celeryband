@@ -1,0 +1,41 @@
+name: devenv
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - devenv.nix
+      - devenv.yaml
+      - devenv.lock
+      - package.json
+      - pnpm-lock.yaml
+      - .nvmrc
+      - .github/workflows/devenv.yaml
+
+jobs:
+  devenv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - uses: cachix/install-nix-action@v31
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: devenv
+
+      - name: Install devenv
+        run: nix profile add --accept-flake-config tarball+https://install.devenv.sh/latest
+
+      - name: Build shell and check the toolchain
+        run: |
+          cp .env.example .env
+          devenv shell -- bash -euo pipefail -c '
+            echo "node: $(node --version)  (.nvmrc: $(cat .nvmrc))"
+            [[ "$(node --version)" == v$(cut -d. -f1 .nvmrc).* ]] || { echo "Node major mismatch with .nvmrc"; exit 1; }
+
+            echo "pnpm: $(pnpm --version)"
+
+            pnpm build
+          '
