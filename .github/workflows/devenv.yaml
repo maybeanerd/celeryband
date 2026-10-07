@@ -26,7 +26,7 @@ jobs:
           name: devenv
 
       - name: Install devenv
-        run: nix profile install --accept-flake-config tarball+https://install.devenv.sh/latest
+        run: nix profile add --accept-flake-config tarball+https://install.devenv.sh/latest
 
       - name: Build shell and check the toolchain
         run: |
