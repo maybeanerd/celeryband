@@ -30,12 +30,12 @@ jobs:
 
       - name: Build shell and check the toolchain
         run: |
+          cp .env.example .env
           devenv shell -- bash -euo pipefail -c '
             echo "node: $(node --version)  (.nvmrc: $(cat .nvmrc))"
             [[ "$(node --version)" == v$(cut -d. -f1 .nvmrc).* ]] || { echo "Node major mismatch with .nvmrc"; exit 1; }
 
             echo "pnpm: $(pnpm --version)"
 
-            cp .env.example .env
             pnpm build
           '
