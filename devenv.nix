@@ -16,6 +16,8 @@
   # Loads .env into the environment
   dotenv.enable = true;
 
-  # `devenv up` starts the dev server
+  scripts.up.exec = ''
+    devenv up "$@"
+  '';
   processes.dev.exec = "pnpm dev";
 }
