@@ -19,5 +19,8 @@ ARG VERSION
 ENV VERSION=$VERSION
 
 COPY --from=build /app/.output ./.output
+COPY --from=build /app/server/db/migrations ./server/db/migrations
+
+RUN mkdir -p data
 
 CMD ["node", ".output/server/index.mjs"]
