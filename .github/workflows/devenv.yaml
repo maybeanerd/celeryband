@@ -9,7 +9,7 @@ jobs:
   devenv:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.1.0
 
       - uses: cachix/install-nix-action@v31
 
