@@ -10,7 +10,7 @@ COPY ["package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "./"]
 # Install pnpm
 RUN corepack enable pnpm
 # Intall dependencies
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
 # Build
 COPY . .

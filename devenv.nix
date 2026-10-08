@@ -7,7 +7,7 @@
     pnpm = {
       enable = true;
       package = pkgs.pnpm_10; # matches packageManager in package.json
-      install.enable = true; # runs `pnpm install` on shell enter
+      install.enable = true; # runs `pnpm i` on shell enter
     };
   };
 
