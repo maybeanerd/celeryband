@@ -225,8 +225,8 @@ importers:
         specifier: 4.5.2
         version: 4.5.2(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7(supports-color@10.2.2)))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7(supports-color@10.2.2)))(@oxc-project/types@0.153.0)(@rollup/plugin-babel@6.1.0(@babel/core@7.29.7(supports-color@10.2.2))(rollup@4.64.2)(supports-color@10.2.2))(@types/node@24.13.2)(@vitejs/devtools@0.7.6)(@vue/compiler-sfc@3.5.43)(better-sqlite3@12.11.1)(cac@7.0.0)(confbox@0.2.4)(db0@0.3.4(better-sqlite3@12.11.1)(drizzle-orm@0.45.3(@types/better-sqlite3@7.6.13)(better-sqlite3@12.11.1)))(dotenv@17.4.2)(drizzle-orm@0.45.3(@types/better-sqlite3@7.6.13)(better-sqlite3@12.11.1))(esbuild@0.28.2)(eslint@8.57.1(supports-color@10.2.2))(giget@3.3.1)(ioredis@5.11.1(supports-color@10.2.2))(lightningcss@1.33.0)(magicast@0.5.5)(optionator@0.9.4)(oxc-parser@0.141.0)(rolldown@1.2.13)(rollup-plugin-visualizer@7.1.1(rolldown@1.2.13)(rollup@4.64.2))(rollup@4.64.2)(srvx@0.11.22)(supports-color@10.2.2)(terser@5.51.2)(tsx@4.21.0)(typescript@5.9.3)(vite@8.3.3)(yaml@2.9.1)
       nuxt-auth-utils:
-        specifier: 0.5.29
-        version: 0.5.29(@nuxt/schema@4.5.2)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.13)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.64.2)(vite@8.3.3))
+        specifier: 0.5.30
+        version: 0.5.30(@nuxt/schema@4.5.2)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.13)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.64.2)(vite@8.3.3))
       nuxt-cron:
         specifier: 1.8.0
         version: 1.8.0(magicast@0.5.5)
@@ -6089,8 +6089,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-auth-utils@0.5.29:
-    resolution: {integrity: sha512-aQ9oD8QR51jUCe2BFEsO/G/E0K+XUy8Skjn3hYcNLiqZ9XE4Y3uT/ozBCmAQ+TR3WW6prj8vUR0wQes8W1N0PA==}
+  nuxt-auth-utils@0.5.30:
+    resolution: {integrity: sha512-KtHMHy/OQAy/RYAmORBDvtNRs0BYbeLQOOrMv0FpBpWUYqMBA2lhumqnTACljFHGLGNpMy25Ck7cWVhVUjc6vA==}
     peerDependencies:
       '@atproto/api': ^0.13.15
       '@atproto/oauth-client-node': ^0.2.0
@@ -14356,7 +14356,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-auth-utils@0.5.29(@nuxt/schema@4.5.2)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.13)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.64.2)(vite@8.3.3)):
+  nuxt-auth-utils@0.5.30(@nuxt/schema@4.5.2)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.13)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.64.2)(vite@8.3.3)):
     dependencies:
       '@adonisjs/hash': 9.1.1
       '@nuxt/kit': 4.6.0(@nuxt/schema@4.5.2)(confbox@0.2.4)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(oxc-parser@0.141.0)(rolldown@1.2.13)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.64.2)(vite@8.3.3))
