@@ -11,7 +11,10 @@
     };
   };
 
-  packages = [ ];
+  packages = [
+    pkgs.node-gyp
+    pkgs.python3
+  ];
 
   # Loads .env into the environment
   dotenv.enable = true;
