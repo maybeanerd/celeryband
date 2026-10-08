@@ -1,0 +1,5 @@
+services:
+  celeryband:
+    environment: !reset []
+    env_file:
+      - .env

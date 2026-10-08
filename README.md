@@ -144,3 +144,9 @@ Locally preview production build:
 ```bash
 pnpm  preview
 ```
+
+### Local Development Override
+
+**Use with caution**, and never enable this in a deployed service!
+
+If you don't have an SMTP server available, setting `DEVELOPMENT_MODE=true` in the `.env` starts logging the login link that would be sent, allowing you to use it to sign in without needing to receive it via email.
