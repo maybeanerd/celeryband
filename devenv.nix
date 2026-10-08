@@ -6,7 +6,7 @@
     package = pkgs.nodejs_24; # matches .nvmrc
     pnpm = {
       enable = true;
-      package = pkgs.pnpm_10; # matches packageManager in package.json
+      package = pkgs.pnpm_12; # matches packageManager in package.json
       install.enable = true; # runs `pnpm i` on shell enter
     };
   };
