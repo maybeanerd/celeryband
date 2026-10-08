@@ -33,7 +33,7 @@
     "@nuxtjs/eslint-config-typescript": "12.1.0",
     "@nuxtjs/i18n": "10.6.0",
     "@types/better-sqlite3": "9.6.0",
-    "@types/node": "24.13.2",
+    "@types/node": "24.13.6",
     "@types/nodemailer": "8.0.2",
     "@typescript-eslint/parser": "7.18.0",
     "@vite-pwa/nuxt": "1.1.1",
