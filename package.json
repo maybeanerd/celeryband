@@ -42,7 +42,7 @@
     "eslint": "8.57.1",
     "git-commit-info": "2.0.2",
     "nuxt": "4.5.2",
-    "nuxt-auth-utils": "0.5.29",
+    "nuxt-auth-utils": "0.5.30",
     "nuxt-cron": "1.8.0",
     "prettier": "3.8.3",
     "tailwindcss": "4.3.3",
