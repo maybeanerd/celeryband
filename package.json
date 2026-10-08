@@ -50,7 +50,7 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "better-sqlite3": "12.11.1",
+    "better-sqlite3": "13.0.3",
     "drizzle-orm": "0.45.3",
     "nodemailer": "8.0.11",
     "zod": "4.6.5"
