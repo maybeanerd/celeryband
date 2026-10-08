@@ -24,7 +24,7 @@
   scripts.docker-up.exec = ''
     COMMIT_HASH="$(git rev-parse --short HEAD)" \
     VERSION="local" \
-    docker-compose up --build "$@"
+    docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build "$@"
   '';
   scripts.docker-down.exec = ''
     docker-compose down "$@"
