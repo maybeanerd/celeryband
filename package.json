@@ -29,7 +29,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/image": "2.1.0",
-    "@nuxt/ui": "3.3.7",
+    "@nuxt/ui": "4.11.2",
     "@nuxtjs/eslint-config-typescript": "12.1.0",
     "@nuxtjs/i18n": "10.6.0",
     "@types/better-sqlite3": "7.6.13",
