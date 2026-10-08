@@ -20,8 +20,9 @@ services:
     build:
       context: .
       args:
-        - COMMIT_HASH=abcdefg
-    image: ${IMAGE_NAME}
+        - COMMIT_HASH=${COMMIT_HASH:-abcdefg}
+        - VERSION=${VERSION:-local}
+    image: ${IMAGE_NAME:-celeryband:local}
     networks:
       - internal
     volumes:
