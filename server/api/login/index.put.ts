@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   if (error) {
     throw createError({
       statusCode: 403,
-      statusMessage: error.errors[0].message,
+      statusMessage: error.issues[0]?.message ?? 'Unknown Error',
     });
   }
 
