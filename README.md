@@ -95,7 +95,25 @@ SMTP_PASSWORD=dummyPassword
 
 ## Setup
 
-Make sure to install the dependencies:
+### Using [devenv](https://devenv.sh/) (Recommended)
+
+```bash
+devenv shell
+```
+
+Or automatically enter it by using [direnv](https://direnv.net/):
+
+```bash
+direnv allow
+```
+
+Then, start all processes:
+
+```bash
+up
+```
+
+### Using [nvm](https://github.com/nvm-sh/nvm)
 
 ```bash
 nvm i
@@ -103,7 +121,9 @@ corepack enable pnpm
 pnpm i
 ```
 
-## Development Server
+### Commands
+
+#### Development Server
 
 Start the development server on `http://localhost:3000`:
 
@@ -111,7 +131,7 @@ Start the development server on `http://localhost:3000`:
 pnpm dev
 ```
 
-## Production
+#### Production
 
 Build the application for production:
 
