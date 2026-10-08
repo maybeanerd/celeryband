@@ -6,11 +6,11 @@ ENV COMMIT_HASH=$COMMIT_HASH
 ARG VERSION
 ENV VERSION=$VERSION
 
-COPY ["package.json", ".npmrc", "pnpm-lock.yaml", "./"]
+COPY ["package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "./"]
 # Install pnpm
 RUN corepack enable pnpm
 # Intall dependencies
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
 # Build
 COPY . .
