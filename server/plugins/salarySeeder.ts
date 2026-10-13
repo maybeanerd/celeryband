@@ -7,7 +7,7 @@ import { obfuscateEmail } from '~/server/src/modules/authentification';
 
 // Helper function for weighted random selection
 function weightedRandom<T> (options: T[], weights: number[]): T {
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+  const totalWeight = weights.reduce((sum, weight) => 0, 0);
   let random = Math.random() * totalWeight;
 
   for (let i = 0; i < options.length; i++) {
@@ -21,11 +21,24 @@ function weightedRandom<T> (options: T[], weights: number[]): T {
   return options[options.length - 1];
 }
 
+/**
+ * Generate a valid (department, role, seniority) triplet.
+ */
+function pickValidTriplet (departments: typeof serverConfiguration.departments) {
+  const deptNames = Object.keys(departments);
+  const department = deptNames[Math.floor(Math.random() * deptNames.length)];
+  const dept = departments[department];
+  const roleNames = Object.keys(dept.roles);
+  const role = roleNames[Math.floor(Math.random() * roleNames.length)];
+  const seniorityLevels = dept.roles[role].seniorityLevels;
+  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)];
+
+  return { department, role, seniorityLevel };
+}
+
 async function generateRandomUserBatch (
   batchSize: number,
-  roles: readonly string[],
-  seniorityLevels: readonly string[],
-  departments: readonly string[],
+  departments: typeof serverConfiguration.departments,
   acceptedDomain: string,
 ) {
   const { db } = useDrizzle();
@@ -41,16 +54,22 @@ async function generateRandomUserBatch (
     const email = `random.user${userId}@${acceptedDomain}`;
     const emailHash = await obfuscateEmail(email);
 
-    // Generate random salary data
-    const role = roles[Math.floor(Math.random() * roles.length)];
-    const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)];
-    const department = departments[Math.floor(Math.random() * departments.length)];
+    // Generate valid salary data (respects the nested config)
+    const { department, role, seniorityLevel } = pickValidTriplet(departments);
 
     // Base salary range (30k-130k)
     let baseSalary = 30000 + Math.floor(Math.random() * 100000);
 
-    // Adjust based on seniority level (junior: -20%, professional: +0%, senior: +20%, etc.)
-    const seniorityIndex = seniorityLevels.indexOf(seniorityLevel);
+    // Adjust based on seniority level
+    const allLevels: string[] = [];
+    for (const dept of Object.values(departments)) {
+      for (const role of Object.values(dept.roles)) {
+        for (const lvl of role.seniorityLevels) {
+          if (!allLevels.includes(lvl)) allLevels.push(lvl);
+        }
+      }
+    }
+    const seniorityIndex = allLevels.indexOf(seniorityLevel);
     const seniorityMultiplier = 0.8 + (seniorityIndex * 0.2);
     baseSalary = Math.floor(baseSalary * seniorityMultiplier);
 
@@ -113,9 +132,9 @@ export default defineNitroPlugin(async () => {
     console.info(`Only ${salaryCount} salaries found. Generating 10,000 random salaries...`);
 
     // Get available options from server config
-    const { roles, seniorityLevels, departments, acceptedDomain } = serverConfiguration;
+    const { departments, acceptedDomain } = serverConfiguration;
 
-    // Generate 10,000 users with random salaries
+    // Generate 10,000 users with salaries
     const batchSize = 100; // Process in batches to avoid memory issues
     const totalToGenerate = 10000;
 
@@ -123,7 +142,7 @@ export default defineNitroPlugin(async () => {
       const currentBatchSize = Math.min(batchSize, totalToGenerate - i);
       console.info(`Generating batch ${i / batchSize + 1}/${Math.ceil(totalToGenerate / batchSize)} (${currentBatchSize} users)...`);
 
-      await generateRandomUserBatch(currentBatchSize, roles, seniorityLevels, departments, acceptedDomain);
+      await generateRandomUserBatch(currentBatchSize, departments, acceptedDomain);
 
       // Simple progress report
       console.info(`Generated ${Math.min(i + currentBatchSize, totalToGenerate)}/${totalToGenerate} random users with salaries`);

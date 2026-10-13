@@ -1,11 +1,17 @@
+export interface DepartmentOption {
+  name: string;
+  roles: string[];
+  roleSeniorityLevels: Record<string, string[]>;
+}
+
+export interface ServerConfiguration {
+  currency: string;
+  acceptedDomain: string;
+  departments: DepartmentOption[];
+}
+
 export async function useServerConfiguration () {
-  const { data: config } = await useFetch<{
-    roles: Array<string>;
-    seniorityLevels: Array<string>;
-    departments: Array<string>;
-    currency: string;
-    acceptedDomain: string;
-  }>('/api/configuration', {
+  const { data: config } = await useFetch<ServerConfiguration>('/api/configuration', {
     lazy: true,
   });
 

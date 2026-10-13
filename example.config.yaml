@@ -1,0 +1,68 @@
+# CeleryBand configuration
+# All deployment settings must be provided here - no defaults.
+#
+# Departments → roles → seniorityLevels define the valid hierarchy.
+# Only roles listed under a department are valid for that department.
+# Only seniority levels listed under a role are valid for that role.
+#
+# Copy this file to config/config.yaml and mount it into the container:
+#   - ./config/config.yaml:/app/config/config.yaml:ro
+
+currency: "€"
+
+departments:
+  engineering:
+    roles:
+      software engineer:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+          - principal
+      product manager:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+      designer:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+  marketing:
+    roles:
+      marketing specialist:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+      content strategist:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+  sales:
+    roles:
+      sales representative:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+      account manager:
+        seniorityLevels:
+          - professional
+          - senior
+          - staff
+  human resources:
+    roles:
+      hr coordinator:
+        seniorityLevels:
+          - junior
+          - professional
+      hr manager:
+        seniorityLevels:
+          - senior
+          - staff

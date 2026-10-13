@@ -3,3 +3,5 @@ services:
     environment: !reset []
     env_file:
       - .env
+    volumes:
+      - ./config/config.yaml:/app/config/config.yaml:ro
