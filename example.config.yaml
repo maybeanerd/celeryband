@@ -8,7 +8,17 @@
 # Copy this file to config/config.yaml and mount it into the container:
 #   - ./config/config.yaml:/app/config/config.yaml:ro
 
+# The URL your server is reachable on (used for login links, etc.)
+serverUrl: "https://your-celeryband.com"
+
+# The domain accepted for signups
+acceptedDomain: "your-company.com"
+
+# Currency symbol shown alongside salary figures
 currency: "€"
+
+# Optional legal disclaimer shown in the footer (null to disable)
+disclaimer: null
 
 departments:
   engineering:

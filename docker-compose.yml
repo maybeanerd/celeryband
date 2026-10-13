@@ -31,9 +31,6 @@ services:
     environment:
       - NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_SECRET
       - OBFUSCATION_SALT=PLEASE_PROVIDE_A_SECURE_SALT
-      - ACCEPTED_DOMAIN=your-company.com
-      - SERVER_URL=https://your-celeryband.com
-      - NUXT_PUBLIC_DISCLAIMER="This is a legal disclaimer that this platform is pretty cool."
 
       - SMTP_HOST=dummy.smtp.com
       - SMTP_PORT=587

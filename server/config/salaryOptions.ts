@@ -12,7 +12,10 @@ export interface DepartmentConfig {
 }
 
 export interface SalaryOptions {
+  serverUrl: string;
+  acceptedDomain: string;
   currency: string;
+  disclaimer: string | null;
   departments: Record<string, DepartmentConfig>;
 }
 
@@ -27,9 +30,24 @@ function validateSalaryOptions (config: unknown): SalaryOptions {
 
   const obj = config as Record<string, unknown>;
 
+  // serverUrl
+  if (typeof obj.serverUrl !== 'string' || obj.serverUrl.length === 0) {
+    throw new Error('config.yaml: "serverUrl" must be a non-empty string');
+  }
+
+  // acceptedDomain
+  if (typeof obj.acceptedDomain !== 'string' || obj.acceptedDomain.length === 0) {
+    throw new Error('config.yaml: "acceptedDomain" must be a non-empty string');
+  }
+
   // currency
   if (typeof obj.currency !== 'string' || obj.currency.length === 0) {
     throw new Error('config.yaml: "currency" must be a non-empty string');
+  }
+
+  // disclaimer (optional)
+  if (obj.disclaimer !== undefined && obj.disclaimer !== null && typeof obj.disclaimer !== 'string') {
+    throw new Error('config.yaml: "disclaimer" must be a string or null');
   }
 
   // departments
@@ -76,7 +94,10 @@ function validateSalaryOptions (config: unknown): SalaryOptions {
   }
 
   return {
+    serverUrl: obj.serverUrl as string,
+    acceptedDomain: obj.acceptedDomain as string,
     currency: obj.currency as string,
+    disclaimer: (obj.disclaimer ?? null) as string | null,
     departments: departments as Record<string, DepartmentConfig>,
   };
 }

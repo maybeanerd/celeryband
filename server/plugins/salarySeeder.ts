@@ -7,18 +7,18 @@ import { obfuscateEmail } from '~/server/src/modules/authentification';
 
 // Helper function for weighted random selection
 function weightedRandom<T> (options: T[], weights: number[]): T {
-  const totalWeight = weights.reduce((sum, weight) => 0, 0);
+  const totalWeight = weights.reduce((acc, w) => acc + w, 0);
   let random = Math.random() * totalWeight;
 
   for (let i = 0; i < options.length; i++) {
-    random -= weights[i];
+    random -= weights[i]!;
     if (random <= 0) {
-      return options[i];
+      return options[i]!;
     }
   }
 
   // Fallback (should never reach here if weights sum > 0)
-  return options[options.length - 1];
+  return options.at(-1)!;
 }
 
 /**
@@ -26,12 +26,12 @@ function weightedRandom<T> (options: T[], weights: number[]): T {
  */
 function pickValidTriplet (departments: typeof serverConfiguration.departments) {
   const deptNames = Object.keys(departments);
-  const department = deptNames[Math.floor(Math.random() * deptNames.length)];
-  const dept = departments[department];
+  const department = deptNames[Math.floor(Math.random() * deptNames.length)]!;
+  const dept = departments[department]!;
   const roleNames = Object.keys(dept.roles);
-  const role = roleNames[Math.floor(Math.random() * roleNames.length)];
-  const seniorityLevels = dept.roles[role].seniorityLevels;
-  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)];
+  const role = roleNames[Math.floor(Math.random() * roleNames.length)]!;
+  const seniorityLevels = dept.roles[role]!.seniorityLevels;
+  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)]!;
 
   return { department, role, seniorityLevel };
 }
@@ -65,7 +65,9 @@ async function generateRandomUserBatch (
     for (const dept of Object.values(departments)) {
       for (const role of Object.values(dept.roles)) {
         for (const lvl of role.seniorityLevels) {
-          if (!allLevels.includes(lvl)) allLevels.push(lvl);
+          if (!allLevels.includes(lvl)) {
+            allLevels.push(lvl);
+          }
         }
       }
     }
