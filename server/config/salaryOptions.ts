@@ -1,106 +1,30 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import { z } from 'zod';
 
 // ---------------------------------------------------------------------------
-// Types
+// Zod schema — single source of truth for config shape + validation
 // ---------------------------------------------------------------------------
 
-export interface DepartmentConfig {
-  roles: Record<string, {
-    seniorityLevels: string[];
-  }>;
-}
+const DepartmentRoleSchema = z.object({
+  seniorityLevels: z.array(z.string()).min(1),
+});
 
-export interface SalaryOptions {
-  serverUrl: string;
-  acceptedDomain: string;
-  currency: string;
-  disclaimer: string | null;
-  departments: Record<string, DepartmentConfig>;
-}
+const DepartmentSchema = z.object({
+  roles: z.record(z.string(), DepartmentRoleSchema),
+});
 
-// ---------------------------------------------------------------------------
-// Validation helpers
-// ---------------------------------------------------------------------------
+export const ConfigSchema = z.object({
+  serverUrl: z.string().min(1),
+  acceptedDomain: z.string().min(1),
+  currency: z.string().min(1),
+  disclaimer: z.string().nullable().default(null),
+  departments: z.record(z.string(), DepartmentSchema),
+});
 
-function validateSalaryOptions (config: unknown): SalaryOptions {
-  if (!config || typeof config !== 'object') {
-    throw new Error('config.yaml must be a YAML object');
-  }
+export type SalaryOptions = z.infer<typeof ConfigSchema>;
 
-  const obj = config as Record<string, unknown>;
-
-  // serverUrl
-  if (typeof obj.serverUrl !== 'string' || obj.serverUrl.length === 0) {
-    throw new Error('config.yaml: "serverUrl" must be a non-empty string');
-  }
-
-  // acceptedDomain
-  if (typeof obj.acceptedDomain !== 'string' || obj.acceptedDomain.length === 0) {
-    throw new Error('config.yaml: "acceptedDomain" must be a non-empty string');
-  }
-
-  // currency
-  if (typeof obj.currency !== 'string' || obj.currency.length === 0) {
-    throw new Error('config.yaml: "currency" must be a non-empty string');
-  }
-
-  // disclaimer (optional)
-  if (obj.disclaimer !== undefined && obj.disclaimer !== null && typeof obj.disclaimer !== 'string') {
-    throw new Error('config.yaml: "disclaimer" must be a string or null');
-  }
-
-  // departments
-  if (!obj.departments || typeof obj.departments !== 'object') {
-    throw new Error('config.yaml: "departments" is required');
-  }
-
-  const departments = obj.departments as Record<string, unknown>;
-
-  for (const [deptName, deptConfig] of Object.entries(departments)) {
-    if (!deptConfig || typeof deptConfig !== 'object') {
-      throw new Error(`config.yaml: departments."${deptName}" must be an object`);
-    }
-
-    const dept = deptConfig as Record<string, unknown>;
-
-    if (!dept.roles || typeof dept.roles !== 'object') {
-      throw new Error(`config.yaml: departments."${deptName}".roles is required`);
-    }
-
-    const roles = dept.roles as Record<string, unknown>;
-
-    for (const [roleName, roleConfig] of Object.entries(roles)) {
-      if (!roleConfig || typeof roleConfig !== 'object') {
-        throw new Error(`config.yaml: departments."${deptName}".roles."${roleName}" must be an object`);
-      }
-
-      const role = roleConfig as Record<string, unknown>;
-
-      if (!Array.isArray(role.seniorityLevels) || role.seniorityLevels.length === 0) {
-        throw new Error(
-          `config.yaml: departments."${deptName}".roles."${roleName}".seniorityLevels must be a non-empty array`,
-        );
-      }
-
-      for (const level of role.seniorityLevels) {
-        if (typeof level !== 'string') {
-          throw new TypeError(
-            `config.yaml: departments."${deptName}".roles."${roleName}".seniorityLevels must contain only strings`,
-          );
-        }
-      }
-    }
-  }
-
-  return {
-    serverUrl: obj.serverUrl as string,
-    acceptedDomain: obj.acceptedDomain as string,
-    currency: obj.currency as string,
-    disclaimer: (obj.disclaimer ?? null) as string | null,
-    departments: departments as Record<string, DepartmentConfig>,
-  };
-}
+export type DepartmentConfig = z.infer<typeof DepartmentSchema>;
 
 // ---------------------------------------------------------------------------
 // Loader
@@ -141,7 +65,14 @@ export function loadSalaryOptions (): SalaryOptions {
     throw new TypeError('Failed to parse config.yaml');
   }
 
-  _salaryOptions = validateSalaryOptions(parsed);
+  const result = ConfigSchema.safeParse(parsed);
+  if (!result.success) {
+    throw new Error(
+      `config.yaml validation failed:\n${result.error.issues.map(i => `  - ${i.path.join('.')}: ${i.message}`).join('\n')}`,
+    );
+  }
+
+  _salaryOptions = result.data;
   return _salaryOptions;
 }
 
