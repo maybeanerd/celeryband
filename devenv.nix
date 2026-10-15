@@ -22,6 +22,8 @@
   dotenv.enable = true;
 
   scripts.docker-up.exec = ''
+    # Copy example config to local config if it doesn't exist
+    [ ! -f config.yaml ] && cp example.config.yaml config.yaml
     COMMIT_HASH="$(git rev-parse --short HEAD)" \
     VERSION="local" \
     docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build "$@"

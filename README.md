@@ -58,7 +58,7 @@ Configuration is split between a YAML file and environment variables.
 
 ### YAML config (required)
 
-Copy `example.config.yaml` to `config/config.yaml`, edit it, then mount it into the container:
+Copy `example.config.yaml` to `config.yaml`, edit it, then mount it into the container:
 
 ```yaml
 serverUrl: "https://your-celeryband.com"

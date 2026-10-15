@@ -5,8 +5,8 @@
 # Only roles listed under a department are valid for that department.
 # Only seniority levels listed under a role are valid for that role.
 #
-# Copy this file to config/config.yaml and mount it into the container:
-#   - ./config/config.yaml:/app/config/config.yaml:ro
+# Copy this file to config.yaml and mount it into the container:
+#   - ./config.yaml:/app/config.yaml:ro
 
 # The URL your server is reachable on (used for login links, etc.)
 serverUrl: "https://your-celeryband.com"

@@ -30,7 +30,7 @@ export type DepartmentConfig = z.infer<typeof DepartmentSchema>;
 // Loader
 // ---------------------------------------------------------------------------
 
-const CONFIG_PATH = resolve(process.cwd(), 'config', 'config.yaml');
+const CONFIG_PATH = resolve(process.cwd(), 'config.yaml');
 
 let _salaryOptions: SalaryOptions | null = null;
 
