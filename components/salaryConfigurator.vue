@@ -4,21 +4,37 @@
       <div class="flex gap-4 flex-wrap">
         <div>
           <p>
-            Seniority Level:
+            Department:
           </p>
-          <USelect v-model="selectedSeniorityLevel" :items="config.seniorityLevels" class="w-48" />
+          <USelect
+            v-model="selectedDepartment"
+            :items="config.departments.map(d => d.name)"
+            class="w-48"
+            @update:model-value="onDepartmentChange"
+          />
         </div>
         <div>
           <p>
             Role:
           </p>
-          <USelect v-model="selectedRole" :items="config.roles" class="w-48" />
+          <USelect
+            v-model="selectedRole"
+            :items="availableRoles"
+            class="w-48"
+            :disabled="!selectedDepartment"
+            @update:model-value="onRoleChange"
+          />
         </div>
         <div>
           <p>
-            Department:
+            Seniority Level:
           </p>
-          <USelect v-model="selectedDepartment" :items="config.departments" class="w-48" />
+          <USelect
+            v-model="selectedSeniorityLevel"
+            :items="availableSeniorityLevels"
+            class="w-48"
+            :disabled="!selectedRole"
+          />
         </div>
         <div class="flex gap-4 flex-wrap">
           <div>
@@ -31,7 +47,8 @@
                 {{ config.currency }}
               </template>
             </UInput>
-          </div>      <div>
+          </div>
+          <div>
             <p>
               Hours Per Week:
             </p>
@@ -58,13 +75,44 @@ const { config } = await useServerConfiguration();
 
 const ownSalary = await useOwnSalary();
 
+const selectedDepartment = ref(ownSalary.value?.department || '');
 const selectedRole = ref(ownSalary.value?.role || '');
 const selectedSeniorityLevel = ref(ownSalary.value?.seniorityLevel || '');
-const selectedDepartment = ref(ownSalary.value?.department || '');
 const selectedYearlyAmount = ref(ownSalary.value?.yearlyAmount || 0);
 const selectedHoursPerWeek = ref(ownSalary.value?.hoursPerWeek || 0);
 
 const loadingSalaryChange = ref(false);
+
+// --- Dependent dropdown logic ---
+
+function getAvailableRoles (department: string): string[] {
+  const dept = config.value?.departments?.find(d => d.name === department);
+  return dept?.roles ?? [];
+}
+
+function getAvailableSeniorityLevels (department: string, role: string): string[] {
+  const dept = config.value?.departments?.find(d => d.name === department);
+  return dept?.roleSeniorityLevels?.[role] ?? [];
+}
+
+const availableRoles = computed(() => getAvailableRoles(selectedDepartment.value));
+
+const availableSeniorityLevels = computed(() =>
+  selectedDepartment.value && selectedRole.value
+    ? getAvailableSeniorityLevels(selectedDepartment.value, selectedRole.value)
+    : [],
+);
+
+function onDepartmentChange () {
+  // Reset dependent fields when department changes
+  selectedRole.value = '';
+  selectedSeniorityLevel.value = '';
+}
+
+function onRoleChange () {
+  // Reset seniority level when role changes
+  selectedSeniorityLevel.value = '';
+}
 
 async function updateSalary () {
   loadingSalaryChange.value = true;
@@ -84,7 +132,7 @@ async function updateSalary () {
   loadingSalaryChange.value = false;
 
   if (error.value) {
-    showZodErrorToast('Error while updating salary', error);
+    showZodErrorToast('Error while updating salary', error.value.data as Record<string, unknown>);
     return;
   }
   showSuccessToast('Salary updated',

@@ -54,37 +54,44 @@ It is a monolithic image that, for simplicity's sake, includes frontend, backend
 
 You can check out [the example docker compose file](https://github.com/maybeanerd/celeryband/blob/main/docker-compose.yml) or the [test deployment's helm chart](https://github.com/maybeanerd/home-cluster/tree/main/charts/celeryband-test) for some example configurations to follow along.
 
-Configuration is done using the following environment variables:
+Configuration is split between a YAML file and environment variables.
+
+### YAML config (required)
+
+Copy `example.config.yaml` to `config/config.yaml`, edit it, then mount it into the container:
+
+```yaml
+serverUrl: "https://your-celeryband.com"
+acceptedDomain: "your-company.com"
+currency: "€"
+disclaimer: null   # optional, set to null to disable
+
+departments:
+  engineering:
+    roles:
+      software engineer:
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+          - principal
+```
+
+Each role has its own set of seniority levels, and only roles defined under a department are available there.
+
+### Environment variables (secrets only)
+
+These values are passed as environment variables (or via `.env`):
 
 ```env
-# A random password with length of at least 32 to enable authentification within the service
+# A random password with length of at least 32 to enable authentication within the service
 NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_SECRET
 
 # A random password with length of at least 32 to securely hash the emails
 OBFUSCATION_SALT=PLEASE_PROVIDE_A_SECURE_SALT
 
-# A comma seperated list of the roles you want to allow users to choose from
-ROLES=software engineer,product manager,designer,director
-
-# A comma seperated list of the seniority levels you want to allow users to choose from
-SENIORITY_LEVELS=junior,professional,senior,staff,principal
-
-# A comma seperated list of the departments you want to allow users to choose from
-DEPARTMENTS=gamma,beta,omega
-
-# The currency you use for salaries. It's non functional, a label
-CURRENCY=€
-
-# The domain of your organization. This is used as validation for allowed emails
-ACCEPTED_DOMAIN=your-company.com
-
-# The domain you host your server on. It will be used e.g. in the login emails to generate links
-SERVER_URL=https://your-celeryband.com
-
-# A dislaimer text that will be added to the footer of all pages. By default, it's empty.
-NUXT_PUBLIC_DISCLAIMER=This is a legal disclaimer that this platform is pretty cool.
-
-# Your email servers credentials which will be used to send login emails
+# Your email server credentials for sending login emails
 SMTP_HOST=dummy.smtp.com
 SMTP_PORT=587
 SMTP_USERNAME=dummyUser
