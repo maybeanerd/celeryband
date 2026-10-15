@@ -1,14 +1,14 @@
-export interface DepartmentOption {
+export type DepartmentOption = {
   name: string;
   roles: string[];
   roleSeniorityLevels: Record<string, string[]>;
-}
+};
 
-export interface ServerConfiguration {
+export type ServerConfiguration = {
   currency: string;
   acceptedDomain: string;
   departments: DepartmentOption[];
-}
+};
 
 export async function useServerConfiguration () {
   const { data: config } = await useFetch<ServerConfiguration>('/api/configuration', {
