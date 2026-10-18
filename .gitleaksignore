@@ -1,2 +1,3 @@
-# Gitleaks false positives — test fixtures and mock data
-abc123def456
+# Gitleaks false positives — auth test tokens
+e4b6de377d42bd0e46c6e68f654509135ad8f01f:server/src/modules/authentification.test.ts:generic-api-key:151
+e4b6de377d42bd0e46c6e68f654509135ad8f01f:server/src/modules/authentification.test.ts:generic-api-key:165
