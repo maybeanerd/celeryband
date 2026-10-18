@@ -9,7 +9,7 @@
 #   - ./config.yaml:/app/config.yaml:ro
 
 # The URL your server is reachable on (used for login links, etc.)
-serverUrl: "https://your-org.celery.band"
+serverUrl: "http://localhost:3000"
 
 # The domain accepted for signups
 acceptedDomain: "celery.band"
