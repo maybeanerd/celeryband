@@ -68,6 +68,7 @@
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
+import { isZodErrorResponse } from '~/composables/useToastNotifications';
 
 const { showZodErrorToast, showSuccessToast } = useToastNotifications();
 
@@ -131,8 +132,8 @@ async function updateSalary () {
   });
   loadingSalaryChange.value = false;
 
-  if (error.value) {
-    showZodErrorToast('Error while updating salary', error.value.data as Record<string, unknown>);
+  if (isZodErrorResponse(error.value)) {
+    showZodErrorToast('Error while updating salary', error.value.data);
     return;
   }
   showSuccessToast('Salary updated',
