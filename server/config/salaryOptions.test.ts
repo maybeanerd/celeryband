@@ -18,7 +18,7 @@ describe('loadSalaryOptions', () => {
   });
 
   it('should load and validate a valid config file', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce(`
+    vi.mocked(readFileSync).mockReturnValue(`
 serverUrl: 'https://celery.band'
 acceptedDomain: 'celery.band'
 currency: '€'
@@ -44,7 +44,7 @@ departments:
   });
 
   it('should cache the result on subsequent calls', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce(`
+    vi.mocked(readFileSync).mockReturnValue(`
 serverUrl: 'https://celery.band'
 acceptedDomain: 'celery.band'
 currency: '€'
@@ -69,31 +69,26 @@ departments:
   });
 
   it('should throw if config file does not exist', () => {
-    vi.mocked(readFileSync).mockImplementationOnce(() => {
+    vi.mocked(readFileSync).mockImplementation(() => {
       throw new Error('ENOENT: no such file or directory');
     });
 
     expect(() => loadSalaryOptions()).toThrow('Cannot load config.yaml from');
   });
 
-  it('should throw TypeError for invalid YAML syntax', async () => {
-    vi.mocked(readFileSync).mockReturnValueOnce('invalid: yaml: [[[');
-    vi.mocked(parse).mockImplementationOnce(() => {
-      throw new SyntaxError('bad YAML');
-    });
-
-    const { loadSalaryOptions } = await import('./salaryOptions');
+  it('should throw TypeError for invalid YAML syntax', () => {
+    vi.mocked(readFileSync).mockReturnValue('invalid: yaml: [[[');
     expect(() => loadSalaryOptions()).toThrow(TypeError);
   });
 
   it('should throw Error for schema validation failures', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce('invalid: true');
+    vi.mocked(readFileSync).mockReturnValue('invalid: true');
 
     expect(() => loadSalaryOptions()).toThrow('config.yaml validation failed');
   });
 
   it('should support nullable disclaimer field', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce(`
+    vi.mocked(readFileSync).mockReturnValue(`
 serverUrl: 'https://celery.band'
 acceptedDomain: 'celery.band'
 currency: '€'
