@@ -2,7 +2,16 @@ import { describe, it, expect } from 'vitest';
 import { calculateStatistics, groupAndCalculate, getStatisticsForSalaries } from './salaries';
 
 // Helper to create mock salary data
-function makeSalary (overrides: Partial<{ yearlyAmount: number; hoursPerWeek: number; role: string; department: string }> = {}) {
+function makeSalary (overrides: Partial<{
+  ownerId: string;
+  yearlyAmount: number;
+  hoursPerWeek: number;
+  role: string;
+  department: string;
+  seniorityLevel: string;
+  createdAt: number;
+  updatedAt: number;
+}> = {}) {
   return {
     ownerId: 'test-user-id',
     yearlyAmount: 60000,
@@ -73,6 +82,22 @@ describe('calculateStatistics', () => {
     expect(stats.max).toBe(80000);
     expect(stats.median).toBe(60000);
   });
+
+  it('should show median differs from average', () => {
+    // 10 at 50k, 9 at 60k, 1 outlier at 200k
+    const salaries = [
+      ...Array(10).fill(null).map(() => makeSalary({ yearlyAmount: 50000 })),
+      ...Array(9).fill(null).map(() => makeSalary({ yearlyAmount: 60000 })),
+      makeSalary({ yearlyAmount: 200000 }),
+    ];
+    const stats = calculateStatistics(salaries);
+    // Sorted: [50k x10, 60k x9, 200k]. Middle two are indices 9 and 10 → 50000 and 60000
+    expect(stats.median).toBe(55000); // average of 50k and 60k, not an actual value
+    expect(stats.average).toBe(62000); // pulled up by the 200k outlier
+    expect(stats.count).toBe(20);
+    expect(stats.min).toBe(50000);
+    expect(stats.max).toBe(200000);
+  });
 });
 
 describe('groupAndCalculate', () => {
@@ -88,9 +113,10 @@ describe('groupAndCalculate', () => {
 
     // Only 'engineering' has >= 3 entries; 'sales' has only 2
     expect(result).toHaveLength(1);
-    expect(result[0].department).toBe('engineering');
-    expect(result[0].statistics.count).toBe(3);
-    expect(result[0].statistics.average).toBe(60000);
+    const eng = result[0];
+    expect(eng?.department).toBe('engineering');
+    expect(eng?.statistics.count).toBe(3);
+    expect(eng?.statistics.average).toBe(60000);
   });
 
   it('should filter out groups with fewer than 3 entries', () => {
@@ -116,8 +142,8 @@ describe('groupAndCalculate', () => {
 
     const result = groupAndCalculate(salaries, 'department');
 
-    expect(result[0].department).toBe('sales');
-    expect(result[1].department).toBe('engineering');
+    expect(result[0]?.department).toBe('sales');
+    expect(result[1]?.department).toBe('engineering');
   });
 
   it('should group by role correctly', () => {
@@ -131,8 +157,9 @@ describe('groupAndCalculate', () => {
     const result = groupAndCalculate(salaries, 'role');
 
     expect(result).toHaveLength(1);
-    expect(result[0].role).toBe('engineer');
-    expect(result[0].statistics.average).toBe(60000);
+    const engRole = result[0];
+    expect(engRole?.role).toBe('engineer');
+    expect(engRole?.statistics.average).toBe(60000);
   });
 });
 
@@ -161,8 +188,9 @@ describe('getStatisticsForSalaries', () => {
     const result = getStatisticsForSalaries(salaries);
 
     expect(result.overallStatistics).not.toBeNull();
-    expect(result.overallStatistics!.count).toBe(3);
-    expect(result.overallStatistics!.average).toBe(60000);
+    const stats = result.overallStatistics;
+    expect(stats?.count).toBe(3);
+    expect(stats?.average).toBe(60000);
   });
 
   it('should return statistics grouped by department when enough salaries exist', () => {
@@ -175,8 +203,9 @@ describe('getStatisticsForSalaries', () => {
     const result = getStatisticsForSalaries(salaries);
 
     expect(result.byDepartment).toHaveLength(1);
-    expect(result.byDepartment[0].department).toBe('engineering');
-    expect(result.byDepartment[0].statistics.count).toBe(3);
+    const engDept = result.byDepartment[0];
+    expect(engDept?.department).toBe('engineering');
+    expect(engDept?.statistics.count).toBe(3);
   });
 
   it('should return nested statistics (department and role)', () => {
@@ -189,10 +218,11 @@ describe('getStatisticsForSalaries', () => {
     const result = getStatisticsForSalaries(salaries);
 
     expect(result.byDepartmentAndRole).toHaveLength(1);
-    expect(result.byDepartmentAndRole[0].department).toBe('engineering');
-    expect(result.byDepartmentAndRole[0].roles).toHaveLength(1);
-    expect(result.byDepartmentAndRole[0].roles[0].role).toBe('engineer');
-    expect(result.byDepartmentAndRole[0].roles[0].statistics.count).toBe(3);
+    const engRoleDept = result.byDepartmentAndRole[0];
+    expect(engRoleDept?.department).toBe('engineering');
+    expect(engRoleDept?.roles).toHaveLength(1);
+    expect(engRoleDept?.roles[0]?.role).toBe('engineer');
+    expect(engRoleDept?.roles[0]?.statistics.count).toBe(3);
   });
 
   it('should include all six statistic groupings in the result', () => {
