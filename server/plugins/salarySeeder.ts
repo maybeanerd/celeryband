@@ -26,12 +26,12 @@ function weightedRandom<T> (options: T[], weights: number[]): T {
  */
 function pickValidTriplet (departments: typeof serverConfiguration.departments) {
   const deptNames = Object.keys(departments);
-  const department = deptNames[Math.floor(Math.random() * deptNames.length)]!;
-  const dept = departments[department]!;
+  const department = deptNames[Math.floor(Math.random() * deptNames.length)];
+  const dept = departments[department];
   const roleNames = Object.keys(dept.roles);
-  const role = roleNames[Math.floor(Math.random() * roleNames.length)]!;
-  const seniorityLevels = dept.roles[role]!.seniorityLevels;
-  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)]!;
+  const role = roleNames[Math.floor(Math.random() * roleNames.length)];
+  const seniorityLevels = dept.roles[role].seniorityLevels;
+  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)];
 
   return { department, role, seniorityLevel };
 }
