@@ -70,7 +70,7 @@ import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import { isZodErrorResponse } from '~/utils/zodErrorHandling';
 
-const { showZodErrorToast, showSuccessToast } = useToastNotifications();
+const { showErrorToast, showZodErrorToast, showSuccessToast } = useToastNotifications();
 
 const { config } = await useServerConfiguration();
 
@@ -132,8 +132,12 @@ async function updateSalary () {
   });
   loadingSalaryChange.value = false;
 
-  if (isZodErrorResponse(error.value)) {
-    showZodErrorToast('Error while updating salary', error.value);
+  if (error.value) {
+    if (isZodErrorResponse(error.value)) {
+      showZodErrorToast('Error while updating salary', error.value);
+    } else {
+      showErrorToast('Error while updating salary', error.value.data?.message ?? 'An unexpected error occurred.');
+    }
     return;
   }
   showSuccessToast('Salary updated',
