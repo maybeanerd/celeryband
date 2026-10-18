@@ -9,10 +9,10 @@
 #   - ./config.yaml:/app/config.yaml:ro
 
 # The URL your server is reachable on (used for login links, etc.)
-serverUrl: "https://your-celeryband.com"
+serverUrl: "https://your-org.celery.band"
 
 # The domain accepted for signups
-acceptedDomain: "your-company.com"
+acceptedDomain: "celery.band"
 
 # Currency symbol shown alongside salary figures
 currency: "€"
