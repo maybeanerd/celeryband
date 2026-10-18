@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { calculateStatistics, groupAndCalculate, getStatisticsForSalaries } from './salaries';
 
 // Helper to create mock salary data

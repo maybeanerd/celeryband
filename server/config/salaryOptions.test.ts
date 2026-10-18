@@ -1,5 +1,4 @@
 import { readFileSync } from 'fs';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { hasRoleInDepartment, getSeniorityLevelsForRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './salaryOptions';
 

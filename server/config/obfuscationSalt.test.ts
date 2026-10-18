@@ -1,5 +1,3 @@
-import { describe, it, expect } from 'vitest';
-
 describe('getObfuscationSalt', () => {
   let getObfuscationSalt: () => string;
 
