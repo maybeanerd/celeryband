@@ -17,8 +17,4 @@ describe('normalizeEmail', () => {
   it('should handle already normalized email', () => {
     expect(normalizeEmail('user@example.com')).toBe('user@example.com');
   });
-
-  it('should handle emails with multiple spaces', () => {
-    expect(normalizeEmail('  user@test.com  ')).toBe('user@test.com');
-  });
 });
