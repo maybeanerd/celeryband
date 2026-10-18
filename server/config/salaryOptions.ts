@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import { parse } from 'yaml';
 import { z } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -47,10 +48,6 @@ export function loadSalaryOptions (): SalaryOptions {
       `Cannot load config.yaml from ${CONFIG_PATH}. The file is required for the application to start.`,
     );
   }
-
-  // Lazy require to avoid bundling yaml in client-side code
-  // Using synchronous require since this runs at Nitro startup, not during requests
-  const { parse } = globalThis.require('yaml');
 
   let parsed: unknown;
   try {
