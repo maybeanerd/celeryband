@@ -38,7 +38,7 @@ describe('loadSalaryOptions', () => {
     },
   };
 
-  it('should load and validate a valid config file', async () => {
+  it('should load and validate a valid config file', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(validConfig));
     vi.mocked(parse).mockReturnValueOnce(validConfig);
 
@@ -50,7 +50,7 @@ describe('loadSalaryOptions', () => {
     expect(result.departments).toHaveProperty('engineering');
   });
 
-  it('should cache the result on subsequent calls', async () => {
+  it('should cache the result on subsequent calls', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(validConfig));
     vi.mocked(parse).mockReturnValueOnce(validConfig);
 
@@ -61,7 +61,7 @@ describe('loadSalaryOptions', () => {
     expect(readFileSync).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw if config file does not exist', async () => {
+  it('should throw if config file does not exist', () => {
     vi.mocked(readFileSync).mockImplementationOnce(() => {
       throw new Error('ENOENT: no such file or directory');
     });
@@ -69,7 +69,7 @@ describe('loadSalaryOptions', () => {
     expect(() => loadSalaryOptions()).toThrow('Cannot load config.yaml from');
   });
 
-  it('should throw TypeError for invalid YAML syntax', async () => {
+  it('should throw TypeError for invalid YAML syntax', () => {
     vi.mocked(readFileSync).mockReturnValueOnce('invalid: yaml: [[[');
     vi.mocked(parse).mockImplementationOnce(() => {
       throw new SyntaxError('bad YAML');
@@ -78,14 +78,14 @@ describe('loadSalaryOptions', () => {
     expect(() => loadSalaryOptions()).toThrow(TypeError, /bad YAML/);
   });
 
-  it('should throw Error for schema validation failures', async () => {
+  it('should throw Error for schema validation failures', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify({ invalid: true }));
     vi.mocked(parse).mockReturnValueOnce({ invalid: true });
 
     expect(() => loadSalaryOptions()).toThrow('config.yaml validation failed');
   });
 
-  it('should support nullable disclaimer field', async () => {
+  it('should support nullable disclaimer field', () => {
     const configWithDisclaimer = {
       ...validConfig,
       disclaimer: 'Some legal text',
