@@ -27,16 +27,10 @@ services:
       - internal
     volumes:
       - db-data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
     environment:
       - NUXT_SESSION_PASSWORD=PLEASE_PROVIDE_A_SECURE_SECRET
       - OBFUSCATION_SALT=PLEASE_PROVIDE_A_SECURE_SALT
-      - ROLES=software engineer,product manager,designer,director
-      - SENIORITY_LEVELS=junior,professional,senior,staff,principal
-      - DEPARTMENTS=gamma,beta,omega
-      - CURRENCY=€
-      - ACCEPTED_DOMAIN=your-company.com
-      - SERVER_URL=https://your-celeryband.com
-      - NUXT_PUBLIC_DISCLAIMER="This is a legal disclaimer that this platform is pretty cool."
 
       - SMTP_HOST=dummy.smtp.com
       - SMTP_PORT=587

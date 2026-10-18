@@ -47,7 +47,7 @@ export async function getSalaryForUser (userId: string): Promise<SalarySchema | 
   return salary ?? null;
 }
 
-function calculateStatistics (salaries: SalarySchema[]): {
+export function calculateStatistics (salaries: SalarySchema[]): {
   average: number;
   median: number;
   max: number;
@@ -86,7 +86,7 @@ type GroupedSalaryStatistics<Key extends keyof SalarySchema> = {
   }
   & Record<Key, string>
 
-function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySchema[], groupByKey: Key): Array<GroupedSalaryStatistics<Key>> {
+export function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySchema[], groupByKey: Key): Array<GroupedSalaryStatistics<Key>> {
   const grouped = salaries.reduce<Record<string, SalarySchema[]>>((acc, salary) => {
     const aggregationKey = String(salary[groupByKey]);
     if (!acc[aggregationKey]) {
@@ -105,7 +105,7 @@ function groupAndCalculate<Key extends keyof SalarySchema> (salaries: SalarySche
     .sort((a, b) => a.statistics.average - b.statistics.average);
 }
 
-function getStatisticsForSalaries (salaries: SalarySchema[]) {
+export function getStatisticsForSalaries (salaries: SalarySchema[]) {
   const overallStatistics = salaries.length >= 3 ? calculateStatistics(salaries) : null;
 
   const byDepartment = groupAndCalculate(salaries, 'department');

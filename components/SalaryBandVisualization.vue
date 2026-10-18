@@ -68,7 +68,7 @@ import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 
 const props = defineProps<{
   salaryStatistics: DetailedStatistics|null;
-  ownSalary: SalarySchema |null;
+  ownSalary?: SalarySchema | null;
   currency?: string;
 }>();
 

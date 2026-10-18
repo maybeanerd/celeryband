@@ -24,7 +24,9 @@
     "lint:fix": "pnpm lint --fix",
     "nuxt:upgrade": "nuxi upgrade --force",
     "db:generate": "drizzle-kit generate",
-    "db:up": "drizzle-kit up"
+    "db:up": "drizzle-kit up",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -47,12 +49,14 @@
     "prettier": "3.8.3",
     "tailwindcss": "4.3.3",
     "tsx": "4.21.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
   },
   "dependencies": {
     "better-sqlite3": "13.0.3",
     "drizzle-orm": "0.45.3",
     "nodemailer": "8.0.11",
+    "yaml": "2.9.1",
     "zod": "4.6.5"
   }
 }

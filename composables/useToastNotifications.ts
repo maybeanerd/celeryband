@@ -1,18 +1,19 @@
-type ZodErrorResponse = { data?: { data?: { fieldErrors?: Record<string, Array<string>> } } } | null;
+import { type ZodErrorResponse } from '~/utils/zodErrorHandling';
 
 const unknownError = 'Unknown error occurred.';
-function getFirstError (errorResponse: ZodErrorResponse): string {
-  if (!errorResponse?.data?.data?.fieldErrors) {
+function getFirstZodErrorMessage (errorResponse: ZodErrorResponse): string {
+  if (!errorResponse || !errorResponse.data?.data) { return unknownError; }
+  const fieldErrors = errorResponse.data.data.fieldErrors;
+  if (!fieldErrors) {
     return unknownError;
   }
 
-  const firstError = Object.entries(errorResponse.data.data.fieldErrors).pop();
-
-  if (!firstError) {
+  const [lastKey, lastErrors] = [...Object.entries(fieldErrors)].at(-1) ?? [];
+  if (!lastKey || !lastErrors?.length) {
     return unknownError;
   }
 
-  return `${firstError.at(0)}: ${firstError.at(1)?.at(0) ?? unknownError}`;
+  return `${lastKey}: ${lastErrors[0]}`;
 }
 
 export function useToastNotifications () {
@@ -35,7 +36,7 @@ export function useToastNotifications () {
   }
 
   function showZodErrorToast (title: string, error: MaybeRef<ZodErrorResponse>) {
-    const errorMessage = getFirstError(unref(error));
+    const errorMessage = getFirstZodErrorMessage(unref(error));
 
     showErrorToast(title, errorMessage);
   }
