@@ -2,7 +2,8 @@ import { type ZodErrorResponse } from '~/utils/zodErrorHandling';
 
 const unknownError = 'Unknown error occurred.';
 function getFirstZodErrorMessage (errorResponse: ZodErrorResponse): string {
-  const fieldErrors = errorResponse.data?.data?.fieldErrors;
+  if (!errorResponse || !errorResponse.data?.data) { return unknownError; }
+  const fieldErrors = errorResponse.data.data.fieldErrors;
   if (!fieldErrors) {
     return unknownError;
   }

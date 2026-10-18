@@ -7,7 +7,6 @@ declare module '#auth-utils' {
     }
 
     interface SecureSessionData {
-        message: string;
     }
 }
 

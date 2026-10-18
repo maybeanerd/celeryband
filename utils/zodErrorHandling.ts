@@ -7,6 +7,8 @@ export type ZodErrorResponse = {
   };
 } | null;
 
+type ZodErrorNestedData = NonNullable<NonNullable<ZodErrorResponse>['data']>['data'];
+
 function isRecord (value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -18,15 +20,17 @@ export function isZodErrorResponse (value: unknown): value is ZodErrorResponse {
   if (!isRecord(value.data)) {
     return false;
   }
-  return isRecord(value.data.data?.fieldErrors) || Array.isArray(value.data.data?.formErrors);
+  const nestedData = value.data?.data as ZodErrorNestedData | undefined;
+  return isRecord(nestedData?.fieldErrors) || Array.isArray(nestedData?.formErrors);
 }
 
 const unknownError = 'Unknown error occurred.';
 export function getFirstZodError (errorResponse: unknown): string {
-  if (!isZodErrorResponse(errorResponse)) {
+  if (!errorResponse || !isZodErrorResponse(errorResponse)) {
     return unknownError;
   }
-  const fieldErrors = errorResponse.data?.data?.fieldErrors;
+  if (!errorResponse.data?.data) { return unknownError; }
+  const fieldErrors = errorResponse.data.data.fieldErrors;
   if (!fieldErrors) {
     return unknownError;
   }

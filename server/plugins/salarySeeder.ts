@@ -28,7 +28,9 @@ function weightedRandom<T> (options: T[], weights: number[]): T {
   }
 
   // Should never reach here if weights sum > 0
-  return options.at(-1) ?? options[0];
+  const last = options.at(-1);
+  if (last !== undefined) { return last; }
+  return options[0]!;
 }
 
 /**
@@ -36,12 +38,12 @@ function weightedRandom<T> (options: T[], weights: number[]): T {
  */
 function pickValidTriplet (departments: typeof serverConfiguration.departments) {
   const deptNames = Object.keys(departments);
-  const department = deptNames[Math.floor(Math.random() * deptNames.length)];
-  const dept = departments[department];
+  const department = deptNames[Math.floor(Math.random() * deptNames.length)]!;
+  const dept = departments[department]!;
   const roleNames = Object.keys(dept.roles);
-  const role = roleNames[Math.floor(Math.random() * roleNames.length)];
-  const seniorityLevels = dept.roles[role].seniorityLevels;
-  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)];
+  const role = roleNames[Math.floor(Math.random() * roleNames.length)]!;
+  const seniorityLevels = dept.roles[role]!.seniorityLevels;
+  const seniorityLevel = seniorityLevels[Math.floor(Math.random() * seniorityLevels.length)]!;
 
   return { department, role, seniorityLevel };
 }
@@ -101,9 +103,9 @@ async function generateRandomUserBatch (
 
     salaryInserts.push({
       ownerId: userId,
-      role,
+      role: role!,
       seniorityLevel,
-      department,
+      department: department!,
       yearlyAmount,
       hoursPerWeek,
       createdAt: now,

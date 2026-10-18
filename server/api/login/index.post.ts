@@ -48,8 +48,7 @@ export default defineEventHandler(async (event) => {
       id: user.id,
     },
     // Private data accessible only on server/routes
-    secure: {
-    },
+    secure: { },
   }, {
     maxAge: 60 * 60 * 24 * 7, // 1 week
   });

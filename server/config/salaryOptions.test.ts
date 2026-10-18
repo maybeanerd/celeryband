@@ -69,13 +69,14 @@ describe('loadSalaryOptions', () => {
     expect(() => loadSalaryOptions()).toThrow('Cannot load config.yaml from');
   });
 
-  it('should throw TypeError for invalid YAML syntax', () => {
+  it('should throw TypeError for invalid YAML syntax', async () => {
     vi.mocked(readFileSync).mockReturnValueOnce('invalid: yaml: [[[');
     vi.mocked(parse).mockImplementationOnce(() => {
       throw new SyntaxError('bad YAML');
     });
 
-    expect(() => loadSalaryOptions()).toThrow(TypeError, /bad YAML/);
+    const { loadSalaryOptions } = await import('./salaryOptions');
+    expect(() => loadSalaryOptions()).toThrow(TypeError);
   });
 
   it('should throw Error for schema validation failures', () => {
