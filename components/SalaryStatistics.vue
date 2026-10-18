@@ -37,9 +37,9 @@
         </p>
       </div>
 
-      <OverallStatistics :salary-statistics="chosenStatistics" :salary-assessment="statistics.salaryAssessment" :own-salary="ownSalary ?? null" :currency="currency" />
+      <OverallStatistics :salary-statistics="chosenStatistics" :salary-assessment="statistics.salaryAssessment" :own-salary="ownSalary" :currency="currency" />
 
-      <SalaryBandVisualization :salary-statistics="chosenStatistics" :own-salary="ownSalary ?? null" :currency="currency" />
+      <SalaryBandVisualization :salary-statistics="chosenStatistics" :own-salary="ownSalary" :currency="currency" />
     </template>
   </div>
 </template>
