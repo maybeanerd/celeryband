@@ -68,7 +68,7 @@
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 import { useOwnSalary } from '~/composables/api/useOwnSalary';
 import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
-import { isZodErrorResponse, getFirstZodError } from '~/utils/zodErrorHandling';
+import { isZodErrorResponse } from '~/utils/zodErrorHandling';
 
 const { showZodErrorToast, showSuccessToast } = useToastNotifications();
 

@@ -1,7 +1,9 @@
 export type ZodErrorResponse = {
   data?: {
-    fieldErrors?: Record<string, Array<string>>;
-    formErrors?: string[];
+    data?: {
+      fieldErrors?: Record<string, Array<string>>;
+      formErrors?: string[];
+    };
   };
 } | null;
 
@@ -16,7 +18,7 @@ export function isZodErrorResponse (value: unknown): value is ZodErrorResponse {
   if (!isRecord(value.data)) {
     return false;
   }
-  return Array.isArray(value.data.data?.fieldErrors) || Array.isArray(value.data.data?.formErrors);
+  return isRecord(value.data.data?.fieldErrors) || Array.isArray(value.data.data?.formErrors);
 }
 
 const unknownError = 'Unknown error occurred.';

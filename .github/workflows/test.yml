@@ -24,6 +24,8 @@ jobs:
         run: pnpm i --frozen-lockfile
       - name: lint
         run: pnpm lint
+      - name: test
+        run: pnpm test
       - name: build
         run: pnpm build
       - name: ensure no outstanding migrations
