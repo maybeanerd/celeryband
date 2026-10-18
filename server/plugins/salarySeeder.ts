@@ -7,18 +7,28 @@ import { obfuscateEmail } from '~/server/src/modules/authentification';
 
 // Helper function for weighted random selection
 function weightedRandom<T> (options: T[], weights: number[]): T {
+  if (options.length === 0) {
+    throw new Error('options must not be empty');
+  }
+  if (weights.length !== options.length) {
+    throw new Error('weights and options must have the same length');
+  }
+
   const totalWeight = weights.reduce((acc, w) => acc + w, 0);
   let random = Math.random() * totalWeight;
 
-  for (let i = 0; i < options.length; i++) {
-    random -= weights[i]!;
+  for (const [i, weight] of weights.entries()) {
+    const option = options[i];
+    if (option === undefined) continue;
+
+    random -= weight;
     if (random <= 0) {
-      return options[i]!;
+      return option;
     }
   }
 
-  // Fallback (should never reach here if weights sum > 0)
-  return options.at(-1)!;
+  // Should never reach here if weights sum > 0
+  return options.at(-1) ?? options[0];
 }
 
 /**
