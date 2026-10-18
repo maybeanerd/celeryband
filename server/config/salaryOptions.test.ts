@@ -1,15 +1,10 @@
 import { readFileSync } from 'fs';
-import { parse } from 'yaml';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { hasRoleInDepartment, getSeniorityLevelsForRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './salaryOptions';
 
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
-}));
-
-vi.mock('yaml', () => ({
-  parse: vi.fn(),
 }));
 
 describe('loadSalaryOptions', () => {
@@ -22,25 +17,23 @@ describe('loadSalaryOptions', () => {
     loadSalaryOptions = mod.loadSalaryOptions;
   });
 
-  const validConfig = {
-    serverUrl: 'https://celery.band',
-    acceptedDomain: 'celery.band',
-    currency: '€',
-    disclaimer: null,
-    departments: {
-      engineering: {
-        roles: {
-          'software engineer': {
-            seniorityLevels: ['junior', 'professional', 'senior', 'staff', 'principal'],
-          },
-        },
-      },
-    },
-  };
-
   it('should load and validate a valid config file', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(validConfig));
-    vi.mocked(parse).mockReturnValueOnce(validConfig);
+    vi.mocked(readFileSync).mockReturnValueOnce(`
+serverUrl: 'https://celery.band'
+acceptedDomain: 'celery.band'
+currency: '€'
+disclaimer: null
+departments:
+  engineering:
+    roles:
+      'software engineer':
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+          - principal
+`);
 
     const result = loadSalaryOptions();
 
@@ -51,8 +44,22 @@ describe('loadSalaryOptions', () => {
   });
 
   it('should cache the result on subsequent calls', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(validConfig));
-    vi.mocked(parse).mockReturnValueOnce(validConfig);
+    vi.mocked(readFileSync).mockReturnValueOnce(`
+serverUrl: 'https://celery.band'
+acceptedDomain: 'celery.band'
+currency: '€'
+disclaimer: null
+departments:
+  engineering:
+    roles:
+      'software engineer':
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+          - principal
+`);
 
     const first = loadSalaryOptions();
     const second = loadSalaryOptions();
@@ -80,19 +87,28 @@ describe('loadSalaryOptions', () => {
   });
 
   it('should throw Error for schema validation failures', () => {
-    vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify({ invalid: true }));
-    vi.mocked(parse).mockReturnValueOnce({ invalid: true });
+    vi.mocked(readFileSync).mockReturnValueOnce('invalid: true');
 
     expect(() => loadSalaryOptions()).toThrow('config.yaml validation failed');
   });
 
   it('should support nullable disclaimer field', () => {
-    const configWithDisclaimer = {
-      ...validConfig,
-      disclaimer: 'Some legal text',
-    };
-    vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(configWithDisclaimer));
-    vi.mocked(parse).mockReturnValueOnce(configWithDisclaimer);
+    vi.mocked(readFileSync).mockReturnValueOnce(`
+serverUrl: 'https://celery.band'
+acceptedDomain: 'celery.band'
+currency: '€'
+disclaimer: 'Some legal text'
+departments:
+  engineering:
+    roles:
+      'software engineer':
+        seniorityLevels:
+          - junior
+          - professional
+          - senior
+          - staff
+          - principal
+`);
 
     const result = loadSalaryOptions();
     expect(result.disclaimer).toBe('Some legal text');
