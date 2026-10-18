@@ -19,7 +19,7 @@ function weightedRandom<T> (options: T[], weights: number[]): T {
 
   for (const [i, weight] of weights.entries()) {
     const option = options[i];
-    if (option === undefined) continue;
+    if (option === undefined) { continue; }
 
     random -= weight;
     if (random <= 0) {
