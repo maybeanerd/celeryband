@@ -16,7 +16,7 @@ export function isZodErrorResponse (value: unknown): value is ZodErrorResponse {
   if (!isRecord(value.data)) {
     return false;
   }
-  return Array.isArray(value.data.fieldErrors) || Array.isArray(value.data.formErrors);
+  return Array.isArray(value.data.data?.fieldErrors) || Array.isArray(value.data.data?.formErrors);
 }
 
 const unknownError = 'Unknown error occurred.';
@@ -24,7 +24,7 @@ export function getFirstZodError (errorResponse: unknown): string {
   if (!isZodErrorResponse(errorResponse)) {
     return unknownError;
   }
-  const fieldErrors = errorResponse.data?.fieldErrors;
+  const fieldErrors = errorResponse.data?.data?.fieldErrors;
   if (!fieldErrors) {
     return unknownError;
   }
