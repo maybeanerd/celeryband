@@ -35,25 +35,11 @@ departments:
           - junior
           - professional
           - senior
-          - staff
       designer:
         seniorityLevels:
           - junior
           - professional
           - senior
-  marketing:
-    roles:
-      marketing specialist:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-      content strategist:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-          - staff
   sales:
     roles:
       sales representative:
@@ -74,5 +60,5 @@ departments:
           - professional
       hr manager:
         seniorityLevels:
+          - professional
           - senior
-          - staff
