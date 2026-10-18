@@ -1,9 +1,15 @@
-process.env.OBFUSCATION_SALT = 'test-salt-value';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  obfuscateEmail,
+  createLoginToken,
+  validateLoginToken,
+} from './authentification';
 
-import { describe, it, expect, afterAll, vi } from 'vitest';
-import { obfuscateEmail, createLoginToken, validateLoginToken } from './authentification';
+beforeEach(() => {
+  process.env.OBFUSCATION_SALT = 'test-salt-value';
+});
 
-afterAll(() => {
+afterEach(() => {
   delete process.env.OBFUSCATION_SALT;
 });
 
@@ -62,7 +68,9 @@ describe('createLoginToken', () => {
     await createLoginToken('mocked-hash');
 
     expect(mockValues).toHaveBeenCalledWith(
-      expect.objectContaining({ expirationDate: 1_000_000 + 1000 * 60 * 60 * 24 }),
+      expect.objectContaining({
+        expirationDate: 1_000_000 + 1000 * 60 * 60 * 24,
+      }),
     );
 
     vi.useRealTimers();
@@ -85,10 +93,14 @@ describe('validateLoginToken', () => {
   it('should return the emailHash for a valid token', async () => {
     const mockDb = {
       delete: vi.fn(() => ({
-        where: vi.fn(() => ({ returning: vi.fn().mockResolvedValue([{
-          token: 'abc',
-          emailHash: 'user-hash',
-        }]) })),
+        where: vi.fn(() => ({
+          returning: vi.fn().mockResolvedValue([
+            {
+              token: 'abc',
+              emailHash: 'user-hash',
+            },
+          ]),
+        })),
       })),
     };
     vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
@@ -98,7 +110,9 @@ describe('validateLoginToken', () => {
   });
 
   it('should delete the token after validation', async () => {
-    const mockReturning = vi.fn().mockResolvedValue([{ token: 'abc', emailHash: 'user-hash' }]);
+    const mockReturning = vi
+      .fn()
+      .mockResolvedValue([{ token: 'abc', emailHash: 'user-hash' }]);
     const mockDb = {
       delete: vi.fn(() => ({
         where: vi.fn(() => ({ returning: mockReturning })),

@@ -2,6 +2,8 @@ import { readFileSync } from 'fs';
 import { parse } from 'yaml';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+import { hasRoleInDepartment, getSeniorityLevelsForRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './salaryOptions';
+
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
@@ -9,8 +11,6 @@ vi.mock('fs', () => ({
 vi.mock('yaml', () => ({
   parse: vi.fn(),
 }));
-
-import { hasRoleInDepartment, getSeniorityLevelsForRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './salaryOptions';
 
 describe('loadSalaryOptions', () => {
   let loadSalaryOptions: typeof import('./salaryOptions').loadSalaryOptions;
