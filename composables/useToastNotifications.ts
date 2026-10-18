@@ -1,12 +1,13 @@
-type ZodErrorResponse = { data?: { data?: { fieldErrors?: Record<string, Array<string>> } } } | null;
+type ZodErrorResponse = { data?: { fieldErrors?: Record<string, Array<string>>; formErrors?: string[] } } | null;
 
 const unknownError = 'Unknown error occurred.';
 function getFirstError (errorResponse: ZodErrorResponse): string {
-  if (!errorResponse?.data?.data?.fieldErrors) {
+  const fieldErrors = errorResponse?.data?.fieldErrors;
+  if (!fieldErrors) {
     return unknownError;
   }
 
-  const firstError = Object.entries(errorResponse.data.data.fieldErrors).pop();
+  const firstError = Object.entries(fieldErrors).pop();
 
   if (!firstError) {
     return unknownError;
