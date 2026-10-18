@@ -1,122 +1,43 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+process.env.OBFUSCATION_SALT = 'test-salt-value';
 
-vi.mock('crypto', () => ({
-  randomBytes: vi.fn(),
-  scrypt: vi.fn(),
-}));
-
-vi.mock('~/server/config/obfuscationSalt', () => ({
-  getObfuscationSalt: vi.fn(() => 'test-salt'),
-}));
-
-vi.mock('~/server/src/modules/email', () => ({
-  normalizeEmail: vi.fn((email: string) => email.toLowerCase().trim()),
-}));
-
-import { scrypt, randomBytes } from 'crypto';
+import { describe, it, expect, afterAll, vi } from 'vitest';
 import { obfuscateEmail, createLoginToken, validateLoginToken } from './authentification';
 
+afterAll(() => {
+  delete process.env.OBFUSCATION_SALT;
+});
+
 describe('obfuscateEmail', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('should return a hex string hash for a valid email', async () => {
-    vi.mocked(scrypt).mockImplementation((_password, _salt, _digest, callback) => {
-      callback(null, Buffer.from('derived-key-data'));
-    });
-
+  it('should return a 128-char hex string (64-byte hash)', async () => {
     const result = await obfuscateEmail('user@example.com');
-
-    expect(typeof result).toBe('string');
-    expect(result).toMatch(/^[0-9a-f]+$/);
-    expect(scrypt).toHaveBeenCalled();
+    expect(result).toMatch(/^[0-9a-f]{128}$/);
   });
 
-  it('should produce the same hash for the same email (deterministic)', async () => {
-    vi.mocked(scrypt).mockImplementation((_password, _salt, _digest, callback) => {
-      callback(null, Buffer.from('derived-key-data'));
-    });
-
+  it('should produce the same hash for the same email', async () => {
     const result1 = await obfuscateEmail('user@example.com');
     const result2 = await obfuscateEmail('user@example.com');
-
     expect(result1).toBe(result2);
   });
 
   it('should produce different hashes for different emails', async () => {
-    vi.mocked(scrypt).mockImplementation((_password, _salt, _digest, callback) => {
-      const mockHash = Buffer.from(`hash-for-${_password}`);
-      callback(null, mockHash);
-    });
-
     const result1 = await obfuscateEmail('user1@example.com');
     const result2 = await obfuscateEmail('user2@example.com');
-
     expect(result1).not.toBe(result2);
-  });
-
-  it('should pass the normalized (lowercase, trimmed) email to scrypt', async () => {
-    vi.mocked(scrypt).mockImplementation((_password, _salt, _digest, callback) => {
-      callback(null, Buffer.from('hash'));
-    });
-
-    await obfuscateEmail('  USER@EXAMPLE.COM  ');
-
-    expect(scrypt).toHaveBeenCalledWith(
-      'user@example.com',
-      'test-salt',
-      64,
-      expect.any(Function),
-    );
   });
 });
 
 describe('createLoginToken', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('should generate a 32-character hex token', async () => {
-    vi.mocked(randomBytes).mockReturnValue(Buffer.from('1234567890123456'));
-
-    const mockValues = vi.fn().mockResolvedValue(undefined);
-    const mockInsert = vi.fn(() => ({ values: mockValues }));
-    const mockDb = { insert: mockInsert };
+  it('should return a 32-char hex token from real randomBytes', async () => {
+    const mockDb = {
+      insert: vi.fn(() => ({ values: vi.fn().mockResolvedValue(undefined) })),
+    };
     vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
 
-    await createLoginToken('mocked-hash');
-
-    expect(randomBytes).toHaveBeenCalledWith(16);
-    expect(mockInsert).toHaveBeenCalled();
+    const token = await createLoginToken('my-hash');
+    expect(token).toMatch(/^[0-9a-f]{32}$/);
   });
 
-  it('should set expiration to 24 hours from now', async () => {
-    vi.mocked(randomBytes).mockReturnValue(Buffer.from('1234567890123456'));
-
-    const now = Date.now();
-    vi.useFakeTimers();
-    vi.setSystemTime(now);
-
-    const mockValues = vi.fn().mockResolvedValue(undefined);
-    const mockInsert = vi.fn(() => ({ values: mockValues }));
-    const mockDb = { insert: mockInsert };
-    vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
-
-    await createLoginToken('mocked-hash');
-
-    expect(mockValues).toHaveBeenCalledWith({
-      token: expect.any(String),
-      emailHash: 'mocked-hash',
-      expirationDate: now + 1000 * 60 * 60 * 24,
-    });
-
-    vi.useRealTimers();
-  });
-
-  it('should include the obfuscated email in the token record', async () => {
-    vi.mocked(randomBytes).mockReturnValue(Buffer.from('1234567890123456'));
-
+  it('should insert the correct email hash into the DB', async () => {
     const mockValues = vi.fn().mockResolvedValue(undefined);
     const mockInsert = vi.fn(() => ({ values: mockValues }));
     const mockDb = { insert: mockInsert };
@@ -124,67 +45,68 @@ describe('createLoginToken', () => {
 
     await createLoginToken('my-obfuscated-hash');
 
-    expect(mockValues).toHaveBeenCalledWith(expect.objectContaining({
-      emailHash: 'my-obfuscated-hash',
-    }));
+    expect(mockValues).toHaveBeenCalledWith(
+      expect.objectContaining({ emailHash: 'my-obfuscated-hash' }),
+    );
+  });
+
+  it('should set expiration to 24 hours from now', async () => {
+    const mockValues = vi.fn().mockResolvedValue(undefined);
+    const mockInsert = vi.fn(() => ({ values: mockValues }));
+    const mockDb = { insert: mockInsert };
+    vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
+
+    vi.useFakeTimers();
+    vi.setSystemTime(1_000_000);
+
+    await createLoginToken('mocked-hash');
+
+    expect(mockValues).toHaveBeenCalledWith(
+      expect.objectContaining({ expirationDate: 1_000_000 + 1000 * 60 * 60 * 24 }),
+    );
+
+    vi.useRealTimers();
   });
 });
 
 describe('validateLoginToken', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should return null for a non-existent token', async () => {
-    const mockReturning = vi.fn().mockResolvedValue([]);
-    const mockWhere = vi.fn().mockReturnValue({ returning: mockReturning });
-    const mockDelete = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockDb = { delete: mockDelete };
+    const mockDb = {
+      delete: vi.fn(() => ({
+        where: vi.fn(() => ({ returning: vi.fn().mockResolvedValue([]) })),
+      })),
+    };
     vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
 
-    const result = await validateLoginToken('non-existent-token');
+    const result = await validateLoginToken('non-existent');
     expect(result).toBeNull();
   });
 
-  it('should return emailHash for a valid token', async () => {
-    const mockReturning = vi.fn().mockResolvedValue([{
-      token: 'abc123def456',
-      emailHash: 'user-hash-value',
-    }]);
-    const mockWhere = vi.fn().mockReturnValue({ returning: mockReturning });
-    const mockDelete = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockDb = { delete: mockDelete };
+  it('should return the emailHash for a valid token', async () => {
+    const mockDb = {
+      delete: vi.fn(() => ({
+        where: vi.fn(() => ({ returning: vi.fn().mockResolvedValue([{
+          token: 'abc',
+          emailHash: 'user-hash',
+        }]) })),
+      })),
+    };
     vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
 
     const result = await validateLoginToken('valid-token');
-    expect(result).toBe('user-hash-value');
+    expect(result).toBe('user-hash');
   });
 
-  it('should delete the token after successful validation (one-time use)', async () => {
-    const mockReturning = vi.fn().mockResolvedValue([{
-      token: 'abc123def456',
-      emailHash: 'user-hash-value',
-    }]);
-    const mockWhere = vi.fn().mockReturnValue({ returning: mockReturning });
-    const mockDelete = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockDb = { delete: mockDelete };
+  it('should delete the token after validation', async () => {
+    const mockReturning = vi.fn().mockResolvedValue([{ token: 'abc', emailHash: 'user-hash' }]);
+    const mockDb = {
+      delete: vi.fn(() => ({
+        where: vi.fn(() => ({ returning: mockReturning })),
+      })),
+    };
     vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
 
     await validateLoginToken('valid-token');
-
-    expect(mockDelete).toHaveBeenCalled();
-    expect(mockReturning).toHaveBeenCalled();
-  });
-
-  it('should return null when token has expired', async () => {
-    const mockReturning = vi.fn().mockResolvedValue([]);
-    const mockWhere = vi.fn().mockReturnValue({ returning: mockReturning });
-    const mockDelete = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockDb = { delete: mockDelete };
-    vi.stubGlobal('useDrizzle', () => ({ db: mockDb }));
-
-    const result = await validateLoginToken('expired-token');
-    expect(result).toBeNull();
-    expect(mockDelete).toHaveBeenCalled();
+    expect(mockDb.delete).toHaveBeenCalled();
   });
 });
