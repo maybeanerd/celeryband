@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isZodErrorResponse, getFirstZodError } from '../../../utils/zodErrorHandling';
+import { isZodErrorResponse, getFirstZodError } from './zodErrorHandling';
 
 describe('isZodErrorResponse', () => {
   it('should return true for a valid Zod error response object', () => {
@@ -53,11 +53,11 @@ describe('isZodErrorResponse', () => {
     expect(isZodErrorResponse(response)).toBe(false);
   });
 
-  it('should return false when data.data.fieldErrors is not an array', () => {
+  it('should return false when data.data.fieldErrors is not an object', () => {
     const response = {
       data: {
         data: {
-          fieldErrors: 'not an array',
+          fieldErrors: 'not an object',
         },
       },
     };

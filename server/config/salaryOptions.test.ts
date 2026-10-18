@@ -2,7 +2,6 @@ import { readFileSync } from 'fs';
 import { parse } from 'yaml';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Mock fs and yaml before importing the module under test
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
@@ -11,11 +10,16 @@ vi.mock('yaml', () => ({
   parse: vi.fn(),
 }));
 
+import { hasRoleInDepartment, getSeniorityLevelsForRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './salaryOptions';
+
 describe('loadSalaryOptions', () => {
-  beforeEach(() => {
+  let loadSalaryOptions: typeof import('./salaryOptions').loadSalaryOptions;
+
+  beforeEach(async () => {
     vi.clearAllMocks();
-    // Reset the module cache so each test gets a fresh load
     vi.resetModules();
+    const mod = await import('./salaryOptions');
+    loadSalaryOptions = mod.loadSalaryOptions;
   });
 
   const validConfig = {
@@ -38,7 +42,6 @@ describe('loadSalaryOptions', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(validConfig));
     vi.mocked(parse).mockReturnValueOnce(validConfig);
 
-    const { loadSalaryOptions } = await import('../../../../server/config/salaryOptions');
     const result = loadSalaryOptions();
 
     expect(result.serverUrl).toBe('https://celery.band');
@@ -51,7 +54,6 @@ describe('loadSalaryOptions', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(validConfig));
     vi.mocked(parse).mockReturnValueOnce(validConfig);
 
-    const { loadSalaryOptions } = await import('../../../../server/config/salaryOptions');
     const first = loadSalaryOptions();
     const second = loadSalaryOptions();
 
@@ -64,34 +66,23 @@ describe('loadSalaryOptions', () => {
       throw new Error('ENOENT: no such file or directory');
     });
 
-    const { loadSalaryOptions } = await import('../../../../server/config/salaryOptions');
-
-    expect(() => loadSalaryOptions()).toThrow(
-      'Cannot load config.yaml from',
-    );
+    expect(() => loadSalaryOptions()).toThrow('Cannot load config.yaml from');
   });
 
   it('should throw TypeError for invalid YAML syntax', async () => {
     vi.mocked(readFileSync).mockReturnValueOnce('invalid: yaml: [[[');
-
     vi.mocked(parse).mockImplementationOnce(() => {
       throw new SyntaxError('bad YAML');
     });
 
-    const { loadSalaryOptions } = await import('../../../../server/config/salaryOptions');
-
-    expect(() => loadSalaryOptions()).toThrow(TypeError);
+    expect(() => loadSalaryOptions()).toThrow(TypeError, /bad YAML/);
   });
 
   it('should throw Error for schema validation failures', async () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify({ invalid: true }));
     vi.mocked(parse).mockReturnValueOnce({ invalid: true });
 
-    const { loadSalaryOptions } = await import('../../../../server/config/salaryOptions');
-
-    expect(() => loadSalaryOptions()).toThrow(
-      'config.yaml validation failed',
-    );
+    expect(() => loadSalaryOptions()).toThrow('config.yaml validation failed');
   });
 
   it('should support nullable disclaimer field', async () => {
@@ -102,16 +93,13 @@ describe('loadSalaryOptions', () => {
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(configWithDisclaimer));
     vi.mocked(parse).mockReturnValueOnce(configWithDisclaimer);
 
-    const { loadSalaryOptions } = await import('../../../../server/config/salaryOptions');
     const result = loadSalaryOptions();
-
     expect(result.disclaimer).toBe('Some legal text');
   });
 });
 
 describe('hasRoleInDepartment', () => {
-  it('should return true when role exists in department', async () => {
-    const { hasRoleInDepartment } = await import('../../../../server/config/salaryOptions');
+  it('should return true when role exists in department', () => {
     expect(
       hasRoleInDepartment(
         {
@@ -123,8 +111,7 @@ describe('hasRoleInDepartment', () => {
     ).toBe(true);
   });
 
-  it('should return false when department does not exist', async () => {
-    const { hasRoleInDepartment } = await import('../../../../server/config/salaryOptions');
+  it('should return false when department does not exist', () => {
     expect(
       hasRoleInDepartment(
         {
@@ -136,8 +123,7 @@ describe('hasRoleInDepartment', () => {
     ).toBe(false);
   });
 
-  it('should return false when role does not exist in department', async () => {
-    const { hasRoleInDepartment } = await import('../../../../server/config/salaryOptions');
+  it('should return false when role does not exist in department', () => {
     expect(
       hasRoleInDepartment(
         {
@@ -149,8 +135,7 @@ describe('hasRoleInDepartment', () => {
     ).toBe(false);
   });
 
-  it('should return false when departments object is empty', async () => {
-    const { hasRoleInDepartment } = await import('../../../../server/config/salaryOptions');
+  it('should return false when departments object is empty', () => {
     expect(
       hasRoleInDepartment({}, 'engineering', 'designer'),
     ).toBe(false);
@@ -158,8 +143,7 @@ describe('hasRoleInDepartment', () => {
 });
 
 describe('getSeniorityLevelsForRole', () => {
-  it('should return seniority levels for a valid department and role', async () => {
-    const { getSeniorityLevelsForRole } = await import('../../../../server/config/salaryOptions');
+  it('should return seniority levels for a valid department and role', () => {
     const levels = getSeniorityLevelsForRole(
       {
         engineering: {
@@ -172,8 +156,7 @@ describe('getSeniorityLevelsForRole', () => {
     expect(levels).toEqual(['junior', 'senior']);
   });
 
-  it('should return undefined for non-existent department', async () => {
-    const { getSeniorityLevelsForRole } = await import('../../../../server/config/salaryOptions');
+  it('should return undefined for non-existent department', () => {
     expect(
       getSeniorityLevelsForRole(
         { engineering: { roles: {} } },
@@ -183,8 +166,7 @@ describe('getSeniorityLevelsForRole', () => {
     ).toBeUndefined();
   });
 
-  it('should return undefined for non-existent role', async () => {
-    const { getSeniorityLevelsForRole } = await import('../../../../server/config/salaryOptions');
+  it('should return undefined for non-existent role', () => {
     expect(
       getSeniorityLevelsForRole(
         { engineering: { roles: {} } },
@@ -196,8 +178,7 @@ describe('getSeniorityLevelsForRole', () => {
 });
 
 describe('getAllRoles', () => {
-  it('should return sorted list of all role names across all departments', async () => {
-    const { getAllRoles } = await import('../../../../server/config/salaryOptions');
+  it('should return sorted list of all role names across all departments', () => {
     const roles = getAllRoles({
       engineering: {
         roles: { 'software engineer': { seniorityLevels: [] } },
@@ -213,15 +194,13 @@ describe('getAllRoles', () => {
     expect(roles).toEqual(['account manager', 'sales rep', 'software engineer']);
   });
 
-  it('should return empty array when no departments exist', async () => {
-    const { getAllRoles } = await import('../../../../server/config/salaryOptions');
+  it('should return empty array when no departments exist', () => {
     expect(getAllRoles({})).toEqual([]);
   });
 });
 
 describe('getAllSeniorityLevels', () => {
-  it('should return sorted unique list of all seniority levels', async () => {
-    const { getAllSeniorityLevels } = await import('../../../../server/config/salaryOptions');
+  it('should return sorted unique list of all seniority levels', () => {
     const levels = getAllSeniorityLevels({
       engineering: {
         roles: {
@@ -234,8 +213,7 @@ describe('getAllSeniorityLevels', () => {
     expect(levels).toEqual(['junior', 'mid', 'senior']);
   });
 
-  it('should deduplicate levels across departments', async () => {
-    const { getAllSeniorityLevels } = await import('../../../../server/config/salaryOptions');
+  it('should deduplicate levels across departments', () => {
     const levels = getAllSeniorityLevels({
       engineering: {
         roles: { dev: { seniorityLevels: ['junior', 'senior'] } },
@@ -250,8 +228,7 @@ describe('getAllSeniorityLevels', () => {
 });
 
 describe('getAllDepartmentNames', () => {
-  it('should return sorted list of department names', async () => {
-    const { getAllDepartmentNames } = await import('../../../../server/config/salaryOptions');
+  it('should return sorted list of department names', () => {
     const depts = getAllDepartmentNames({
       sales: { roles: {} },
       engineering: { roles: {} },
@@ -261,8 +238,7 @@ describe('getAllDepartmentNames', () => {
     expect(depts).toEqual(['engineering', 'hr', 'sales']);
   });
 
-  it('should return empty array when no departments exist', async () => {
-    const { getAllDepartmentNames } = await import('../../../../server/config/salaryOptions');
+  it('should return empty array when no departments exist', () => {
     expect(getAllDepartmentNames({})).toEqual([]);
   });
 });
