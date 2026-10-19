@@ -77,41 +77,8 @@ const { config } = await useServerConfiguration();
 
 const showOnlyYourDepartment = ref(true);
 
-// Resolve display labels from IDs stored in the database
-const roleLabel = computed(() => {
-  const roleId = props.ownSalary?.role;
-  if (!roleId) {
-    return '';
-  }
-  return config.value?.roles?.[roleId]?.label || roleId;
-});
-
-const departmentLabel = computed(() => {
-  const deptId = props.ownSalary?.department;
-  if (!deptId) {
-    return '';
-  }
-  return config.value?.departments?.find(d => d.name === deptId)?.label || deptId;
-});
-
-function getSeniorityLabel (roleId: string, seniorityId: string): string {
-  return (
-    config.value?.departments
-      ?.flatMap(d => d.roleSeniorityLevels?.[roleId] ?? [])
-      .find(l => l.id === seniorityId)
-      ?.label ?? seniorityId
-  );
-}
-
-type ResultItem = {
-  seniorityLevel: string;
-  label: string;
-  average: number;
-  median: number;
-  min: number;
-  max: number;
-  count: number;
-}
+const roleLabel = computed(() => config.value?.roles?.[props.ownSalary?.role]?.label ?? '');
+const departmentLabel = computed(() => config.value?.departments?.find(d => d.name === props.ownSalary?.department)?.label ?? '');
 
 // Computed property for Same Role (All Seniorities) data that switches data sources based on toggle
 const sameRoleAllSeniorityData = computed(() => {
@@ -135,11 +102,10 @@ const sameRoleAllSeniorityData = computed(() => {
       return [];
     }
 
-    // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
-        label: getSeniorityLabel(roleItem.role, seniorityItem.seniorityLevel),
+        label: seniorityItem.label,
         average: seniorityItem.statistics.average,
         median: seniorityItem.statistics.median,
         min: seniorityItem.statistics.min,
@@ -172,11 +138,10 @@ const sameRoleAllSeniorityData = computed(() => {
       return [];
     }
 
-    // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
-        label: getSeniorityLabel(roleItem.role, seniorityItem.seniorityLevel),
+        label: seniorityItem.label,
         average: seniorityItem.statistics.average,
         median: seniorityItem.statistics.median,
         min: seniorityItem.statistics.min,

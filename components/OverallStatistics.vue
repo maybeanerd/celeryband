@@ -152,36 +152,9 @@ const props = defineProps<{
 
 const { config } = await useServerConfiguration();
 
-// Resolve display labels from IDs stored in the database
-const roleLabel = computed(() => {
-  const roleId = props.ownSalary?.role;
-  if (!roleId) {
-    return '';
-  }
-  return config.value?.roles?.[roleId]?.label || roleId;
-});
-
-const departmentLabel = computed(() => {
-  const deptId = props.ownSalary?.department;
-  if (!deptId) {
-    return '';
-  }
-  return config.value?.departments?.find(d => d.name === deptId)?.label || deptId;
-});
-
-const seniorityLevelLabel = computed(() => {
-  const seniorityId = props.ownSalary?.seniorityLevel;
-  const roleId = props.ownSalary?.role;
-  if (!seniorityId || !roleId) {
-    return '';
-  }
-  return (
-    config.value?.departments
-      ?.flatMap(d => d.roleSeniorityLevels?.[roleId] ?? [])
-      .find(l => l.id === seniorityId)
-      ?.label ?? seniorityId
-  );
-});
+const roleLabel = computed(() => config.value?.roles?.[props.ownSalary?.role]?.label ?? '');
+const departmentLabel = computed(() => config.value?.departments?.find(d => d.name === props.ownSalary?.department)?.label ?? '');
+const seniorityLevelLabel = computed(() => config.value?.seniorityLevels?.find(s => s.id === props.ownSalary?.seniorityLevel)?.label ?? '');
 
 const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
   if (!props.salaryStatistics?.byRoleAndSeniority ||

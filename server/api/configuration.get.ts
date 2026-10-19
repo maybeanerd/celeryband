@@ -14,6 +14,7 @@ export type ConfigurationResponse = {
   acceptedDomain: string;
   departments: Array<DepartmentDetail>;
   roles: Record<string, { label: string; seniorityLevels: string[] }>;
+  seniorityLevels: Array<{ id: string; label: string }>;
 };
 
 export default defineEventHandler(async (event) => {
@@ -38,10 +39,16 @@ export default defineEventHandler(async (event) => {
     ),
   }));
 
+  // Gather all unique seniority levels across all roles
+  const allSeniorityLevels = Array.from(new Set(
+    Object.values(rolesMap).flatMap(r => r.seniorityLevels),
+  )).sort().map(level => ({ id: level, label: idToLabel(level) }));
+
   return {
     currency: serverConfig.currency,
     acceptedDomain: serverConfig.acceptedDomain,
     departments: departmentsWithDetails,
     roles: rolesMap,
+    seniorityLevels: allSeniorityLevels,
   };
 });
