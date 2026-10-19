@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-import { hasRoleInDepartment, getSeniorityLevelsForDeptRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames, idToLabel, getSeniorityLevelsForRole, type RolesMap } from './serverConfig';
+import { hasRoleInDepartment, getSeniorityLevelsForDeptRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames, idToLabel, getSeniorityLevelsForRole } from './serverConfig';
 
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
