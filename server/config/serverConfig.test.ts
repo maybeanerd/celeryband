@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-import { hasRoleInDepartment, getSeniorityLevelsForDeptRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './serverConfig';
+import { hasRoleInDepartment, getSeniorityLevelsForDeptRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames, idToLabel, getSeniorityLevelsForRole, type RolesMap } from './serverConfig';
 
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
@@ -316,5 +316,54 @@ roles:
     const mod = await import('./serverConfig');
     mod.loadServerConfig();
     expect(mod.getRoleLabel('software_engineer')).toBe('Software Engineer');
+  });
+});
+
+describe('getSeniorityLevelsForRole', () => {
+  it('should return seniority levels for a role that exists in the roles map', () => {
+    const rolesMap: Record<string, { label: string; seniorityLevels: string[] }> = {
+      software_engineer: {
+        label: 'Software Engineer',
+        seniorityLevels: ['junior', 'professional', 'senior'],
+      },
+    };
+    expect(getSeniorityLevelsForRole(rolesMap, 'software_engineer')).toEqual(['junior', 'professional', 'senior']);
+  });
+
+  it('should return empty array for a role that does not exist in the roles map', () => {
+    const rolesMap: Record<string, { label: string; seniorityLevels: string[] }> = {
+      software_engineer: { label: 'Software Engineer', seniorityLevels: ['junior'] },
+    };
+    expect(getSeniorityLevelsForRole(rolesMap, 'nonexistent_role')).toEqual([]);
+  });
+
+  it('should return empty array when roles map is empty', () => {
+    expect(getSeniorityLevelsForRole({}, 'any_role')).toEqual([]);
+  });
+});
+
+describe('idToLabel', () => {
+  it('should convert single word to title case', () => {
+    expect(idToLabel('engineering')).toBe('Engineering');
+  });
+
+  it('should convert multi-word snake_case to title case', () => {
+    expect(idToLabel('software_engineer')).toBe('Software Engineer');
+  });
+
+  it('should handle three-word snake_case', () => {
+    expect(idToLabel('chief_executive_officer')).toBe('Chief Executive Officer');
+  });
+
+  it('should handle already title-cased input', () => {
+    expect(idToLabel('Engineering')).toBe('Engineering');
+  });
+
+  it('should handle mixed case input (no underscores, treated as single word)', () => {
+    expect(idToLabel('So Ft WaRe EnGiNeEr')).toBe('So ft ware engineer');
+  });
+
+  it('should handle single character words', () => {
+    expect(idToLabel('a_and_b')).toBe('A And B');
   });
 });
