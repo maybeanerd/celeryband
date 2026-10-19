@@ -1,15 +1,18 @@
 import { loadServerConfig, getRolesMap, idToLabel } from '~/server/config/serverConfig';
 import type { TransformedDepartment } from '~/server/config/serverConfig';
 
-export type ConfigurationResponse = {
-  currency: string;
-  acceptedDomain: string;
-  departments: Array<{
+type DepartmentDetail =
+  {
     name: string;
     label: string;
     roles: Array<{ id: string; label: string }>;
     roleSeniorityLevels: Record<string, Array<{ id: string; label: string }>>;
-  }>;
+  };
+
+export type ConfigurationResponse = {
+  currency: string;
+  acceptedDomain: string;
+  departments: Array<DepartmentDetail>;
   roles: Record<string, { label: string; seniorityLevels: string[] }>;
 };
 
