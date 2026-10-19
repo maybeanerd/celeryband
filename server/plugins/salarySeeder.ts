@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
 import { count } from 'drizzle-orm';
-import type { TransformedDepartment, RolesMap } from '~/server/config/serverConfig';
+import type { TransformedDepartment } from '~/server/config/serverConfig';
 import { salarySchema } from '~/server/db/schemas/Salary.schema';
 import { userSchema } from '~/server/db/schemas/User.schema';
-import { loadServerConfig, getRolesMap } from '~/server/config/serverConfig';
+import { serverConfiguration, getRolesMap } from '~/server/config/serverConfig';
 import { obfuscateEmail } from '~/server/src/modules/authentification';
 
 // Helper function for weighted random selection
@@ -131,10 +131,7 @@ function getAllSeniorityLevelsFlat (departments: TransformedDepartment[], rolesM
 
 export default defineNitroPlugin(async () => {
   // Only run the seeder in development mode
-  const serverConfig = loadServerConfig();
-  const rolesMap = getRolesMap();
-  const developmentMode = process.env.DEVELOPMENT_MODE === 'true';
-  if (!developmentMode) {
+  if (!serverConfiguration.developmentMode) {
     return;
   }
 
@@ -161,7 +158,7 @@ export default defineNitroPlugin(async () => {
       const currentBatchSize = Math.min(batchSize, totalToGenerate - i);
       console.info(`Generating batch ${i / batchSize + 1}/${Math.ceil(totalToGenerate / batchSize)} (${currentBatchSize} users)...`);
 
-      await generateRandomUserBatch(currentBatchSize, serverConfig.departments, rolesMap, serverConfig.acceptedDomain);
+      await generateRandomUserBatch(currentBatchSize, serverConfiguration.departments, getRolesMap(), serverConfiguration.acceptedDomain);
 
       // Simple progress report
       console.info(`Generated ${Math.min(i + currentBatchSize, totalToGenerate)}/${totalToGenerate} random users with salaries`);
