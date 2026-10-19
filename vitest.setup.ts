@@ -7,24 +7,32 @@ currency: "€"
 disclaimer: null
 departments:
   engineering:
+    label: "Engineering"
     roles:
-      "software engineer":
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-          - staff
-          - principal
-      "product manager":
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-      "designer":
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
+      - software_engineer
+      - product_manager
+      - designer
+roles:
+  software_engineer:
+    label: "Software Engineer"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+      - staff
+      - principal
+  product_manager:
+    label: "Product Manager"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+  designer:
+    label: "Designer"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
 `;
 
 vi.mock('fs', () => ({
