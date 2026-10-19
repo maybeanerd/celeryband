@@ -41,7 +41,7 @@
       <!-- Your role and seniority statistics -->
       <div>
         <h3 class="text-lg font-medium mb-1">
-          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ roleLabel }}s
+          {{ seniorityLevelLabel }} {{ roleLabel }}s
         </h3>
         <div v-if="ownRoleSeniorityStats">
           <p class="text-xs text-gray-500 mb-2">
@@ -80,7 +80,7 @@
 
       <div>
         <h3 class="text-lg font-medium mb-1">
-          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ roleLabel }}s
+          {{ seniorityLevelLabel }} {{ roleLabel }}s
           in {{ departmentLabel }}
         </h3>
         <div v-if="ownRoleAndSeniorityAndDepartmentStats">
@@ -167,6 +167,20 @@ const departmentLabel = computed(() => {
     return '';
   }
   return config.value?.departments?.find(d => d.name === deptId)?.label || deptId;
+});
+
+const seniorityLevelLabel = computed(() => {
+  const seniorityId = props.ownSalary?.seniorityLevel;
+  const roleId = props.ownSalary?.role;
+  if (!seniorityId || !roleId) {
+    return '';
+  }
+  return (
+    config.value?.departments
+      ?.flatMap(d => d.roleSeniorityLevels?.[roleId] ?? [])
+      .find(l => l.id === seniorityId)
+      ?.label ?? seniorityId
+  );
 });
 
 const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {

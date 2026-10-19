@@ -23,7 +23,7 @@
             <div class="w-32 flex flex-col justify-around pr-2">
               <div class="text-sm font-medium">
                 <div class="truncate">
-                  {{ capitalizeFirstCharacterOfWords(item.seniorityLevel) }}
+                  {{ item.label }}
                 </div> <div class="text-xs text-gray-500">
                   {{ item.count }} data points
                 </div>
@@ -94,8 +94,18 @@ const departmentLabel = computed(() => {
   return config.value?.departments?.find(d => d.name === deptId)?.label || deptId;
 });
 
-type ResultItem= {
+function getSeniorityLabel (roleId: string, seniorityId: string): string {
+  return (
+    config.value?.departments
+      ?.flatMap(d => d.roleSeniorityLevels?.[roleId] ?? [])
+      .find(l => l.id === seniorityId)
+      ?.label ?? seniorityId
+  );
+}
+
+type ResultItem = {
   seniorityLevel: string;
+  label: string;
   average: number;
   median: number;
   min: number;
@@ -129,6 +139,7 @@ const sameRoleAllSeniorityData = computed(() => {
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
+        label: getSeniorityLabel(roleItem.role, seniorityItem.seniorityLevel),
         average: seniorityItem.statistics.average,
         median: seniorityItem.statistics.median,
         min: seniorityItem.statistics.min,
@@ -165,6 +176,7 @@ const sameRoleAllSeniorityData = computed(() => {
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
+        label: getSeniorityLabel(roleItem.role, seniorityItem.seniorityLevel),
         average: seniorityItem.statistics.average,
         median: seniorityItem.statistics.median,
         min: seniorityItem.statistics.min,
