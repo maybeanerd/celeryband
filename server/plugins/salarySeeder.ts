@@ -3,7 +3,8 @@ import { count } from 'drizzle-orm';
 import type { TransformedDepartment } from '~/server/config/serverConfig';
 import { salarySchema } from '~/server/db/schemas/Salary.schema';
 import { userSchema } from '~/server/db/schemas/User.schema';
-import { serverConfiguration, getRolesMap } from '~/server/config/serverConfig';
+import { serverConfiguration } from '~/server/config/server';
+import { getRolesMap } from '~/server/config/serverConfig';
 import { obfuscateEmail } from '~/server/src/modules/authentification';
 
 // Helper function for weighted random selection
