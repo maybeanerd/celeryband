@@ -76,14 +76,23 @@ function transformConfig (raw: z.infer<typeof ConfigSchema>): {
   result: TransformedSalaryOptions;
   rolesMap: RolesMap;
 } {
-  const { departments: deptRaw, roles: roleRaw, currency, acceptedDomain, serverUrl } = raw;
+  const {
+    departments: deptRaw,
+    roles: roleRaw,
+    currency,
+    acceptedDomain,
+    serverUrl,
+  } = raw;
 
   // Build a map of role id → enriched role definition
   const rolesMap: RolesMap = Object.fromEntries(
-    Object.entries(roleRaw).map(([id, def]) => [id, {
-      label: def.label ?? idToLabel(id),
-      seniorityLevels: def.seniorityLevels,
-    }]),
+    Object.entries(roleRaw).map(([id, def]) => [
+      id,
+      {
+        label: def.label ?? idToLabel(id),
+        seniorityLevels: def.seniorityLevels,
+      },
+    ]),
   );
 
   // Build the department list, resolving role references
@@ -93,7 +102,10 @@ function transformConfig (raw: z.infer<typeof ConfigSchema>): {
       const label = dept.label ?? idToLabel(id);
       const roles = dept.roles.sort();
       const roleSeniorityLevels: Record<string, string[]> = Object.fromEntries(
-        roles.map(roleId => [roleId, rolesMap[roleId]?.seniorityLevels ?? []]),
+        roles.map(roleId => [
+          roleId,
+          rolesMap[roleId]?.seniorityLevels ?? [],
+        ]),
       );
       return { name: id, label, roles, roleSeniorityLevels };
     });
@@ -147,9 +159,10 @@ export function loadServerConfig (): TransformedSalaryOptions {
 
   const result = ConfigSchema.safeParse(parsed);
   if (!result.success) {
-    throw new Error(
-      `config.yaml validation failed:\n${result.error.issues.map(i => `  - ${i.path.join('.')}: ${i.message}`).join('\n')}`,
-    );
+    const details = result.error.issues.map(i => `  - ${i.path.join('.')}: ${i.message}`).join('\n');
+    const message = `config.yaml validation failed:\n${details}`;
+    console.error(message);
+    throw new Error(message);
   }
 
   const { result: transformed, rolesMap } = transformConfig(result.data);
@@ -170,7 +183,10 @@ export function getRoleLabel (roleId: string): string {
 }
 
 /** Get the seniority levels for a specific role id. */
-export function getSeniorityLevelsForRole (rolesMap: RolesMap, roleId: string): string[] {
+export function getSeniorityLevelsForRole (
+  rolesMap: RolesMap,
+  roleId: string,
+): string[] {
   return rolesMap[roleId]?.seniorityLevels ?? [];
 }
 
@@ -220,7 +236,9 @@ export function getAllRoles (departments: TransformedDepartment[]): string[] {
 /**
  * Flatten all seniority levels (for backward-compat / display).
  */
-export function getAllSeniorityLevels (departments: TransformedDepartment[]): string[] {
+export function getAllSeniorityLevels (
+  departments: TransformedDepartment[],
+): string[] {
   const levels = new Set<string>();
   for (const dept of departments) {
     for (const roleId of dept.roles) {
@@ -238,6 +256,8 @@ export function getAllSeniorityLevels (departments: TransformedDepartment[]): st
 /**
  * Flatten all department names.
  */
-export function getAllDepartmentNames (departments: TransformedDepartment[]): string[] {
+export function getAllDepartmentNames (
+  departments: TransformedDepartment[],
+): string[] {
   return departments.map(d => d.name).sort();
 }

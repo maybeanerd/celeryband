@@ -93,7 +93,7 @@ function getAvailableRoles (department: string): {
   label: string;
 }[] {
   const dept = config.value?.departments?.find(d => d.name === department);
-  return (dept?.roles ?? []).map((roleId) => ({
+  return (dept?.roles ?? []).map(roleId => ({
     id: roleId,
     label: config.value?.roles?.[roleId]?.label ?? '',
   }));
