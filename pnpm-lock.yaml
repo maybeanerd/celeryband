@@ -213,8 +213,8 @@ importers:
         specifier: 1.1.1
         version: 1.1.1(magicast@0.5.5)(supports-color@10.2.2)(vite@8.3.3)(workbox-build@7.4.1(supports-color@10.2.2))(workbox-window@7.4.1)
       autoprefixer:
-        specifier: 10.5.0
-        version: 10.5.0(postcss@8.5.29)
+        specifier: 10.6.1
+        version: 10.6.1(postcss@8.5.29)
       drizzle-kit:
         specifier: 0.31.11
         version: 0.31.11
@@ -3845,13 +3845,6 @@ packages:
   at-least-node@1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-
-  autoprefixer@10.5.0:
-    resolution: {integrity: sha512-FMhOoZV4+qR6aTUALKX2rEqGG+oyATvwBt9IIzVR5rMa2HRWPkxf+P+PAJLD1I/H5/II+HuZcBJYEFBpq39ong==}
-    engines: {node: ^10 || ^12 || >=14}
-    hasBin: true
-    peerDependencies:
-      postcss: ^8.1.0
 
   autoprefixer@10.6.1:
     resolution: {integrity: sha512-cL1Qz6ADZhcEbny/8HPfe99J6HhNoYtpX2LFLIbhgGE7Q1hlQVkYFdetDN7Id3KiQxhDrHwzlHr/YQCnZ8+xSA==}
@@ -11837,15 +11830,6 @@ snapshots:
   async@3.2.6: {}
 
   at-least-node@1.0.0: {}
-
-  autoprefixer@10.5.0(postcss@8.5.29):
-    dependencies:
-      browserslist: 4.29.3
-      caniuse-lite: 1.0.30001815
-      fraction.js: 5.3.4
-      picocolors: 1.1.1
-      postcss: 8.5.29
-      postcss-value-parser: 4.2.0
 
   autoprefixer@10.6.1(postcss@8.5.29):
     dependencies:
