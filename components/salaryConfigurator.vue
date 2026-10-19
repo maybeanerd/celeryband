@@ -141,7 +141,7 @@ async function updateSalary () {
     if (isZodErrorResponse(error.value)) {
       showZodErrorToast('Error while updating salary', error.value);
     } else {
-      showErrorToast('Error while updating salary', error.value.data?.message ?? 'An unexpected error occurred.');
+      showErrorToast('Error while updating salary', (error.value.data as { message?: string })?.message ?? 'An unexpected error occurred.');
     }
     return;
   }

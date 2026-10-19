@@ -1,13 +1,13 @@
 import { readFileSync } from 'fs';
 
-import { hasRoleInDepartment, getSeniorityLevelsForDeptRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames, loadServerConfig, getRoleLabel } from './serverConfig';
+import { hasRoleInDepartment, getSeniorityLevelsForDeptRole, getAllRoles, getAllSeniorityLevels, getAllDepartmentNames } from './serverConfig';
 
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
 
 describe('loadServerConfig', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
   });
@@ -32,6 +32,8 @@ roles:
       - junior
       - professional
       - senior
+      - staff
+      - principal
 `);
 
     const result = load();
@@ -39,9 +41,10 @@ roles:
     expect(result.currency).toBe('€');
     expect(result.acceptedDomain).toBe('celery.band');
     expect(result.departments).toHaveLength(1);
-    expect(result.departments[0].name).toBe('engineering');
-    expect(result.departments[0].label).toBe('Engineering');
-    expect(result.departments[0].roles).toEqual(['software_engineer']);
+    const firstDept = result.departments[0]!;
+    expect(firstDept.name).toBe('engineering');
+    expect(firstDept.label).toBe('Engineering');
+    expect(firstDept.roles).toEqual(['software_engineer']);
   });
 
   it('should cache the result on subsequent calls', async () => {

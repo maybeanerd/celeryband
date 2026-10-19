@@ -73,21 +73,25 @@ const props = defineProps<{
   currency?: string;
 }>();
 
-const { config: serverConfig } = await useServerConfiguration();
+const { config } = await useServerConfiguration();
 
 const showOnlyYourDepartment = ref(true);
 
 // Resolve display labels from IDs stored in the database
 const roleLabel = computed(() => {
   const roleId = props.ownSalary?.role;
-  if (!roleId) return '';
-  return serverConfig.value?.roles?.[roleId]?.label || roleId;
+  if (!roleId) {
+    return '';
+  }
+  return config.value?.roles?.[roleId]?.label || roleId;
 });
 
 const departmentLabel = computed(() => {
   const deptId = props.ownSalary?.department;
-  if (!deptId) return '';
-  return serverConfig.value?.departments?.find(d => d.name === deptId)?.label || deptId;
+  if (!deptId) {
+    return '';
+  }
+  return config.value?.departments?.find(d => d.name === deptId)?.label || deptId;
 });
 
 type ResultItem= {
