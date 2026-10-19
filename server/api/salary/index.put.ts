@@ -1,12 +1,11 @@
 import { z } from 'zod';
-import type { TransformedDepartment, RolesMap } from '~/server/config/serverConfig';
-import { loadServerConfig, getRolesMap } from '~/server/config/serverConfig';
+import type { TransformedDepartment } from '~/server/config/serverConfig';
+import { loadServerConfig } from '~/server/config/serverConfig';
 import { storeSalaryForUser } from '~/server/src/modules/salary/salaries';
 
 const serverConfig = loadServerConfig();
-const rolesMap = getRolesMap();
 
-function buildValidationSchema (departments: TransformedDepartment[], _rolesMap: RolesMap) {
+function buildValidationSchema (departments: TransformedDepartment[]) {
   // Gather all valid values for top-level enum checks
   const allDepartments = departments.map(d => d.name) as [string, ...string[]];
   const allRoles: string[] = [];
@@ -54,7 +53,7 @@ function buildValidationSchema (departments: TransformedDepartment[], _rolesMap:
     );
 }
 
-const salaryValidator = buildValidationSchema(serverConfig.departments, rolesMap);
+const salaryValidator = buildValidationSchema(serverConfig.departments);
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
