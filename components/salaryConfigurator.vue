@@ -97,9 +97,15 @@ function getAvailableRoles (department: string): {
   }));
 }
 
-function getAvailableSeniorityLevels (department: string, role: string): string[] {
+function getAvailableSeniorityLevels (department: string, role: string): {
+  label: string;
+  value: string;
+}[] {
   const dept = config.value?.departments?.find(d => d.name === department);
-  return dept?.roleSeniorityLevels?.[role] ?? [];
+  return (dept?.roleSeniorityLevels?.[role] ?? []).map(level => ({
+    label: level.label,
+    value: level.id,
+  }));
 }
 
 const availableRoles = computed(() => getAvailableRoles(selectedDepartment.value));

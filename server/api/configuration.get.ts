@@ -1,11 +1,16 @@
 import { loadServerConfig, getRolesMap, idToLabel } from '~/server/config/serverConfig';
 import type { TransformedDepartment } from '~/server/config/serverConfig';
 
-type DepartmentDetail = {
-  name: string;
-  label: string;
-  roles: Array<{ id: string; label: string }>;
-  roleSeniorityLevels: Record<string, string[]>;
+export type ConfigurationResponse = {
+  currency: string;
+  acceptedDomain: string;
+  departments: Array<{
+    name: string;
+    label: string;
+    roles: Array<{ id: string; label: string }>;
+    roleSeniorityLevels: Record<string, Array<{ id: string; label: string }>>;
+  }>;
+  roles: Record<string, { label: string; seniorityLevels: string[] }>;
 };
 
 export default defineEventHandler(async (event) => {
@@ -22,7 +27,12 @@ export default defineEventHandler(async (event) => {
       id: roleId,
       label: rolesMap[roleId]?.label ?? idToLabel(roleId),
     })),
-    roleSeniorityLevels: dept.roleSeniorityLevels,
+    roleSeniorityLevels: Object.fromEntries(
+      Object.entries(dept.roleSeniorityLevels).map(([roleId, levels]) => [
+        roleId,
+        levels.map(level => ({ id: level, label: idToLabel(level) })),
+      ]),
+    ),
   }));
 
   return {
