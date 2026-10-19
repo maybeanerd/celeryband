@@ -8,7 +8,7 @@
           </p>
           <USelect
             v-model="selectedDepartment"
-            :items="config.departments.map(d => d.name)"
+            :items="config.departments.map(d => ({ label: d.label, value: d.name }))"
             class="w-48"
             @update:model-value="onDepartmentChange"
           />
@@ -86,14 +86,26 @@ const loadingSalaryChange = ref(false);
 
 // --- Dependent dropdown logic ---
 
-function getAvailableRoles (department: string): string[] {
+function getAvailableRoles (department: string): {
+  label: string;
+  value: string;
+}[] {
   const dept = config.value?.departments?.find(d => d.name === department);
-  return dept?.roles ?? [];
+  return (dept?.roles ?? []).map(role => ({
+    label: role.label,
+    value: role.id,
+  }));
 }
 
-function getAvailableSeniorityLevels (department: string, role: string): string[] {
+function getAvailableSeniorityLevels (department: string, role: string): {
+  label: string;
+  value: string;
+}[] {
   const dept = config.value?.departments?.find(d => d.name === department);
-  return dept?.roleSeniorityLevels?.[role] ?? [];
+  return (dept?.roleSeniorityLevels?.[role] ?? []).map(level => ({
+    label: level.label,
+    value: level.id,
+  }));
 }
 
 const availableRoles = computed(() => getAvailableRoles(selectedDepartment.value));
@@ -136,7 +148,7 @@ async function updateSalary () {
     if (isZodErrorResponse(error.value)) {
       showZodErrorToast('Error while updating salary', error.value);
     } else {
-      showErrorToast('Error while updating salary', error.value.data?.message ?? 'An unexpected error occurred.');
+      showErrorToast('Error while updating salary', (error.value.data as { message?: string })?.message ?? 'An unexpected error occurred.');
     }
     return;
   }

@@ -5,12 +5,12 @@
         <div class="flex items-center gap-2">
           <UIcon name="i-lucide-chart-bar-stacked" class="text-xl shrink-0" />
           <h2 class="text-xl font-semibold">
-            Statistics for {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
+            Statistics for {{ roleLabel }}s
           </h2>
         </div>
         <div class="flex items-center gap-2">
           <USwitch v-model="showOnlyYourDepartment" />
-          <span class="text-sm font-medium">Only include salaries from {{ capitalizeFirstCharacterOfWords(ownSalary?.department) ||
+          <span class="text-sm font-medium">Only include salaries from {{ departmentLabel ||
             'your department'
           }}</span>
         </div>
@@ -23,7 +23,7 @@
             <div class="w-32 flex flex-col justify-around pr-2">
               <div class="text-sm font-medium">
                 <div class="truncate">
-                  {{ capitalizeFirstCharacterOfWords(item.seniorityLevel) }}
+                  {{ item.label }}
                 </div> <div class="text-xs text-gray-500">
                   {{ item.count }} data points
                 </div>
@@ -63,6 +63,7 @@
 
 <script setup lang="ts">
 import SalaryBandLine from '~/components/SalaryBandLine.vue';
+import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import type { DetailedStatistics } from '~/server/api/salary/statistics/index.get';
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 
@@ -72,16 +73,12 @@ const props = defineProps<{
   currency?: string;
 }>();
 
+const { config } = await useServerConfiguration();
+
 const showOnlyYourDepartment = ref(true);
 
-type ResultItem= {
-  seniorityLevel: string;
-  average: number;
-  median: number;
-  min: number;
-  max: number;
-  count: number;
-}
+const roleLabel = computed(() => config.value?.roles?.[props.ownSalary?.role]?.label ?? '');
+const departmentLabel = computed(() => config.value?.departments?.find(d => d.name === props.ownSalary?.department)?.label ?? '');
 
 // Computed property for Same Role (All Seniorities) data that switches data sources based on toggle
 const sameRoleAllSeniorityData = computed(() => {
@@ -105,10 +102,10 @@ const sameRoleAllSeniorityData = computed(() => {
       return [];
     }
 
-    // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
+        label: seniorityItem.label,
         average: seniorityItem.statistics.average,
         median: seniorityItem.statistics.median,
         min: seniorityItem.statistics.min,
@@ -141,10 +138,10 @@ const sameRoleAllSeniorityData = computed(() => {
       return [];
     }
 
-    // Process each seniority level for this role
     roleItem.seniorityLevels.forEach((seniorityItem) => {
       result.push({
         seniorityLevel: seniorityItem.seniorityLevel,
+        label: seniorityItem.label,
         average: seniorityItem.statistics.average,
         median: seniorityItem.statistics.median,
         min: seniorityItem.statistics.min,

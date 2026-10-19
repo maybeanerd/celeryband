@@ -68,17 +68,37 @@ disclaimer: null   # optional, set to null to disable
 
 departments:
   engineering:
+    label: "Engineering"
     roles:
-      software engineer:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-          - staff
-          - principal
-```
+      - software_engineer
+      - product_manager
+  sales:
+    label: "Sales"
+    roles:
+      - sales_representative
 
-Each role has its own set of seniority levels, and only roles defined under a department are available there.
+# Roles are defined once and shared across departments.
+# The "label" is optional — if omitted, it's auto-generated from the ID.
+roles:
+  software_engineer:
+    label: "Software Engineer"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+      - staff
+      - principal
+  product_manager:
+    seniorityLevels:       # label defaults to "Product Manager"
+      - junior
+      - professional
+      - senior
+  sales_representative:
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+```
 
 ### Environment variables (secrets only)
 

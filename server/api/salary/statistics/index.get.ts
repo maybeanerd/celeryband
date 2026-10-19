@@ -1,4 +1,5 @@
 import { getSalaryStatistics } from '~/server/src/modules/salary/salaries';
+import { loadServerConfig, getRolesMap, idToLabel } from '~/server/config/serverConfig';
 
 export type SalaryStatistics = {
   average: number;
@@ -8,40 +9,51 @@ export type SalaryStatistics = {
   count: number;
 }
 
+// Enriched statistics with labels (for the frontend API response)
 export type DetailedStatistics = {
   overallStatistics: SalaryStatistics | null;
   byDepartment: Array<{
     department: string;
+    label: string;
     statistics: SalaryStatistics;
   }>;
   byRole: Array<{
     role: string;
+    label: string;
     statistics: SalaryStatistics;
   }>;
   bySeniorityLevel: Array<{
     seniorityLevel: string;
+    label: string;
     statistics: SalaryStatistics;
   }>;
   byDepartmentAndRole: Array<{
     department: string;
+    label: string;
     roles: Array<{
       role: string;
+      label: string;
       statistics: SalaryStatistics;
     }>;
   }>;
   byRoleAndSeniority: Array<{
     role: string;
+    label: string;
     seniorityLevels: Array<{
       seniorityLevel: string;
+      label: string;
       statistics: SalaryStatistics;
     }>;
   }>;
   byDepartmentAndRoleAndSeniority: Array<{
     department: string;
+    label: string;
     roles: Array<{
       role: string;
+      label: string;
       seniorityLevels: Array<{
         seniorityLevel: string;
+        label: string;
         statistics: SalaryStatistics;
       }>;
     }>;
@@ -71,6 +83,55 @@ export type Statistics = {
   salaryAssessment: SalaryAssessment;
 }
 
+type BaseStatistics = Awaited<ReturnType<typeof getSalaryStatistics>>['statistics'];
+
+export function enrichWithLabels (baseStatistics: BaseStatistics): DetailedStatistics {
+  const config = loadServerConfig();
+  const rolesMap = getRolesMap();
+
+  const deptLabel = (id: string) => config.departments.find(d => d.name === id)?.label ?? idToLabel(id);
+  const roleLabel = (id: string) => rolesMap[id]?.label ?? idToLabel(id);
+  const seniorityLabel = (id: string) => idToLabel(id);
+
+  if (baseStatistics === null) {
+    return {
+      overallStatistics: null,
+      byDepartment: [],
+      byRole: [],
+      bySeniorityLevel: [],
+      byDepartmentAndRole: [],
+      byRoleAndSeniority: [],
+      byDepartmentAndRoleAndSeniority: [],
+    };
+  }
+
+  return {
+    overallStatistics: baseStatistics.overallStatistics,
+    byDepartment: baseStatistics.byDepartment.map(d => ({ ...d, label: deptLabel(d.department) })),
+    byRole: baseStatistics.byRole.map(r => ({ ...r, label: roleLabel(r.role) })),
+    bySeniorityLevel: baseStatistics.bySeniorityLevel.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+    byDepartmentAndRole: baseStatistics.byDepartmentAndRole.map(d => ({
+      ...d,
+      label: deptLabel(d.department),
+      roles: d.roles.map(r => ({ ...r, label: roleLabel(r.role) })),
+    })),
+    byRoleAndSeniority: baseStatistics.byRoleAndSeniority.map(r => ({
+      ...r,
+      label: roleLabel(r.role),
+      seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+    })),
+    byDepartmentAndRoleAndSeniority: baseStatistics.byDepartmentAndRoleAndSeniority.map(d => ({
+      ...d,
+      label: deptLabel(d.department),
+      roles: d.roles.map(r => ({
+        ...r,
+        label: roleLabel(r.role),
+        seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+      })),
+    })),
+  };
+}
+
 export default defineEventHandler(async (event): Promise<Statistics> => {
   const { user } = await requireUserSession(event);
 
@@ -87,8 +148,8 @@ export default defineEventHandler(async (event): Promise<Statistics> => {
 
   return {
     areAvailable: true,
-    statistics,
-    normalizedStatistics,
+    statistics: enrichWithLabels(statistics),
+    normalizedStatistics: enrichWithLabels(normalizedStatistics),
     salaryAssessment,
   };
 });

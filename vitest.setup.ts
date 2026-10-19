@@ -1,34 +1,14 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { vi } from 'vitest';
 
-const validConfig = `
-serverUrl: "http://localhost:3000"
-acceptedDomain: "example.com"
-currency: "€"
-disclaimer: null
-departments:
-  engineering:
-    roles:
-      "software engineer":
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-          - staff
-          - principal
-      "product manager":
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-      "designer":
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-`;
+const exampleConfig = readFileSync(
+  resolve(process.cwd(), 'example.config.yaml'),
+  'utf-8',
+);
 
-vi.mock('fs', () => ({
-  readFileSync: vi.fn(() => validConfig),
+vi.doMock('fs', () => ({
+  readFileSync: vi.fn(() => exampleConfig),
 }));
 
 vi.mock('nodemailer', () => ({

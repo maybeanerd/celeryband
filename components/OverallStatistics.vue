@@ -41,7 +41,7 @@
       <!-- Your role and seniority statistics -->
       <div>
         <h3 class="text-lg font-medium mb-1">
-          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
+          {{ seniorityLevelLabel }} {{ roleLabel }}s
         </h3>
         <div v-if="ownRoleSeniorityStats">
           <p class="text-xs text-gray-500 mb-2">
@@ -80,8 +80,8 @@
 
       <div>
         <h3 class="text-lg font-medium mb-1">
-          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
-          in {{ capitalizeFirstCharacterOfWords(ownSalary?.department) }}
+          {{ seniorityLevelLabel }} {{ roleLabel }}s
+          in {{ departmentLabel }}
         </h3>
         <div v-if="ownRoleAndSeniorityAndDepartmentStats">
           <p class="text-xs text-gray-500 mb-2">
@@ -139,6 +139,7 @@
 
 <script setup lang="ts">
 import SalaryBandLine from '~/components/SalaryBandLine.vue';
+import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import type { DetailedStatistics, SalaryStatistics, SalaryAssessment } from '~/server/api/salary/statistics/index.get';
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 
@@ -148,6 +149,12 @@ const props = defineProps<{
   ownSalary?: SalarySchema | null;
   currency?: string;
 }>();
+
+const { config } = await useServerConfiguration();
+
+const roleLabel = computed(() => config.value?.roles?.[props.ownSalary?.role]?.label ?? '');
+const departmentLabel = computed(() => config.value?.departments?.find(d => d.name === props.ownSalary?.department)?.label ?? '');
+const seniorityLevelLabel = computed(() => config.value?.seniorityLevels?.find(s => s.id === props.ownSalary?.seniorityLevel)?.label ?? '');
 
 const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
   if (!props.salaryStatistics?.byRoleAndSeniority ||

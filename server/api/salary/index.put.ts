@@ -1,22 +1,24 @@
 import { z } from 'zod';
-import { serverConfiguration } from '~/server/config/server';
+import type { TransformedDepartment } from '~/server/config/serverConfig';
+import { loadServerConfig } from '~/server/config/serverConfig';
 import { storeSalaryForUser } from '~/server/src/modules/salary/salaries';
 
-const { departments: deptConfig } = serverConfiguration;
+const serverConfig = loadServerConfig();
 
-function buildValidationSchema (departments: typeof deptConfig) {
+function buildValidationSchema (departments: TransformedDepartment[]) {
   // Gather all valid values for top-level enum checks
-  const allDepartments = Object.keys(departments) as [string, ...string[]];
+  const allDepartments = departments.map(d => d.name) as [string, ...string[]];
   const allRoles: string[] = [];
   const allSeniorityLevels: string[] = [];
 
-  for (const dept of Object.values(departments)) {
-    for (const roleName of Object.keys(dept.roles)) {
-      allRoles.push(roleName);
-    }
-    for (const role of Object.values(dept.roles)) {
-      for (const lvl of role.seniorityLevels) {
-        allSeniorityLevels.push(lvl);
+  for (const dept of departments) {
+    for (const roleId of dept.roles) {
+      allRoles.push(roleId);
+      const seniorityForRole = dept.roleSeniorityLevels[roleId];
+      if (seniorityForRole) {
+        for (const lvl of seniorityForRole) {
+          allSeniorityLevels.push(lvl);
+        }
       }
     }
   }
@@ -30,8 +32,8 @@ function buildValidationSchema (departments: typeof deptConfig) {
   })
     .refine(
       (data) => {
-        const dept = departments[data.department];
-        return dept?.roles && data.role in dept.roles;
+        const dept = departments.find(d => d.name === data.department);
+        return dept?.roles.includes(data.role);
       },
       {
         message: 'Role is not available in the selected department.',
@@ -40,9 +42,9 @@ function buildValidationSchema (departments: typeof deptConfig) {
     )
     .refine(
       (data) => {
-        const dept = departments[data.department];
-        const roleConfig = dept?.roles?.[data.role];
-        return roleConfig?.seniorityLevels.includes(data.seniorityLevel);
+        const dept = departments.find(d => d.name === data.department);
+        const seniorityForRole = dept?.roleSeniorityLevels[data.role];
+        return seniorityForRole?.includes(data.seniorityLevel);
       },
       {
         message: 'Seniority level is not available for the selected role.',
@@ -51,7 +53,7 @@ function buildValidationSchema (departments: typeof deptConfig) {
     );
 }
 
-const salaryValidator = buildValidationSchema(deptConfig);
+const salaryValidator = buildValidationSchema(serverConfig.departments);
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);

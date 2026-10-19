@@ -1,17 +1,8 @@
-export type DepartmentOption = {
-  name: string;
-  roles: string[];
-  roleSeniorityLevels: Record<string, string[]>;
-};
-
-export type ServerConfiguration = {
-  currency: string;
-  acceptedDomain: string;
-  departments: DepartmentOption[];
-};
+// Import API response type from server API
+import type { ConfigurationResponse } from '~/server/api/configuration.get';
 
 export async function useServerConfiguration () {
-  const { data: config } = await useFetch<ServerConfiguration>('/api/configuration', {
+  const { data: config } = await useFetch<ConfigurationResponse>('/api/configuration', {
     lazy: true,
   });
 
