@@ -8,7 +8,7 @@
           </p>
           <USelect
             v-model="selectedDepartment"
-            :items="config.departments.map(d => d.name)"
+            :items="config.departments.map(d => ({ label: d.label, value: d.name }))"
             class="w-48"
             @update:model-value="onDepartmentChange"
           />
@@ -20,6 +20,8 @@
           <USelect
             v-model="selectedRole"
             :items="availableRoles"
+            option-label="label"
+            option-value="id"
             class="w-48"
             :disabled="!selectedDepartment"
             @update:model-value="onRoleChange"
@@ -86,7 +88,10 @@ const loadingSalaryChange = ref(false);
 
 // --- Dependent dropdown logic ---
 
-function getAvailableRoles (department: string): string[] {
+function getAvailableRoles (department: string): {
+  id: string;
+  label: string;
+}[] {
   const dept = config.value?.departments?.find(d => d.name === department);
   return dept?.roles ?? [];
 }

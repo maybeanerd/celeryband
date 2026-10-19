@@ -1,9 +1,11 @@
 # CeleryBand configuration
 # All deployment settings must be provided here - no defaults.
 #
-# Departments → roles → seniorityLevels define the valid hierarchy.
-# Only roles listed under a department are valid for that department.
-# Only seniority levels listed under a role are valid for that role.
+# Departments reference roles by their lowercase, underscore-separated ID.
+# Roles and seniority levels are defined once at the top level and shared
+# across departments. Optional "label" fields provide human-readable names
+# for the UI — when omitted the identifier is auto-formatted (underscores →
+# spaces, title-cased).
 #
 # Copy this file to config.yaml and mount it into the container:
 #   - ./config.yaml:/app/config.yaml:ro
@@ -20,45 +22,70 @@ currency: "€"
 # Optional legal disclaimer shown in the footer (null to disable)
 disclaimer: null
 
+# --- Departments ---
+# Each department has an optional label for display.
+# Roles are listed as references to the top-level "roles" definitions.
 departments:
   engineering:
+    label: "Engineering"
     roles:
-      software engineer:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-          - staff
-          - principal
-      product manager:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-      designer:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
+      - software_engineer
+      - product_manager
+      - designer
   sales:
+    label: "Sales"
     roles:
-      sales representative:
-        seniorityLevels:
-          - junior
-          - professional
-          - senior
-      account manager:
-        seniorityLevels:
-          - professional
-          - senior
-          - staff
-  human resources:
+      - sales_representative
+      - account_manager
+  human_resources:
+    label: "Human Resources"
     roles:
-      hr coordinator:
-        seniorityLevels:
-          - junior
-          - professional
-      hr manager:
-        seniorityLevels:
-          - professional
-          - senior
+      - hr_coordinator
+      - hr_manager
+
+# --- Roles ---
+# Defined once, shared across departments. Each role declares which
+# seniority levels it supports.
+roles:
+  software_engineer:
+    label: "Software Engineer"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+      - staff
+      - principal
+  product_manager:
+    label: "Product Manager"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+  designer:
+    label: "Designer"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+  sales_representative:
+    label: "Sales Representative"
+    seniorityLevels:
+      - junior
+      - professional
+      - senior
+  account_manager:
+    label: "Account Manager"
+    seniorityLevels:
+      - professional
+      - senior
+      - staff
+  hr_coordinator:
+    label: "HR Coordinator"
+    seniorityLevels:
+      - junior
+      - professional
+  hr_manager:
+    label: "HR Manager"
+    seniorityLevels:
+      - professional
+      - senior

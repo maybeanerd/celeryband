@@ -1,28 +1,34 @@
-import { serverConfiguration } from '~/server/config/server';
+import { loadServerConfig, getRolesMap, idToLabel } from '~/server/config/serverConfig';
+import type { TransformedDepartment } from '~/server/config/serverConfig';
+
+type DepartmentDetail = {
+  name: string;
+  label: string;
+  roles: Array<{ id: string; label: string }>;
+  roleSeniorityLevels: Record<string, string[]>;
+};
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event);
 
-  const { departments, currency, acceptedDomain } = serverConfiguration;
+  const serverConfig = loadServerConfig();
+  const rolesMap = getRolesMap();
 
-  // Build the nested structure that the frontend expects
-  // Each department → list of roles → seniority levels for each role
-  const departmentsWithDetails = Object.entries(departments).map(
-    ([deptName, deptConfig]) => ({
-      name: deptName,
-      roles: Object.keys(deptConfig.roles),
-      roleSeniorityLevels: Object.fromEntries(
-        Object.entries(deptConfig.roles).map(([roleName, roleConfig]) => [
-          roleName,
-          roleConfig.seniorityLevels,
-        ]),
-      ),
-    }),
-  );
+  // Build department entries with enriched role metadata (labels)
+  const departmentsWithDetails: DepartmentDetail[] = serverConfig.departments.map((dept: TransformedDepartment) => ({
+    name: dept.name,
+    label: dept.label,
+    roles: dept.roles.map((roleId: string) => ({
+      id: roleId,
+      label: rolesMap[roleId]?.label ?? idToLabel(roleId),
+    })),
+    roleSeniorityLevels: dept.roleSeniorityLevels,
+  }));
 
   return {
-    currency,
-    acceptedDomain,
+    currency: serverConfig.currency,
+    acceptedDomain: serverConfig.acceptedDomain,
     departments: departmentsWithDetails,
+    roles: rolesMap,
   };
 });

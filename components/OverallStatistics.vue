@@ -41,7 +41,7 @@
       <!-- Your role and seniority statistics -->
       <div>
         <h3 class="text-lg font-medium mb-1">
-          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
+          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ roleLabel }}s
         </h3>
         <div v-if="ownRoleSeniorityStats">
           <p class="text-xs text-gray-500 mb-2">
@@ -80,8 +80,8 @@
 
       <div>
         <h3 class="text-lg font-medium mb-1">
-          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
-          in {{ capitalizeFirstCharacterOfWords(ownSalary?.department) }}
+          {{ capitalizeFirstCharacterOfWords(ownSalary?.seniorityLevel) }} {{ roleLabel }}s
+          in {{ departmentLabel }}
         </h3>
         <div v-if="ownRoleAndSeniorityAndDepartmentStats">
           <p class="text-xs text-gray-500 mb-2">
@@ -139,6 +139,7 @@
 
 <script setup lang="ts">
 import SalaryBandLine from '~/components/SalaryBandLine.vue';
+import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import type { DetailedStatistics, SalaryStatistics, SalaryAssessment } from '~/server/api/salary/statistics/index.get';
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 
@@ -148,6 +149,21 @@ const props = defineProps<{
   ownSalary?: SalarySchema | null;
   currency?: string;
 }>();
+
+const { config: serverConfig } = await useServerConfiguration();
+
+// Resolve display labels from IDs stored in the database
+const roleLabel = computed(() => {
+  const roleId = props.ownSalary?.role;
+  if (!roleId) return '';
+  return serverConfig.value?.roles?.[roleId]?.label || roleId;
+});
+
+const departmentLabel = computed(() => {
+  const deptId = props.ownSalary?.department;
+  if (!deptId) return '';
+  return serverConfig.value?.departments?.find(d => d.name === deptId)?.label || deptId;
+});
 
 const ownRoleSeniorityStats = computed<SalaryStatistics | null>(() => {
   if (!props.salaryStatistics?.byRoleAndSeniority ||

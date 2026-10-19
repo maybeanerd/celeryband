@@ -1,6 +1,6 @@
-import { loadSalaryOptions } from '~/server/config/salaryOptions';
+import { loadServerConfig } from '~/server/config/serverConfig';
 
 export default defineNitroPlugin(() => {
-  const config = loadSalaryOptions();
+  const config = loadServerConfig();
   console.info(`[loadConfig] YAML config loaded -- ${config.serverUrl}`);
 });

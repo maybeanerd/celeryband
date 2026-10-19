@@ -1,6 +1,10 @@
 export type DepartmentOption = {
   name: string;
-  roles: string[];
+  label: string;
+  roles: {
+    id: string;
+    label: string;
+  }[];
   roleSeniorityLevels: Record<string, string[]>;
 };
 
@@ -8,6 +12,10 @@ export type ServerConfiguration = {
   currency: string;
   acceptedDomain: string;
   departments: DepartmentOption[];
+  roles: Record<string, {
+    label: string;
+    seniorityLevels: string[];
+  }>;
 };
 
 export async function useServerConfiguration () {

@@ -5,12 +5,12 @@
         <div class="flex items-center gap-2">
           <UIcon name="i-lucide-chart-bar-stacked" class="text-xl shrink-0" />
           <h2 class="text-xl font-semibold">
-            Statistics for {{ capitalizeFirstCharacterOfWords(ownSalary?.role) }}s
+            Statistics for {{ roleLabel }}s
           </h2>
         </div>
         <div class="flex items-center gap-2">
           <USwitch v-model="showOnlyYourDepartment" />
-          <span class="text-sm font-medium">Only include salaries from {{ capitalizeFirstCharacterOfWords(ownSalary?.department) ||
+          <span class="text-sm font-medium">Only include salaries from {{ departmentLabel ||
             'your department'
           }}</span>
         </div>
@@ -63,6 +63,7 @@
 
 <script setup lang="ts">
 import SalaryBandLine from '~/components/SalaryBandLine.vue';
+import { useServerConfiguration } from '~/composables/api/useServerConfiguration';
 import type { DetailedStatistics } from '~/server/api/salary/statistics/index.get';
 import type { SalarySchema } from '~/server/db/schemas/Salary.schema';
 
@@ -72,7 +73,22 @@ const props = defineProps<{
   currency?: string;
 }>();
 
+const { config: serverConfig } = await useServerConfiguration();
+
 const showOnlyYourDepartment = ref(true);
+
+// Resolve display labels from IDs stored in the database
+const roleLabel = computed(() => {
+  const roleId = props.ownSalary?.role;
+  if (!roleId) return '';
+  return serverConfig.value?.roles?.[roleId]?.label || roleId;
+});
+
+const departmentLabel = computed(() => {
+  const deptId = props.ownSalary?.department;
+  if (!deptId) return '';
+  return serverConfig.value?.departments?.find(d => d.name === deptId)?.label || deptId;
+});
 
 type ResultItem= {
   seniorityLevel: string;
