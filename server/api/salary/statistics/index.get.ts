@@ -9,15 +9,6 @@ export type SalaryStatistics = {
   count: number;
 }
 
-// Base statistics shape (from the salary module, no labels)
-type BaseStatisticsItem = {
-  average: number;
-  median: number;
-  max: number;
-  min: number;
-  count: number;
-};
-
 // Enriched statistics with labels (for the frontend API response)
 export type DetailedStatistics = {
   overallStatistics: SalaryStatistics | null;
@@ -92,7 +83,9 @@ export type Statistics = {
   salaryAssessment: SalaryAssessment;
 }
 
-function enrichWithLabels (detailed: ReturnType<typeof getSalaryStatistics>['statistics']): DetailedStatistics {
+type BaseStatistics = Awaited<ReturnType<typeof getSalaryStatistics>>['statistics'];
+
+export function enrichWithLabels (baseStatistics: BaseStatistics): DetailedStatistics {
   const config = loadServerConfig();
   const rolesMap = getRolesMap();
 
@@ -100,7 +93,7 @@ function enrichWithLabels (detailed: ReturnType<typeof getSalaryStatistics>['sta
   const roleLabel = (id: string) => rolesMap[id]?.label ?? idToLabel(id);
   const seniorityLabel = (id: string) => idToLabel(id);
 
-  if (detailed === null) {
+  if (baseStatistics === null) {
     return {
       overallStatistics: null,
       byDepartment: [],
@@ -113,21 +106,21 @@ function enrichWithLabels (detailed: ReturnType<typeof getSalaryStatistics>['sta
   }
 
   return {
-    overallStatistics: detailed.overallStatistics,
-    byDepartment: detailed.byDepartment.map(d => ({ ...d, label: deptLabel(d.department) })),
-    byRole: detailed.byRole.map(r => ({ ...r, label: roleLabel(r.role) })),
-    bySeniorityLevel: detailed.bySeniorityLevel.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
-    byDepartmentAndRole: detailed.byDepartmentAndRole.map(d => ({
+    overallStatistics: baseStatistics.overallStatistics,
+    byDepartment: baseStatistics.byDepartment.map(d => ({ ...d, label: deptLabel(d.department) })),
+    byRole: baseStatistics.byRole.map(r => ({ ...r, label: roleLabel(r.role) })),
+    bySeniorityLevel: baseStatistics.bySeniorityLevel.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+    byDepartmentAndRole: baseStatistics.byDepartmentAndRole.map(d => ({
       ...d,
       label: deptLabel(d.department),
       roles: d.roles.map(r => ({ ...r, label: roleLabel(r.role) })),
     })),
-    byRoleAndSeniority: detailed.byRoleAndSeniority.map(r => ({
+    byRoleAndSeniority: baseStatistics.byRoleAndSeniority.map(r => ({
       ...r,
       label: roleLabel(r.role),
       seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
     })),
-    byDepartmentAndRoleAndSeniority: detailed.byDepartmentAndRoleAndSeniority.map(d => ({
+    byDepartmentAndRoleAndSeniority: baseStatistics.byDepartmentAndRoleAndSeniority.map(d => ({
       ...d,
       label: deptLabel(d.department),
       roles: d.roles.map(r => ({
