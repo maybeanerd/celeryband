@@ -74,6 +74,84 @@ roles:
     expect(readFileSync).toHaveBeenCalledTimes(1);
   });
 
+  it('should preserve department order from config', async () => {
+    const { loadServerConfig: load } = await import('./serverConfig');
+
+    vi.mocked(readFileSync).mockReturnValue(`
+serverUrl: 'https://celery.band'
+acceptedDomain: 'celery.band'
+currency: '€'
+disclaimer: null
+departments:
+  finance:
+    label: Finance
+    roles:
+      - accountant
+  engineering:
+    label: Engineering
+    roles:
+      - software_engineer
+  marketing:
+    label: Marketing
+    roles:
+      - content_writer
+roles:
+  accountant:
+    label: Accountant
+    seniorityLevels:
+      - junior
+  software_engineer:
+    label: Software Engineer
+    seniorityLevels:
+      - junior
+  content_writer:
+    label: Content Writer
+    seniorityLevels:
+      - junior
+`);
+
+    const result = load();
+
+    expect(result.departments.map(d => d.name)).toEqual(['finance', 'engineering', 'marketing']);
+    expect(result.departments.map(d => d.label)).toEqual(['Finance', 'Engineering', 'Marketing']);
+  });
+
+  it('should preserve role order from config', async () => {
+    const { loadServerConfig: load } = await import('./serverConfig');
+
+    vi.mocked(readFileSync).mockReturnValue(`
+serverUrl: 'https://celery.band'
+acceptedDomain: 'celery.band'
+currency: '€'
+disclaimer: null
+departments:
+  engineering:
+    label: Engineering
+    roles:
+      - qa_engineer
+      - principal_engineer
+      - junior_engineer
+roles:
+  qa_engineer:
+    label: QA Engineer
+    seniorityLevels:
+      - junior
+  principal_engineer:
+    label: Principal Engineer
+    seniorityLevels:
+      - senior
+  junior_engineer:
+    label: Junior Engineer
+    seniorityLevels:
+      - junior
+`);
+
+    const result = load();
+
+    const engineering = result.departments.find(d => d.name === 'engineering')!;
+    expect(engineering.roles).toEqual(['qa_engineer', 'principal_engineer', 'junior_engineer']);
+  });
+
   it('should throw if config file does not exist', async () => {
     const { loadServerConfig: load } = await import('./serverConfig');
 
@@ -197,7 +275,26 @@ describe('getSeniorityLevelsForDeptRole', () => {
 });
 
 describe('getAllRoles', () => {
-  it('should return sorted list of all role ids across all departments', () => {
+  it('should return role ids across all departments in config order', () => {
+    const roles = getAllRoles([
+      {
+        name: 'engineering',
+        label: 'Engineering',
+        roles: ['software_engineer', 'qa_engineer'],
+        roleSeniorityLevels: {},
+      },
+      {
+        name: 'sales',
+        label: 'Sales',
+        roles: ['account_manager', 'sales_representative'],
+        roleSeniorityLevels: {},
+      },
+    ]);
+
+    expect(roles).toEqual(['software_engineer', 'qa_engineer', 'account_manager', 'sales_representative']);
+  });
+
+  it('should deduplicate roles while preserving first occurrence order', () => {
     const roles = getAllRoles([
       {
         name: 'engineering',
@@ -206,14 +303,14 @@ describe('getAllRoles', () => {
         roleSeniorityLevels: {},
       },
       {
-        name: 'sales',
-        label: 'Sales',
-        roles: ['sales_representative', 'account_manager'],
+        name: 'design',
+        label: 'Design',
+        roles: ['software_engineer', 'ui_designer'],
         roleSeniorityLevels: {},
       },
     ]);
 
-    expect(roles).toEqual(['account_manager', 'sales_representative', 'software_engineer']);
+    expect(roles).toEqual(['software_engineer', 'ui_designer']);
   });
 
   it('should return empty array when no departments exist', () => {
@@ -222,20 +319,20 @@ describe('getAllRoles', () => {
 });
 
 describe('getAllSeniorityLevels', () => {
-  it('should return sorted unique list of all seniority levels', () => {
+  it('should return unique seniority levels in order of first appearance', () => {
     const levels = getAllSeniorityLevels([
       {
         name: 'engineering',
         label: 'Engineering',
         roles: ['software_engineer', 'product_manager'],
         roleSeniorityLevels: {
-          software_engineer: ['junior', 'senior'],
-          product_manager: ['junior', 'mid'],
+          software_engineer: ['senior', 'junior'],
+          product_manager: ['mid', 'senior'],
         },
       },
     ]);
 
-    expect(levels).toEqual(['junior', 'mid', 'senior']);
+    expect(levels).toEqual(['senior', 'junior', 'mid']);
   });
 
   it('should deduplicate levels across departments', () => {
@@ -250,23 +347,23 @@ describe('getAllSeniorityLevels', () => {
         name: 'design',
         label: 'Design',
         roles: ['designer'],
-        roleSeniorityLevels: { designer: ['junior', 'lead'] },
+        roleSeniorityLevels: { designer: ['lead', 'junior'] },
       },
     ]);
 
-    expect(levels).toEqual(['junior', 'lead', 'senior']);
+    expect(levels).toEqual(['junior', 'senior', 'lead']);
   });
 });
 
 describe('getAllDepartmentNames', () => {
-  it('should return sorted list of department names', () => {
+  it('should return department names in config order', () => {
     const depts = getAllDepartmentNames([
+      { name: 'hr', label: 'HR', roles: [], roleSeniorityLevels: {} },
       { name: 'sales', label: 'Sales', roles: [], roleSeniorityLevels: {} },
       { name: 'engineering', label: 'Engineering', roles: [], roleSeniorityLevels: {} },
-      { name: 'hr', label: 'HR', roles: [], roleSeniorityLevels: {} },
     ]);
 
-    expect(depts).toEqual(['engineering', 'hr', 'sales']);
+    expect(depts).toEqual(['hr', 'sales', 'engineering']);
   });
 
   it('should return empty array when no departments exist', () => {
