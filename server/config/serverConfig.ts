@@ -42,6 +42,7 @@ export interface TransformedSalaryOptions {
   serverUrl: string;
   currency: string;
   acceptedDomain: string;
+  disclaimer: string | null;
   departments: TransformedDepartment[];
 }
 
@@ -82,6 +83,7 @@ function transformConfig (raw: z.infer<typeof ConfigSchema>): {
     currency,
     acceptedDomain,
     serverUrl,
+    disclaimer,
   } = raw;
 
   // Build a map of role id → enriched role definition
@@ -115,6 +117,7 @@ function transformConfig (raw: z.infer<typeof ConfigSchema>): {
       serverUrl,
       currency,
       acceptedDomain,
+      disclaimer,
       departments: enrichedDepartments,
     },
     rolesMap,
