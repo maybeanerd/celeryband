@@ -9,55 +9,29 @@ export type SalaryStatistics = {
   count: number;
 }
 
+type Labeled<T> = T & { label: string };
+
 // Enriched statistics with labels (for the frontend API response)
 export type DetailedStatistics = {
   overallStatistics: SalaryStatistics | null;
-  byDepartment: Array<{
+  byDepartment: Array<Labeled<{ department: string }>>;
+  byRole: Array<Labeled<{ role: string }>>;
+  bySeniorityLevel: Array<Labeled<{ seniorityLevel: string }>>;
+  byDepartmentAndRole: Array<Labeled<{
     department: string;
-    label: string;
-    statistics: SalaryStatistics;
-  }>;
-  byRole: Array<{
+    roles: Array<Labeled<{ role: string }>>;
+  }>>;
+  byRoleAndSeniority: Array<Labeled<{
     role: string;
-    label: string;
-    statistics: SalaryStatistics;
-  }>;
-  bySeniorityLevel: Array<{
-    seniorityLevel: string;
-    label: string;
-    statistics: SalaryStatistics;
-  }>;
-  byDepartmentAndRole: Array<{
+    seniorityLevels: Array<Labeled<{ seniorityLevel: string }>>;
+  }>>;
+  byDepartmentAndRoleAndSeniority: Array<Labeled<{
     department: string;
-    label: string;
-    roles: Array<{
+    roles: Array<Labeled<{
       role: string;
-      label: string;
-      statistics: SalaryStatistics;
-    }>;
-  }>;
-  byRoleAndSeniority: Array<{
-    role: string;
-    label: string;
-    seniorityLevels: Array<{
-      seniorityLevel: string;
-      label: string;
-      statistics: SalaryStatistics;
-    }>;
-  }>;
-  byDepartmentAndRoleAndSeniority: Array<{
-    department: string;
-    label: string;
-    roles: Array<{
-      role: string;
-      label: string;
-      seniorityLevels: Array<{
-        seniorityLevel: string;
-        label: string;
-        statistics: SalaryStatistics;
-      }>;
-    }>;
-  }>;
+      seniorityLevels: Array<Labeled<{ seniorityLevel: string }>>;
+    }>>;
+  }>>;
 };
 
 export type SalaryAssessment = {
@@ -85,13 +59,25 @@ export type Statistics = {
 
 type BaseStatistics = Awaited<ReturnType<typeof getSalaryStatistics>>['statistics'];
 
-export function enrichWithLabels (baseStatistics: BaseStatistics): DetailedStatistics {
+type LabelResolvers = {
+  deptLabel: (id: string) => string;
+  roleLabel: (id: string) => string;
+  seniorityLabel: (id: string) => string;
+};
+
+function createLabelResolvers (): LabelResolvers {
   const config = loadServerConfig();
   const rolesMap = getRolesMap();
 
-  const deptLabel = (id: string) => config.departments.find(d => d.name === id)?.label ?? idToLabel(id);
-  const roleLabel = (id: string) => rolesMap[id]?.label ?? idToLabel(id);
-  const seniorityLabel = (id: string) => idToLabel(id);
+  return {
+    deptLabel: (id: string) => config.departments.find(d => d.name === id)?.label ?? idToLabel(id),
+    roleLabel: (id: string) => rolesMap[id]?.label ?? idToLabel(id),
+    seniorityLabel: (id: string) => idToLabel(id),
+  };
+}
+
+export function enrichWithLabels (baseStatistics: BaseStatistics): DetailedStatistics {
+  const resolvers = createLabelResolvers();
 
   if (baseStatistics === null) {
     return {
@@ -107,26 +93,26 @@ export function enrichWithLabels (baseStatistics: BaseStatistics): DetailedStati
 
   return {
     overallStatistics: baseStatistics.overallStatistics,
-    byDepartment: baseStatistics.byDepartment.map(d => ({ ...d, label: deptLabel(d.department) })),
-    byRole: baseStatistics.byRole.map(r => ({ ...r, label: roleLabel(r.role) })),
-    bySeniorityLevel: baseStatistics.bySeniorityLevel.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+    byDepartment: baseStatistics.byDepartment.map(d => ({ ...d, label: resolvers.deptLabel(d.department) })),
+    byRole: baseStatistics.byRole.map(r => ({ ...r, label: resolvers.roleLabel(r.role) })),
+    bySeniorityLevel: baseStatistics.bySeniorityLevel.map(s => ({ ...s, label: resolvers.seniorityLabel(s.seniorityLevel) })),
     byDepartmentAndRole: baseStatistics.byDepartmentAndRole.map(d => ({
       ...d,
-      label: deptLabel(d.department),
-      roles: d.roles.map(r => ({ ...r, label: roleLabel(r.role) })),
+      label: resolvers.deptLabel(d.department),
+      roles: d.roles.map(r => ({ ...r, label: resolvers.roleLabel(r.role) })),
     })),
     byRoleAndSeniority: baseStatistics.byRoleAndSeniority.map(r => ({
       ...r,
-      label: roleLabel(r.role),
-      seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+      label: resolvers.roleLabel(r.role),
+      seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: resolvers.seniorityLabel(s.seniorityLevel) })),
     })),
     byDepartmentAndRoleAndSeniority: baseStatistics.byDepartmentAndRoleAndSeniority.map(d => ({
       ...d,
-      label: deptLabel(d.department),
+      label: resolvers.deptLabel(d.department),
       roles: d.roles.map(r => ({
         ...r,
-        label: roleLabel(r.role),
-        seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: seniorityLabel(s.seniorityLevel) })),
+        label: resolvers.roleLabel(r.role),
+        seniorityLevels: r.seniorityLevels.map(s => ({ ...s, label: resolvers.seniorityLabel(s.seniorityLevel) })),
       })),
     })),
   };

@@ -97,12 +97,11 @@ function transformConfig (raw: z.infer<typeof ConfigSchema>): {
     ]),
   );
 
-  // Build the department list, resolving role references
+  // Build the department list, resolving role references (preserves config order)
   const enrichedDepartments: TransformedDepartment[] = Object.entries(deptRaw)
-    .sort(([a], [b]) => a.localeCompare(b))
     .map(([id, dept]) => {
       const label = dept.label ?? idToLabel(id);
-      const roles = dept.roles.sort();
+      const roles = dept.roles;
       const roleSeniorityLevels: Record<string, string[]> = Object.fromEntries(
         roles.map(roleId => [
           roleId,
@@ -162,8 +161,7 @@ export function loadServerConfig (): TransformedSalaryOptions {
 
   const result = ConfigSchema.safeParse(parsed);
   if (!result.success) {
-    const details = result.error.issues.map(i => `  - ${i.path.join('.')}: ${i.message}`).join('\n');
-    const message = `config.yaml validation failed:\n${details}`;
+    const message = `config.yaml validation failed:\n${result.error.issues.map(i => `  - ${i.path.join('.')}: ${i.message}`).join('\n')}`;
     console.error(message);
     throw new Error(message);
   }
@@ -224,43 +222,51 @@ export function getSeniorityLevelsForDeptRole (
 }
 
 /**
- * Flatten all role ids across all departments.
+ * Flatten all role ids across all departments (preserves config order).
  */
 export function getAllRoles (departments: TransformedDepartment[]): string[] {
-  const roles = new Set<string>();
+  const seen = new Set<string>();
+  const roles: string[] = [];
   for (const dept of departments) {
     for (const roleId of dept.roles) {
-      roles.add(roleId);
+      if (!seen.has(roleId)) {
+        seen.add(roleId);
+        roles.push(roleId);
+      }
     }
   }
-  return Array.from(roles).sort();
+  return roles;
 }
 
 /**
- * Flatten all seniority levels (for backward-compat / display).
+ * Flatten all seniority levels (for backward-compat / display, preserves order).
  */
 export function getAllSeniorityLevels (
   departments: TransformedDepartment[],
 ): string[] {
   const levels = new Set<string>();
+  const result: string[] = [];
   for (const dept of departments) {
     for (const roleId of dept.roles) {
       const levelsForRole = dept.roleSeniorityLevels[roleId];
       if (levelsForRole) {
         for (const lvl of levelsForRole) {
-          levels.add(lvl);
+          if (!levels.has(lvl)) {
+            levels.add(lvl);
+            result.push(lvl);
+          }
         }
       }
     }
   }
-  return Array.from(levels).sort();
+  return result;
 }
 
 /**
- * Flatten all department names.
+ * Flatten all department names (preserves config order).
  */
 export function getAllDepartmentNames (
   departments: TransformedDepartment[],
 ): string[] {
-  return departments.map(d => d.name).sort();
+  return departments.map(d => d.name);
 }

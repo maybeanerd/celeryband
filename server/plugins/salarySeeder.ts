@@ -4,7 +4,7 @@ import type { TransformedDepartment, RolesMap } from '~/server/config/serverConf
 import { salarySchema } from '~/server/db/schemas/Salary.schema';
 import { userSchema } from '~/server/db/schemas/User.schema';
 import { serverConfiguration } from '~/server/config/server';
-import { getRolesMap } from '~/server/config/serverConfig';
+import { getRolesMap, getAllSeniorityLevels } from '~/server/config/serverConfig';
 import { obfuscateEmail } from '~/server/src/modules/authentification';
 
 // Helper function for weighted random selection
@@ -53,6 +53,7 @@ async function generateRandomUserBatch (
   batchSize: number,
   departments: TransformedDepartment[],
   rolesMap: RolesMap,
+  seniorityIndex: Map<string, number>,
   acceptedDomain: string,
 ) {
   const { db } = useDrizzle();
@@ -75,9 +76,8 @@ async function generateRandomUserBatch (
     let baseSalary = 30000 + Math.floor(Math.random() * 100000);
 
     // Adjust based on seniority level
-    const allLevels = Array.from(getAllSeniorityLevelsFlat(departments, rolesMap));
-    const seniorityIndex = allLevels.indexOf(seniorityLevel);
-    const seniorityMultiplier = 0.8 + (seniorityIndex * 0.2);
+    const seniorityPosition = seniorityIndex.get(seniorityLevel) ?? 0;
+    const seniorityMultiplier = 0.8 + (seniorityPosition * 0.2);
     baseSalary = Math.floor(baseSalary * seniorityMultiplier);
 
     // Add some random variation (±10%)
@@ -117,19 +117,6 @@ async function generateRandomUserBatch (
   }
 }
 
-/** Collect all unique seniority levels from the departments + roles. */
-function getAllSeniorityLevelsFlat (departments: TransformedDepartment[], rolesMap: RolesMap): string[] {
-  const levels = new Set<string>();
-  for (const dept of departments) {
-    for (const roleId of dept.roles) {
-      for (const lvl of rolesMap[roleId]?.seniorityLevels ?? []) {
-        levels.add(lvl);
-      }
-    }
-  }
-  return Array.from(levels).sort();
-}
-
 export default defineNitroPlugin(async () => {
   // Only run the seeder in development mode
   if (!serverConfiguration.developmentMode) {
@@ -151,6 +138,10 @@ export default defineNitroPlugin(async () => {
 
     console.info(`Only ${salaryCount} salaries found. Generating 10,000 random salaries...`);
 
+    // Pre-compute seniority level positions for O(1) lookup
+    const allLevels = getAllSeniorityLevels(serverConfiguration.departments);
+    const seniorityIndex = new Map(allLevels.map((level, index) => [level, index]));
+
     // Generate 10,000 users with salaries
     const batchSize = 100; // Process in batches to avoid memory issues
     const totalToGenerate = 10000;
@@ -159,7 +150,7 @@ export default defineNitroPlugin(async () => {
       const currentBatchSize = Math.min(batchSize, totalToGenerate - i);
       console.info(`Generating batch ${i / batchSize + 1}/${Math.ceil(totalToGenerate / batchSize)} (${currentBatchSize} users)...`);
 
-      await generateRandomUserBatch(currentBatchSize, serverConfiguration.departments, getRolesMap(), serverConfiguration.acceptedDomain);
+      await generateRandomUserBatch(currentBatchSize, serverConfiguration.departments, getRolesMap(), seniorityIndex, serverConfiguration.acceptedDomain);
 
       // Simple progress report
       console.info(`Generated ${Math.min(i + currentBatchSize, totalToGenerate)}/${totalToGenerate} random users with salaries`);
