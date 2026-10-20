@@ -9,7 +9,7 @@ export type SalaryStatistics = {
   count: number;
 }
 
-type Labeled<T extends { statistics: SalaryStatistics }> = T & { label: string };
+type Labeled<T> = T & { label: string };
 
 // Enriched statistics with labels (for the frontend API response)
 export type DetailedStatistics = {
