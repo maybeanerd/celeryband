@@ -17,9 +17,13 @@
 
 <script setup lang="ts">
 import { getLinkToCommit, getLinkToTag } from '~/utils/gitHubRepo';
+import { usePublicServerInformation } from '~/composables/api/usePublicServerInformation';
 
 const runtimeConfig = useRuntimeConfig();
 
-const { commitHash, version, disclaimer } = runtimeConfig.public;
-const buildDate = new Date(runtimeConfig.public.buildDate);
+const { serverInfo } = await usePublicServerInformation();
+const { commitHash, version, buildDate: buildDateRaw } = runtimeConfig.public;
+const buildDate = new Date(buildDateRaw);
+
+const disclaimer = computed(() => serverInfo.value?.disclaimer ?? null);
 </script>

@@ -20,7 +20,7 @@ acceptedDomain: "celery.band"
 currency: "€"
 
 # Optional legal disclaimer shown in the footer (null to disable)
-disclaimer: null
+disclaimer: This platform was not created on behalf of BigCorporation or any of its affiliates. All content is based on publicly available or voluntarily provided information and is intended solely for the independent promotion of transparency.
 
 # --- Departments ---
 # Each department has an optional label for display.
