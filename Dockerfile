@@ -1,4 +1,4 @@
-FROM node:24.22.1 AS build
+FROM node:24.22.2 AS build
 WORKDIR /app
 
 COPY ["package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "./"]
@@ -15,7 +15,7 @@ ENV VERSION=$VERSION
 COPY . .
 RUN pnpm build
 
-FROM node:24.22.1-slim
+FROM node:24.22.2-slim
 WORKDIR /app
 
 COPY --from=build /app/.output ./.output
